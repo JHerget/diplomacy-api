@@ -6,7 +6,7 @@ classDiagram
         id: Guid
         ownerId: Guid
         mapId: Guid
-        boardState: BoardState 
+        board: Board 
         players: User[]
         turns: Turn[]
         daysPerTurn: number
@@ -18,7 +18,7 @@ classDiagram
         isDeleted: bool
     }
 
-    class BoardState {
+    class Board {
         providences: Providence[]
         supplyCenters: SupplyCenter[]
     }
