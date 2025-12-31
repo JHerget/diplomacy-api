@@ -6,6 +6,7 @@ classDiagram
         id: Guid
         ownerId: Guid
         mapId: Guid
+        boardState: BoardState 
         players: User[]
         turns: Turn[]
         daysPerTurn: number
@@ -15,6 +16,11 @@ classDiagram
         endDate: number
         inProgress: bool
         isDeleted: bool
+    }
+
+    class BoardState {
+        providences: Providence[]
+        supplyCenters: SupplyCenter[]
     }
 
     class User {
