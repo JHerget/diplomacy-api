@@ -86,6 +86,7 @@ classDiagram
     }
 
     class SupplyCenter {
+        id: Guid
         providenceId: Guid
         unitX: number
         unitY: number
