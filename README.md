@@ -5,6 +5,7 @@ classDiagram
     class Game {
         id: Guid
         ownerId: Guid
+        mapId: Guid
         players: User[]
         turns: Turn[]
         daysPerTurn: number
@@ -63,5 +64,31 @@ classDiagram
         id: Guid
         name: string
         color: string
+    }
+
+    class Map {
+        id: Guid
+        name: string
+        providences: Providence[]
+        supplyCenters: SupplyCenter[]
+    }
+
+    class Providence {
+        id: Guid
+        name: string
+        shortCode: string
+        supplyCenterId: Guid | null
+        unitX: number
+        unitY: number
+        type: army | fleet | all
+        routes: Guid[]
+        controlledBy: Guid | null
+    }
+
+    class SupplyCenter {
+        providenceId: Guid
+        unitX: number
+        unitY: number
+        controlledBy: Guid | null
     }
 ```
