@@ -1,0 +1,54 @@
+{
+    "openapi": "3.0.3",
+    "info": {
+        "title": "diplomacy-api",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/games/{gid}/board": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                },
+                "x-amazon-apigateway-integration": {
+                    "type": "AWS_PROXY",
+                    "httpMethod": "POST",
+                    "payloadFormatVersion": "2.0",
+                    "uri": "${board_arn}"
+                }
+            }
+        },
+        "/games/{gid}/turns/{tid}/orders": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                },
+                "x-amazon-apigateway-integration": {
+                    "type": "AWS_PROXY",
+                    "httpMethod": "POST",
+                    "payloadFormatVersion": "2.0",
+                    "uri": "${orders_arn}"
+                }
+            }
+        },
+        "/test": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                },
+                "x-amazon-apigateway-integration": {
+                    "type": "AWS_PROXY",
+                    "httpMethod": "POST",
+                    "payloadFormatVersion": "2.0",
+                    "uri": "${test_arn}"
+                }
+            }
+        }
+    }
+}

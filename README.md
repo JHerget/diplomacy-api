@@ -6,7 +6,7 @@ classDiagram
         id: Guid
         ownerId: Guid
         mapId: Guid
-        board: Board 
+        board: Board
         players: User[]
         turns: Turn[]
         daysPerTurn: number

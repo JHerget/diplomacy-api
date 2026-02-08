@@ -1,0 +1,21 @@
+# deps / build
+node_modules
+dist
+
+# terraform
+terraform/.terraform
+**/.terraform
+*.tfstate
+*.tfstate.*
+*.tfplan
+
+# binaries / misc
+*.zip
+*.gz
+*.tgz
+*.png
+*.jpg
+*.jpeg
+*.pdf
+*.lock
+
