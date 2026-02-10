@@ -30,15 +30,15 @@ export const validateCommands = (
 };
 
 const isValidHold = (hold: MoveCommand): boolean => {
-    const loc = boardMap.get(hold.location.name);
+    const loc = boardMap.get(hold.location.name)!;
 
-    if (!loc) return false;
-    if (hold.location.coast && !loc.coastalRoutes[hold.location.coast]) return false;
+    if (!isValidLocation(hold.location)) return false;
 
     if (!loc.unit) return false;
     if (loc.unit.type !== hold.unitType) return false;
     if (loc.unit.controlledBy !== hold.playerName) return false;
-    if (hold.location != hold.destination) return false;
+    if (hold.location.name !== hold.destination.name) return false;
+    if (hold.location.coast !== hold.destination.coast) return false;
 
     return true;
 };
@@ -47,13 +47,11 @@ const isValidMove = (
     move: MoveCommand,
     validatePlayer: boolean = true,
 ): boolean => {
-    const loc = boardMap.get(move.location.name);
-    const dest = boardMap.get(move.destination.name);
+    const loc = boardMap.get(move.location.name)!;
+    const dest = boardMap.get(move.destination.name)!;
 
-    if (!loc) return false;
-    if (!dest) return false;
-    if (move.location.coast && !loc.coastalRoutes[move.location.coast]) return false;
-    if (move.destination.coast && !dest.coastalRoutes[move.destination.coast]) return false;
+    if (!isValidLocation(move.location)) return false;
+    if (!isValidLocation(move.destination)) return false;
 
     if (!loc.unit) return false;
     if (loc.unit.type !== move.unitType) return false;
@@ -67,11 +65,11 @@ const isValidMove = (
 };
 
 const isValidRetreat = (retreat: MoveCommand): boolean => {
-    const loc = boardMap.get(retreat.location);
-    const dest = boardMap.get(retreat.destination);
+    const loc = boardMap.get(retreat.location.name)!;
+    const dest = boardMap.get(retreat.destination.name)!;
 
-    if (!loc) return false;
-    if (!dest) return false;
+    if (!isValidLocation(retreat.location)) return false;
+    if (!isValidLocation(retreat.destination)) return false;
 
     if (!loc.unit) return false;
     if (loc.unit.type !== retreat.unitType) return false;
@@ -84,13 +82,11 @@ const isValidRetreat = (retreat: MoveCommand): boolean => {
 };
 
 const isValidSupport = (support: SupportCommand): boolean => {
-    const loc = boardMap.get(support.location);
-    const dest = boardMap.get(support.move.destination);
+    const loc = boardMap.get(support.location.name)!;
+    const dest = boardMap.get(support.move.destination.name)!;
 
     if (!isValidMove(support.move, false)) return false;
-
-    if (!loc) return false;
-    if (!dest) return false;
+    if (!isValidLocation(support.location)) return false;
 
     if (!loc.unit) return false;
     if (loc.unit.type !== support.unitType) return false;
@@ -103,10 +99,11 @@ const isValidSupport = (support: SupportCommand): boolean => {
 };
 
 const isValidConvoy = (convoy: ConvoyCommand): boolean => {
-    const loc = boardMap.get(convoy.location);
-    const dest = boardMap.get(convoy.move.destination);
+    const loc = boardMap.get(convoy.location.name)!;
+    const dest = boardMap.get(convoy.move.destination.name)!;
 
     if (!isValidMove(convoy.move, false)) return false;
+    if (!isValidLocation(convoy.location)) return false;
 
     if (!loc) return false;
     if (!dest) return false;
@@ -119,9 +116,9 @@ const isValidConvoy = (convoy: ConvoyCommand): boolean => {
 };
 
 const isValidReinforce = (reinforce: ReinforceCommand): boolean => {
-    const loc = boardMap.get(reinforce.location);
+    const loc = boardMap.get(reinforce.location.name)!;
 
-    if (!loc) return false;
+    if (!isValidLocation(reinforce.location)) return false;
 
     if (loc.unit) return false;
     if (!loc.supplyCenter) return false;
@@ -132,9 +129,9 @@ const isValidReinforce = (reinforce: ReinforceCommand): boolean => {
 };
 
 const isValidDisband = (disband: DisbandCommand): boolean => {
-    const loc = boardMap.get(disband.location);
+    const loc = boardMap.get(disband.location.name)!;
 
-    if (!loc) return false;
+    if (!isValidLocation(disband.location)) return false;
 
     if (!loc.unit) return false;
     if (loc.unit.type !== disband.unitType) return false;
@@ -147,6 +144,8 @@ const isValidLocation = (location: LocationReference): boolean => {
     const loc = boardMap.get(location.name);
 
     if (!loc) return false;
+    if (!location.coast && Object.keys(loc.coastalRoutes).length > 1) return false;
+    if (location.coast && Object.keys(loc.coastalRoutes).length <= 1) return false;
     if (location.coast && !loc.coastalRoutes[location.coast]) return false;
 
     return true;
