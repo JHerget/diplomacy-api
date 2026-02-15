@@ -57,9 +57,8 @@ const isValidMove = (
     if (loc.unit.type !== move.unitType) return false;
     if (validatePlayer && loc.unit.controlledBy !== move.playerName)
         return false;
-    // if (!loc.routes.includes(dest.id)) return false;
 
-    if (dest.type !== move.unitType && dest.type !== "all") return false;
+    if (!isValidRoute(loc, dest)) return false;
 
     return true;
 };
@@ -147,6 +146,27 @@ const isValidLocation = (location: LocationReference): boolean => {
     if (!location.coast && Object.keys(loc.coastalRoutes).length > 1) return false;
     if (location.coast && Object.keys(loc.coastalRoutes).length <= 1) return false;
     if (location.coast && !loc.coastalRoutes[location.coast]) return false;
+
+    return true;
+}
+
+const isValidRoute = (location: Providence, destination: Providence): boolean => {
+    if (!location.unit) return false;
+
+    if (location.type === "ocean") {
+        if (destination.type === "inland") return false;
+        if (location.unit.type !== "fleet") return false;
+    }
+    if (location.type === "inland") {
+        if (destination.type === "ocean") return false;
+        if (location.unit.type !== "army") return false;
+    }
+
+    if (location.type === "coastal") {
+
+    } else {
+
+    }
 
     return true;
 }

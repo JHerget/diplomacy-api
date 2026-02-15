@@ -14,6 +14,7 @@ import { Map } from "./map.interface";
 import { Phase } from "./phase.interface";
 import { Player } from "./player.interface";
 import {
+    ProvidenceType,
     Providence,
     SupplyCenter,
     Unit,
@@ -36,6 +37,7 @@ export {
     type Map,
     type Phase,
     type Player,
+    type ProvidenceType,
     type Providence,
     type SupplyCenter,
     type Unit,

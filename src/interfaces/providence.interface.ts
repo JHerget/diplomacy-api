@@ -1,12 +1,14 @@
 import { LocationReference } from "./command.interface";
 
+export type ProvidenceType = "ocean" | "coastal" | "inland";
+
 export interface Providence {
     id: string;
     name: string;
     supplyCenter: SupplyCenter | null;
     unit: Unit | null;
     coordinates: Coordinates;
-    type: "army" | "fleet" | "all";
+    type: ProvidenceType;
     routes: string[];
     coastalRoutes: {
         [key: string]: string[]
