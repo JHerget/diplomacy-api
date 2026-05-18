@@ -20,6 +20,9 @@ dist/
 .terraform/
 terraform.tfstate
 terraform.tfstate.*
+**/.terraform/
+**/terraform.tfstate
+**/terraform.tfstate.*
 *.tfplan
 *.tfvars
 *.tfvars.json

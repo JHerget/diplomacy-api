@@ -58,7 +58,7 @@ const isValidMove = (
     if (validatePlayer && loc.unit.controlledBy !== move.playerName)
         return false;
 
-    if (!isValidRoute(loc, dest)) return false;
+    if (!isValidRoute(loc, dest, move.destination)) return false;
 
     return true;
 };
@@ -150,22 +150,40 @@ const isValidLocation = (location: LocationReference): boolean => {
     return true;
 }
 
-const isValidRoute = (location: Providence, destination: Providence): boolean => {
+const isValidRoute = (location: Providence, destination: Providence, destRef: LocationReference): boolean => {
     if (!location.unit) return false;
 
     if (location.type === "ocean") {
         if (destination.type === "inland") return false;
         if (location.unit.type !== "fleet") return false;
+
+        const numCoastalRoutes = destination.coastalRoutes.length;
+        const destIncludesLocation = destination.routes.includes(location.id);
+
+        if (destRef.coast) {
+            if (!numCoastalRoutes) return destIncludesLocation;
+
+            const routes = destination.coastalRoutes[destRef.coast];
+            if (!routes) return false;
+
+            return routes.includes(location.id);
+        }
+        if (destination.coastalRoutes.length) return false;
+
+        return destIncludesLocation;
     }
+
     if (location.type === "inland") {
         if (destination.type === "ocean") return false;
         if (location.unit.type !== "army") return false;
     }
 
     if (location.type === "coastal") {
-
-    } else {
-
+        if (destination.type === "coastal") {
+            if (!destRef.coast && Object.keys(destination.coastalRoutes).length > 1) return false;
+            if (destRef.coast && !destination.coastalRoutes[destRef.coast]) return false;
+            if (destRef.coast && destination.coastalRoutes[destRef.coast].includes(location.id)) return false;
+        }
     }
 
     return true;

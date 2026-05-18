@@ -78,10 +78,10 @@ resource "aws_iam_role_policy_attachment" "lambda_basic_logs" {
     policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }
 
-resource "aws_iam_role_policy_attachment" "lambda_vpc_access" {
-    role = aws_iam_role.lambda_role.name
-    policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
-}
+# resource "aws_iam_role_policy_attachment" "lambda_vpc_access" {
+#     role = aws_iam_role.lambda_role.name
+#     policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
+# }
 
 resource "aws_iam_role_policy_attachment" "lambda_secret_access" {
     role = aws_iam_role.lambda_role.name
@@ -93,17 +93,17 @@ resource "aws_iam_role_policy_attachment" "lambda_s3_access" {
     policy_arn = aws_iam_policy.lambda_s3.arn
 }
 
-resource "aws_security_group" "lambda_vpc" {
-    name = "diplomacy-lambda-vpc"
-    vpc_id = aws_vpc.main.id
-
-    egress {
-        from_port = 0
-        to_port = 0
-        protocol = "-1"
-        cidr_blocks = ["0.0.0.0/0"]
-    }
-}
+# resource "aws_security_group" "lambda_vpc" {
+#     name = "diplomacy-lambda-vpc"
+#     vpc_id = aws_vpc.main.id
+#
+#     egress {
+#         from_port = 0
+#         to_port = 0
+#         protocol = "-1"
+#         cidr_blocks = ["0.0.0.0/0"]
+#     }
+# }
 
 resource "aws_lambda_function" "fn" {
     for_each = local.lambdas
@@ -118,8 +118,8 @@ resource "aws_lambda_function" "fn" {
     memory_size = 1024
     timeout = 120
 
-    vpc_config {
-        subnet_ids = [aws_subnet.private[0].id, aws_subnet.private[1].id]
-        security_group_ids = [aws_security_group.lambda_vpc.id]
-    }
+    # vpc_config {
+    #     subnet_ids = [aws_subnet.private[0].id, aws_subnet.private[1].id]
+    #     security_group_ids = [aws_security_group.lambda_vpc.id]
+    # }
 }
