@@ -1,6 +1,7 @@
 import { LocationReference } from "./command.interface";
 
 export type ProvidenceType = "ocean" | "coastal" | "inland";
+type routeMap = { [key: string]: string[] }
 
 export interface Providence {
     id: string;
@@ -10,9 +11,7 @@ export interface Providence {
     coordinates: Coordinates;
     type: ProvidenceType;
     routes: string[];
-    coastalRoutes: {
-        [key: string]: string[]
-    }
+    coastalRoutes: routeMap | null;
 }
 
 export interface SupplyCenter {

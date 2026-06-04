@@ -73,9 +73,8 @@ const isValidRetreat = (retreat: MoveCommand): boolean => {
     if (!loc.unit) return false;
     if (loc.unit.type !== retreat.unitType) return false;
     if (loc.unit.controlledBy !== retreat.playerName) return false;
-    if (!loc.routes.includes(dest.id)) return false;
 
-    if (dest.type !== retreat.unitType && dest.type !== "all") return false;
+    if (!isValidRoute(loc, dest, retreat.destination)) return false;
 
     return true;
 };
@@ -90,9 +89,8 @@ const isValidSupport = (support: SupportCommand): boolean => {
     if (!loc.unit) return false;
     if (loc.unit.type !== support.unitType) return false;
     if (loc.unit.controlledBy !== support.playerName) return false;
-    if (!loc.routes.includes(dest.id)) return false;
 
-    if (dest.type !== support.unitType && dest.type !== "all") return false;
+    if (!isValidRoute(loc, dest, support.move.destination)) return false;
 
     return true;
 };
@@ -139,13 +137,13 @@ const isValidDisband = (disband: DisbandCommand): boolean => {
     return true;
 };
 
-const isValidLocation = (location: LocationReference): boolean => {
-    const loc = boardMap.get(location.name);
+const isValidLocation = (ref: LocationReference): boolean => {
+    const loc = boardMap.get(ref.name);
 
     if (!loc) return false;
-    if (!location.coast && Object.keys(loc.coastalRoutes).length > 1) return false;
-    if (location.coast && Object.keys(loc.coastalRoutes).length <= 1) return false;
-    if (location.coast && !loc.coastalRoutes[location.coast]) return false;
+    if (!ref.coast && loc.coastalRoutes) return false;
+    if (ref.coast && !loc.coastalRoutes) return false;
+    if (ref.coast && loc.coastalRoutes && !loc.coastalRoutes[ref.coast]) return false;
 
     return true;
 }
@@ -153,51 +151,20 @@ const isValidLocation = (location: LocationReference): boolean => {
 const isValidRoute = (location: Providence, destination: Providence, destRef: LocationReference): boolean => {
     if (!location.unit) return false;
 
-    if (location.type === "ocean") {
-        if (destination.type === "inland") return false;
-        if (location.unit.type !== "fleet") return false;
+    if (location.type == "ocean" && destination.type == "inland") return false;
+    if (location.type == "inland" && destination.type == "ocean") return false;
+    if (destination.type == "inland" && location.unit.type == "fleet") return false;
+    if (destination.type == "ocean" && location.unit.type == "army") return false;
 
-        const numCoastalRoutes = len(destination.coastalRoutes);
-        const destIncludesLocation = destination.routes.includes(location.id);
+    if (destRef.coast) {
+        if (!destination.coastalRoutes) return destination.routes.includes(location.id);
 
-        if (destRef.coast) {
-            if (!numCoastalRoutes) return destIncludesLocation;
+        const routes = destination.coastalRoutes[destRef.coast];
+        if (!routes) return false;
 
-            const routes = destination.coastalRoutes[destRef.coast];
-            if (!routes) return false;
-
-            return routes.includes(location.id);
-        }
-        if (len(destination.coastalRoutes)) return false;
-
-        return destIncludesLocation;
+        return routes.includes(location.id);
     }
+    if (destination.coastalRoutes) return false;
 
-    if (location.type === "inland") {
-        if (destination.type === "ocean") return false;
-        if (location.unit.type !== "army") return false;
-
-        return destination.routes.includes(location.id);
-    }
-
-    if (location.type === "coastal") {
-        if (destination.type === "coastal") {
-            const numCoastalRoutes = len(destination.coastalRoutes);
-            const destIncludesLocation = destination.routes.includes(location.id);
-
-            if (destRef.coast) {
-                if (!numCoastalRoutes) return destIncludesLocation;
-
-                const routes = destination.coastalRoutes[destRef.coast];
-                if (!routes) return false;
-
-                return routes.includes(location.id);
-            }
-            if (len(destination.coastalRoutes)) return false;
-        }
-    }
-
-    return true;
+    return destination.routes.includes(location.id);
 }
-
-const len = (obj: object) => Object.keys(obj).length;
