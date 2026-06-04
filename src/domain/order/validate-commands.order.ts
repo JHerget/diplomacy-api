@@ -157,7 +157,7 @@ const isValidRoute = (location: Providence, destination: Providence, destRef: Lo
         if (destination.type === "inland") return false;
         if (location.unit.type !== "fleet") return false;
 
-        const numCoastalRoutes = destination.coastalRoutes.length;
+        const numCoastalRoutes = len(destination.coastalRoutes);
         const destIncludesLocation = destination.routes.includes(location.id);
 
         if (destRef.coast) {
@@ -168,7 +168,7 @@ const isValidRoute = (location: Providence, destination: Providence, destRef: Lo
 
             return routes.includes(location.id);
         }
-        if (destination.coastalRoutes.length) return false;
+        if (len(destination.coastalRoutes)) return false;
 
         return destIncludesLocation;
     }
@@ -176,15 +176,28 @@ const isValidRoute = (location: Providence, destination: Providence, destRef: Lo
     if (location.type === "inland") {
         if (destination.type === "ocean") return false;
         if (location.unit.type !== "army") return false;
+
+        return destination.routes.includes(location.id);
     }
 
     if (location.type === "coastal") {
         if (destination.type === "coastal") {
-            if (!destRef.coast && Object.keys(destination.coastalRoutes).length > 1) return false;
-            if (destRef.coast && !destination.coastalRoutes[destRef.coast]) return false;
-            if (destRef.coast && destination.coastalRoutes[destRef.coast].includes(location.id)) return false;
+            const numCoastalRoutes = len(destination.coastalRoutes);
+            const destIncludesLocation = destination.routes.includes(location.id);
+
+            if (destRef.coast) {
+                if (!numCoastalRoutes) return destIncludesLocation;
+
+                const routes = destination.coastalRoutes[destRef.coast];
+                if (!routes) return false;
+
+                return routes.includes(location.id);
+            }
+            if (len(destination.coastalRoutes)) return false;
         }
     }
 
     return true;
 }
+
+const len = (obj: object) => Object.keys(obj).length;
