@@ -4,9 +4,7 @@
         "outDir": "./dist",
         "module": "commonjs",
         "target": "ES2022",
-        "types": [
-            "node"
-        ],
+        "types": ["node"],
         "noUncheckedIndexedAccess": true,
         "exactOptionalPropertyTypes": true,
         "strict": true,
@@ -19,36 +17,16 @@
         "allowImportingTsExtensions": false,
         "baseUrl": ".",
         "paths": {
-            "@apis": [
-                "src/apis/apis"
-            ],
-            "@constants": [
-                "src/constants"
-            ],
-            "@domain": [
-                "src/domain/domain"
-            ],
-            "@errors": [
-                "src/errors/errors"
-            ],
-            "@interfaces": [
-                "src/interfaces/interfaces"
-            ],
-            "@lambdas": [
-                "src/lambdas/lambdas"
-            ],
-            "@mocks": [
-                "src/mocks/mocks"
-            ],
-            "@repositories": [
-                "src/repositories/repositories"
-            ]
+            "@apis": ["src/apis/apis"],
+            "@constants": ["src/constants"],
+            "@domain": ["src/domain/domain"],
+            "@errors": ["src/errors/errors"],
+            "@interfaces": ["src/interfaces/interfaces"],
+            "@lambdas": ["src/lambdas/lambdas"],
+            "@mocks": ["src/mocks/mocks"],
+            "@repositories": ["src/repositories/repositories"]
         }
     },
-    "include": [
-        "src"
-    ],
-    "exclude": [
-        "node_modules"
-    ]
+    "include": ["src"],
+    "exclude": ["node_modules"]
 }

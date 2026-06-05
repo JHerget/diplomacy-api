@@ -20,7 +20,7 @@ export const SecretsManagerApi = {
     },
     getCredentials: async (): Promise<Secrets> => {
         const secrets = await SecretsManagerApi.getJson<Secrets>(
-            "diplomacy-credentials",
+            Constants.credsSecret,
         );
 
         if (secrets) {

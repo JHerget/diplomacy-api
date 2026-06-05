@@ -23,6 +23,7 @@ terraform.tfstate.*
 **/.terraform/
 **/terraform.tfstate
 **/terraform.tfstate.*
+**/.terraform.tfstate.lock.info
 *.tfplan
 *.tfvars
 *.tfvars.json

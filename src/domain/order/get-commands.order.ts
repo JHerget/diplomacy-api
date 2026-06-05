@@ -1,4 +1,10 @@
-import { Order, Commands, CommandsRegex, Coast, LocationReference } from "@interfaces";
+import {
+    Order,
+    Commands,
+    CommandsRegex,
+    Coast,
+    LocationReference,
+} from "@interfaces";
 
 interface RawCommand {
     playerName: string;
@@ -77,7 +83,8 @@ export const getCommands = (orders: Order[]): Commands => {
                 moveLocation &&
                 moveDestination
             ) {
-                const isHold = moveDestination === "hold" || moveDestination === "h";
+                const isHold =
+                    moveDestination === "hold" || moveDestination === "h";
 
                 commands.support.push({
                     playerName: raw.playerName,
@@ -87,10 +94,9 @@ export const getCommands = (orders: Order[]): Commands => {
                         playerName: raw.playerName,
                         unitType: parseUnit(moveUnit),
                         location: parseLocationReference(moveLocation),
-                        destination:
-                            isHold
-                                ? parseLocationReference(moveLocation)
-                                : parseLocationReference(moveDestination),
+                        destination: isHold
+                            ? parseLocationReference(moveLocation)
+                            : parseLocationReference(moveDestination),
                     },
                 });
                 continue;
@@ -167,7 +173,7 @@ const parseUnit = (rawUnit: string): Unit =>
 const parseLocationReference = (rawLocation: string): LocationReference => {
     const locParts = rawLocation.split("-");
     return {
-        name: locParts[0]!,
-        coast: locParts[1] as Coast || null
-    }
-}
+        id: locParts[0]!,
+        coast: (locParts[1] as Coast) || null,
+    };
+};

@@ -5,8 +5,8 @@ export default defineConfig({
         alias: {
             "@domain": "/src/domain/domain",
             "@interfaces": "/src/interfaces/interfaces",
-            "@mocks": "/src/mocks/mocks"
-        }
+            "@mocks": "/src/mocks/mocks",
+        },
     },
     test: {
         environment: "node",

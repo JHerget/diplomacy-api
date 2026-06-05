@@ -51,33 +51,33 @@ export const applyTurn = (board: Providence[], turn: Turn): Providence[] => {
 };
 
 const applyMove = (move: MoveCommand): void => {
-    const loc = boardMap.get(move.location)!;
-    const dest = boardMap.get(move.destination!)!;
+    const loc = boardMap.get(move.location.id)!;
+    const dest = boardMap.get(move.destination.id)!;
 
     loc.unresolvedCommand = move;
     dest.attacks.push({
         unit: move.unitType,
-        location: move.location,
+        location: move.location.id,
         support: [],
     });
 };
 
-const applyRetreat = (retreat: MoveCommand): void => { };
+const applyRetreat = (retreat: MoveCommand): void => {};
 
 const applySupport = (support: SupportCommand): void => {
-    const dest = boardMap.get(support.move.destination)!;
+    const dest = boardMap.get(support.move.destination.id)!;
     const attack = dest.attacks.find(
-        (u) => u.location === support.move.location,
+        (u) => u.location === support.move.location.id,
     );
 
     if (!attack) return;
 
-    attack.support.push(support.location);
+    attack.support.push(support.location.id);
 };
 
-const applyConvoy = (convoy: ConvoyCommand): void => { };
-const applyReinforce = (reinforce: ReinforceCommand): void => { };
-const applyDisband = (disband: DisbandCommand): void => { };
+const applyConvoy = (convoy: ConvoyCommand): void => {};
+const applyReinforce = (reinforce: ReinforceCommand): void => {};
+const applyDisband = (disband: DisbandCommand): void => {};
 
 const finalizeState = (): Providence[] => {
     const board = [];
@@ -92,7 +92,7 @@ const finalizeState = (): Providence[] => {
 
         while (stack.length) {
             const top = stack.pop()!;
-            const dest = boardMap.get(top.unresolvedCommand!.destination)!;
+            const dest = boardMap.get(top.unresolvedCommand!.destination.id)!;
 
             if (dest.unresolvedCommand) {
                 stack.push(top, dest);

@@ -11,65 +11,107 @@ describe("Parse player orders into individual RawCommands.", () => {
                 {
                     playerName: "Italy",
                     unitType: "army",
-                    location: "rom",
-                    destination: "rom"
+                    location: {
+                        id: "rom",
+                        coast: null,
+                    },
+                    destination: {
+                        id: "rom",
+                        coast: null,
+                    },
                 },
                 {
                     playerName: "Italy",
                     unitType: "fleet",
-                    location: "tun",
-                    destination: "tun"
-                }
+                    location: {
+                        id: "tun",
+                        coast: null,
+                    },
+                    destination: {
+                        id: "tun",
+                        coast: null,
+                    },
+                },
             ],
             move: [
                 {
                     playerName: "Italy",
                     unitType: "army",
-                    location: "pie",
-                    destination: "mar"
-                }
+                    location: {
+                        id: "pie",
+                        coast: null,
+                    },
+                    destination: {
+                        id: "mar",
+                        coast: null,
+                    },
+                },
             ],
             retreat: [
                 {
                     playerName: "Germany",
                     unitType: "army",
-                    location: "ber",
-                    destination: "sil"
-                }
+                    location: {
+                        id: "ber",
+                        coast: null,
+                    },
+                    destination: {
+                        id: "sil",
+                        coast: null,
+                    },
+                },
             ],
             support: [
                 {
                     playerName: "Italy",
                     unitType: "fleet",
-                    location: "gol",
+                    location: {
+                        id: "gol",
+                        coast: null,
+                    },
                     move: {
                         playerName: "Italy",
                         unitType: "army",
-                        location: "pie",
-                        destination: "mar"
-                    }
-                }
+                        location: {
+                            id: "pie",
+                            coast: null,
+                        },
+                        destination: {
+                            id: "mar",
+                            coast: null,
+                        },
+                    },
+                },
             ],
             convoy: [],
             reinforce: [
                 {
                     playerName: "Germany",
                     unitType: "fleet",
-                    location: "pru",
+                    location: {
+                        id: "pru",
+                        coast: null,
+                    },
                 },
                 {
                     playerName: "Germany",
                     unitType: "army",
-                    location: "bal",
-                }
+                    location: {
+                        id: "bal",
+                        coast: null,
+                    },
+                },
             ],
             disband: [
                 {
                     playerName: "Germany",
                     unitType: "army",
-                    location: "mun"
-                }
-            ]
+                    location: {
+                        id: "mun",
+                        coast: null,
+                    },
+                },
+            ],
         };
         const actualOutput = OrderDomain.getCommands(mockOrders);
 

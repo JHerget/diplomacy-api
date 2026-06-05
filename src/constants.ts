@@ -1,4 +1,5 @@
 export const Constants = {
     awsRegion: "us-west-2",
-    mapsBucket: "diplomacy-maps-01",
+    mapsBucket: "diplomacy-maps",
+    credsSecret: "diplomacy-credentials",
 };

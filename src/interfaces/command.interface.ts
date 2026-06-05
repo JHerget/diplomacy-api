@@ -2,7 +2,7 @@ type Unit = "army" | "fleet";
 export type Coast = "nc" | "sc" | "ec" | "wc";
 
 export interface LocationReference {
-    name: string;
+    id: string;
     coast: Coast | null;
 }
 

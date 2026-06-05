@@ -10,44 +10,86 @@ describe("Validate all command types.", () => {
         const validHold: MoveCommand = {
             playerName: "France",
             unitType: "army",
-            location: "pie",
-            destination: "pie"
+            location: {
+                id: "pie",
+                coast: null,
+            },
+            destination: {
+                id: "pie",
+                coast: null,
+            },
         };
         const wrongUnitTypeHold: MoveCommand = {
             playerName: "France",
             unitType: "fleet",
-            location: "pie",
-            destination: "pie"
+            location: {
+                id: "pie",
+                coast: null,
+            },
+            destination: {
+                id: "pie",
+                coast: null,
+            },
         };
         const wrongDestHold: MoveCommand = {
             playerName: "France",
             unitType: "army",
-            location: "pie",
-            destination: "ven"
+            location: {
+                id: "pie",
+                coast: null,
+            },
+            destination: {
+                id: "ven",
+                coast: null,
+            },
         };
         const validMove: MoveCommand = {
             playerName: "Italy",
             unitType: "army",
-            location: "ven",
-            destination: "pie"
+            location: {
+                id: "ven",
+                coast: null,
+            },
+            destination: {
+                id: "pie",
+                coast: null,
+            },
         };
         const wrongPlayerMove: MoveCommand = {
             playerName: "Italy",
             unitType: "army",
-            location: "pie",
-            destination: "ven"
+            location: {
+                id: "pie",
+                coast: null,
+            },
+            destination: {
+                id: "ven",
+                coast: null,
+            },
         };
         const unknownLocMove: MoveCommand = {
             playerName: "France",
             unitType: "army",
-            location: "abc",
-            destination: "ven"
+            location: {
+                id: "abc",
+                coast: null,
+            },
+            destination: {
+                id: "ven",
+                coast: null,
+            },
         };
         const unknownDestMove: MoveCommand = {
             playerName: "France",
             unitType: "army",
-            location: "pie",
-            destination: "abc"
+            location: {
+                id: "pie",
+                coast: null,
+            },
+            destination: {
+                id: "abc",
+                coast: null,
+            },
         };
 
         const allCommands = {
@@ -57,7 +99,7 @@ describe("Validate all command types.", () => {
             support: [],
             convoy: [],
             reinforce: [],
-            disband: []
+            disband: [],
         };
     });
 });
