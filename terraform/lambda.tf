@@ -1,21 +1,15 @@
 locals {
   lambdas = {
     "board" = {
-      handler = "lambdas.board"
+      zip = "../dist/board.zip"
     }
     "orders" = {
-      handler = "lambdas.orders"
+      zip = "../dist/orders.zip"
     }
     "test" = {
-      handler = "lambdas.test"
+      zip = "../dist/test.zip"
     }
   }
-}
-
-data "archive_file" "lambda_zip" {
-  type        = "zip"
-  source_dir  = "../dist"
-  output_path = "../dist/lambdas.zip"
 }
 
 data "aws_iam_policy_document" "lambda_assume_role" {
@@ -108,13 +102,14 @@ resource "aws_iam_role_policy_attachment" "lambda_s3_access" {
 resource "aws_lambda_function" "fn" {
   for_each = local.lambdas
 
-  filename         = data.archive_file.lambda_zip.output_path
-  source_code_hash = data.archive_file.lambda_zip.output_base64sha256
+  filename         = each.value.zip
+  source_code_hash = filebase64sha256(each.value.zip)
 
   function_name = "diplomacy-api-v1-${each.key}"
   role          = aws_iam_role.lambda_role.arn
-  handler       = each.value.handler
-  runtime       = "nodejs24.x"
+  handler       = "bootstrap"
+  runtime       = "provided.al2023"
+  architectures = ["arm64"]
   memory_size   = 1024
   timeout       = 120
 
