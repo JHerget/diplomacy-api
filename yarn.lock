@@ -2545,7 +2545,7 @@ __metadata:
     ts-node: "npm:10.9.2"
     tsconfig-paths: "npm:4.2.0"
     typescript: "npm:5.9.3"
-    vitest: "npm:^4.0.18"
+    vitest: "npm:4.0.18"
     webpack: "npm:5.102.1"
     webpack-cli: "npm:^6.0.1"
   languageName: unknown
@@ -4261,7 +4261,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vitest@npm:^4.0.18":
+"vitest@npm:4.0.18":
   version: 4.0.18
   resolution: "vitest@npm:4.0.18"
   dependencies:
