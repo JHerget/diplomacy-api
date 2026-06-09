@@ -11,11 +11,11 @@ var CommandsRegex = struct {
 	Reinforce *regexp.Regexp
 	Disband   *regexp.Regexp
 }{
-	Hold: regexp.MustCompile(`^([af])\s*([a-z]{3}|[a-z]{3}-[nsew]c)\s*-\s*(?:hold|h)$`),
-	Move: regexp.MustCompile(`^([af])\s*([a-z]{3}|[a-z]{3}-[nsew]c)\s*-\s*([a-z]{3}|[a-z]{3}-[nsew]c)$`),
-	Retreat: regexp.MustCompile(`^([af])\s*r\s*([a-z]{3}|[a-z]{3}-[nsew]c)\s*-\s*([a-z]{3}|[a-z]{3}-[nsew]c)$`),
-	Support: regexp.MustCompile(`^([af])\s*([a-z]{3}|[a-z]{3}-[nsew]c)\s*s\s*([af])\s*([a-z]{3}|[a-z]{3}-[nsew]c)\s*-\s*(hold|h|[a-z]{3})$`),
-	Convoy: regexp.MustCompile(`^f\s*([a-z]{3}|[a-z]{3}-[nsew]c)\s*c\s*a\s*([a-z]{3}|[a-z]{3}-[nsew]c)\s*-\s*([a-z]{3}|[a-z]{3}-[nsew]c)$`),
+	Hold:      regexp.MustCompile(`^([af])\s*([a-z]{3}|[a-z]{3}-[nsew]c)\s*-\s*(?:hold|h)$`),
+	Move:      regexp.MustCompile(`^([af])\s*([a-z]{3}|[a-z]{3}-[nsew]c)\s*-\s*([a-z]{3}|[a-z]{3}-[nsew]c)$`),
+	Retreat:   regexp.MustCompile(`^([af])\s*r\s*([a-z]{3}|[a-z]{3}-[nsew]c)\s*-\s*([a-z]{3}|[a-z]{3}-[nsew]c)$`),
+	Support:   regexp.MustCompile(`^([af])\s*([a-z]{3}|[a-z]{3}-[nsew]c)\s*s\s*([af])\s*([a-z]{3}|[a-z]{3}-[nsew]c)\s*-\s*(hold|h|[a-z]{3})$`),
+	Convoy:    regexp.MustCompile(`^f\s*([a-z]{3}|[a-z]{3}-[nsew]c)\s*c\s*a\s*([a-z]{3}|[a-z]{3}-[nsew]c)\s*-\s*([a-z]{3}|[a-z]{3}-[nsew]c)$`),
 	Reinforce: regexp.MustCompile(`^([af])\s*([a-z]{3}|[a-z]{3}-[nsew]c)$`),
 	Disband:   regexp.MustCompile(`^d\s*([af])\s*([a-z]{3}|[a-z]{3}-[nsew]c)$`),
 }
@@ -106,70 +106,70 @@ type Commands struct {
 }
 
 type Player struct {
-    UserId *string `json:"userId" bson:"userId"`
-    Name string `json:"name" bson:"name"`
-    Color string `json:"color" bson:"color"`
-    IsPlaying bool `json:"isPlaying" bson:"isPlaying"`
+	UserId    *string `json:"userId" bson:"userId"`
+	Name      string  `json:"name" bson:"name"`
+	Color     string  `json:"color" bson:"color"`
+	IsPlaying bool    `json:"isPlaying" bson:"isPlaying"`
 }
 
 type Phase struct {
-    Id string `json:"id" bson:"id"`
-    Name string `json:"name" bson:"name"`
-    Description string `json:"description" bson:"description"`
-    PhaseOrder int8 `json:"phaseOrder" bson:"phaseOrder"`
+	Id          string `json:"id" bson:"id"`
+	Name        string `json:"name" bson:"name"`
+	Description string `json:"description" bson:"description"`
+	PhaseOrder  int8   `json:"phaseOrder" bson:"phaseOrder"`
 }
 
 type Turn struct {
-    Id string `json:"id" bson:"id"`
-    PhaseId string `json:"phaseId" bson:"phaseId"`
-    Orders []Order `json:"orders" bson:"orders"`
-    TurnNumber int8 `json:"turnNumber" bson:"turnNumber"`
-    StartDate int64 `json:"startDate" bson:"startDate"`
-    EndDate int64 `json:"endDate" bson:"endDate"`
+	Id         string  `json:"id" bson:"id"`
+	PhaseId    string  `json:"phaseId" bson:"phaseId"`
+	Orders     []Order `json:"orders" bson:"orders"`
+	TurnNumber int8    `json:"turnNumber" bson:"turnNumber"`
+	StartDate  int64   `json:"startDate" bson:"startDate"`
+	EndDate    int64   `json:"endDate" bson:"endDate"`
 }
 
 type Order struct {
-    Id string `json:"id" bson:"id"`
-    PhaseId string `json:"phaseId" bson:"phaseId"`
-    PlayerName string `json:"playerName" bson:"playerName"`
-    CreatedDate int64 `json:"createdDate" bson:"createdDate"`
-    Value string `json:"value" bson:"value"`
+	Id          string `json:"id" bson:"id"`
+	PhaseId     string `json:"phaseId" bson:"phaseId"`
+	PlayerName  string `json:"playerName" bson:"playerName"`
+	CreatedDate int64  `json:"createdDate" bson:"createdDate"`
+	Value       string `json:"value" bson:"value"`
 }
 
 type User struct {
-    Id string `json:"id" bson:"id"`
-    FirstName string `json:"firstName" bson:"firstName"`
-    LastName string `json:"lastName" bson:"lastName"`
-    Username string `json:"username" bson:"username"`
-    Password string `json:"password" bson:"password"`
-    Salt []byte `json:"salt" bson:"salt"`
-    CreatedDate int64 `json:"createdDate" bson:"createdDate"`
-    IsDeleted bool `json:"isDeleted" bson:"isDeleted"`
+	Id          string `json:"id" bson:"id"`
+	FirstName   string `json:"firstName" bson:"firstName"`
+	LastName    string `json:"lastName" bson:"lastName"`
+	Username    string `json:"username" bson:"username"`
+	Password    string `json:"password" bson:"password"`
+	Salt        []byte `json:"salt" bson:"salt"`
+	CreatedDate int64  `json:"createdDate" bson:"createdDate"`
+	IsDeleted   bool   `json:"isDeleted" bson:"isDeleted"`
 }
 
 type Game struct {
-    Id string `json:"id" bson:"id"`
-    OwnerId string `json:"ownerId" bson:"ownerId"`
-    Map struct {
-        Id string `json:"id" bson:"id"`
-        Filename string `json:"filename" bson:"filename"`
-    }
-    Board []Providence `json:"board" bson:"board"`
-    Players []Player `json:"players" bson:"players"`
-    Turns []Turn `json:"turns" bson:"turns"`
-    DaysPerTurn int8 `json:"daysPerTurn" bson:"daysPerTurn"`
-    TurnStartHour int8 `json:"turnStartHour" bson:"turnStartHour"`
-    Timezone int8 `json:"timezone" bson:"timezone"`
-    StartDate int64 `json:"startDate" bson:"startDate"`
-    EndDate int64 `json:"endDate" bson:"endDate"`
-    InProgress bool `json:"inProgress" bson:"inProgress"`
-    IsDeleted bool `json:"isDeleted" bson:"isDeleted"`
+	Id      string `json:"id" bson:"id"`
+	OwnerId string `json:"ownerId" bson:"ownerId"`
+	Map     struct {
+		Id       string `json:"id" bson:"id"`
+		Filename string `json:"filename" bson:"filename"`
+	}
+	Board         []Providence `json:"board" bson:"board"`
+	Players       []Player     `json:"players" bson:"players"`
+	Turns         []Turn       `json:"turns" bson:"turns"`
+	DaysPerTurn   int8         `json:"daysPerTurn" bson:"daysPerTurn"`
+	TurnStartHour int8         `json:"turnStartHour" bson:"turnStartHour"`
+	Timezone      int8         `json:"timezone" bson:"timezone"`
+	StartDate     int64        `json:"startDate" bson:"startDate"`
+	EndDate       int64        `json:"endDate" bson:"endDate"`
+	InProgress    bool         `json:"inProgress" bson:"inProgress"`
+	IsDeleted     bool         `json:"isDeleted" bson:"isDeleted"`
 }
 
 type Map struct {
-    Id string `json:"id" bson:"id"`
-    Filename string `json:"filename" bson:"filename"`
-    Name string `json:"name" bson:"name"`
-    Players []Player `json:"players" bson:"players"`
-    Providences []Providence `json:"providences" bson:"providences"`
+	Id          string       `json:"id" bson:"id"`
+	Filename    string       `json:"filename" bson:"filename"`
+	Name        string       `json:"name" bson:"name"`
+	Players     []Player     `json:"players" bson:"players"`
+	Providences []Providence `json:"providences" bson:"providences"`
 }
