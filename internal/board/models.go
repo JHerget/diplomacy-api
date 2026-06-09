@@ -142,7 +142,7 @@ type User struct {
     LastName string `json:"lastName" bson:"lastName"`
     Username string `json:"username" bson:"username"`
     Password string `json:"password" bson:"password"`
-    Salt []int8 `json:"salt" bson:"salt"`
+    Salt []byte `json:"salt" bson:"salt"`
     CreatedDate int64 `json:"createdDate" bson:"createdDate"`
     IsDeleted bool `json:"isDeleted" bson:"isDeleted"`
 }

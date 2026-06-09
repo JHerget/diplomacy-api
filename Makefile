@@ -15,3 +15,6 @@ publish: build
 
 format:
 	gofmt -w .
+
+tidy:
+	go mod tidy
