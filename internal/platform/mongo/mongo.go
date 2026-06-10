@@ -3,6 +3,7 @@ package mongo
 import (
 	"context"
 	"diplomacy-api/internal/platform/aws"
+	"errors"
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -17,6 +18,10 @@ func NewMongoDB(ctx context.Context) (*mongo.Client, error) {
 	secrets, err := secretsManager.GetJson(ctx, "diplomacy-credentials")
 	if err != nil {
 		return nil, err
+	}
+
+	if secrets.MongoDBConnectionString == "" {
+		return nil, errors.New("missing mongodb:connection-string in diplomacy-credentials secret")
 	}
 
 	opts := options.Client().ApplyURI(secrets.MongoDBConnectionString)
