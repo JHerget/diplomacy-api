@@ -20,7 +20,7 @@ func handler(ctx context.Context, event events.APIGatewayV2HTTPRequest) (events.
 
 	gameRepo := game.MakeRepository(db)
 
-	game, err := gameRepo.Get(ctx, "test")
+	game, err := gameRepo.Get(ctx, "69564bb933c5739468982b67")
 	if err != nil {
 		return events.APIGatewayV2HTTPResponse{
 			StatusCode: 500,
