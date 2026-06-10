@@ -11,28 +11,24 @@ import (
 )
 
 type S3 struct {
-	ctx    context.Context
 	config config.Config
 	client *s3.Client
 }
 
-func NewS3() S3 {
-	ctx := context.Background()
-
+func NewS3(ctx context.Context) S3 {
 	cfg, err := config.LoadDefaultConfig(ctx)
 	if err != nil {
 		log.Println("failed to load default s3 config", err)
 	}
 
 	return S3{
-		ctx:    ctx,
 		config: cfg,
 		client: s3.NewFromConfig(cfg),
 	}
 }
 
-func (s *S3) Get(bucket string, filename string) ([]byte, error) {
-	result, err := s.client.GetObject(s.ctx, &s3.GetObjectInput{
+func (s *S3) Get(ctx context.Context, bucket string, filename string) ([]byte, error) {
+	result, err := s.client.GetObject(ctx, &s3.GetObjectInput{
 		Bucket: aws.String(bucket),
 		Key:    aws.String(filename),
 	})
