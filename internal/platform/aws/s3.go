@@ -15,16 +15,16 @@ type S3 struct {
 	client *s3.Client
 }
 
-func NewS3(ctx context.Context) S3 {
+func NewS3(ctx context.Context) (*S3, error) {
 	cfg, err := config.LoadDefaultConfig(ctx)
 	if err != nil {
-		log.Println("failed to load default s3 config", err)
+		return nil, err
 	}
 
-	return S3{
+	return &S3{
 		config: cfg,
 		client: s3.NewFromConfig(cfg),
-	}
+	}, nil
 }
 
 func (s *S3) Get(ctx context.Context, bucket string, filename string) ([]byte, error) {
