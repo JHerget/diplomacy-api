@@ -2,6 +2,7 @@ package aws
 
 import (
 	"context"
+	"encoding/json"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
@@ -36,4 +37,19 @@ func (s *SecretsManager) Get(ctx context.Context, secretName string) (*string, e
 	}
 
 	return result.SecretString, nil
+}
+
+func (s *SecretsManager) GetJson(ctx context.Context, secretName string) (*Secrets, error) {
+	rawSecrets, err := s.Get(ctx, secretName)
+	if err != nil {
+		return nil, err
+	}
+
+	var secrets Secrets
+	err = json.Unmarshal([]byte(*rawSecrets), &secrets)
+	if err != nil {
+		return nil, err
+	}
+
+	return &secrets, nil
 }
