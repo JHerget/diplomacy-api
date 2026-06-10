@@ -5,6 +5,7 @@ import (
 	"diplomacy-api/internal/board"
 
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -21,8 +22,13 @@ func MakeRepository(db *mongo.Client) *Repository {
 func (r *Repository) Get(ctx context.Context, id string) (*board.Game, error) {
 	var game board.Game
 
-	err := r.collection.FindOne(ctx, bson.M{
-		"_id": id,
+	objectId, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return nil, err
+	}
+
+	err = r.collection.FindOne(ctx, bson.M{
+		"_id": objectId,
 	}).Decode(&game)
 	if err != nil {
 		return nil, err
