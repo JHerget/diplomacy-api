@@ -1,11 +1,11 @@
 package main
 
 import (
-	"diplomacy-api/internal/lambdas/orders"
+	"diplomacy-api/internal/lambdas"
 
 	"github.com/aws/aws-lambda-go/lambda"
 )
 
 func main() {
-	lambda.Start(orders.Handler)
+	lambda.Start(lambdas.OrdersHandler)
 }

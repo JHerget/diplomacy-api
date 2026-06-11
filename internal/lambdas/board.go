@@ -1,4 +1,4 @@
-package board
+package lambdas
 
 import (
 	"context"
@@ -9,7 +9,7 @@ import (
 	"github.com/aws/aws-lambda-go/events"
 )
 
-func Handler(ctx context.Context, event events.APIGatewayV2HTTPRequest) (events.APIGatewayV2HTTPResponse, error) {
+func BoardHandler(ctx context.Context, event events.APIGatewayV2HTTPRequest) (events.APIGatewayV2HTTPResponse, error) {
 	db, err := mongo.NewMongoDB(ctx)
 	if err != nil {
 		return http.InternalServerError(&http.Error{

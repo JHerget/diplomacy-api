@@ -1,11 +1,11 @@
 package main
 
 import (
-	"diplomacy-api/internal/lambdas/test"
+	"diplomacy-api/internal/lambdas"
 
 	"github.com/aws/aws-lambda-go/lambda"
 )
 
 func main() {
-	lambda.Start(test.Handler)
+	lambda.Start(lambdas.TestHandler)
 }
