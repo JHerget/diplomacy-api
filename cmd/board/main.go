@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"diplomacy-api/internal/game"
+	"diplomacy-api/internal/http"
 	"diplomacy-api/internal/platform/mongo"
 	"encoding/json"
 
@@ -13,9 +14,7 @@ import (
 func handler(ctx context.Context, event events.APIGatewayV2HTTPRequest) (events.APIGatewayV2HTTPResponse, error) {
 	db, err := mongo.NewMongoDB(ctx)
 	if err != nil {
-		return events.APIGatewayV2HTTPResponse{
-			StatusCode: 500,
-		}, err
+		http.InternalServerError()
 	}
 
 	gameRepo := game.MakeRepository(db)

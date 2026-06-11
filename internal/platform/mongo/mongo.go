@@ -21,7 +21,7 @@ func NewMongoDB(ctx context.Context) (*mongo.Client, error) {
 	}
 
 	if secrets.MongoDBConnectionString == "" {
-		return nil, errors.New("missing mongodb:connection-string in diplomacy-credentials secret")
+		return nil, errors.New("missing mongodb:connection-string")
 	}
 
 	opts := options.Client().ApplyURI(secrets.MongoDBConnectionString)
