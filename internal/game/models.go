@@ -1,4 +1,4 @@
-package board
+package game
 
 import "regexp"
 
@@ -153,7 +153,7 @@ type Game struct {
 	Map     struct {
 		Id       string `json:"id" bson:"id"`
 		Filename string `json:"filename" bson:"filename"`
-	}
+	} `json:"map" bson:"map"`
 	Board         []Providence `json:"board" bson:"board"`
 	Players       []Player     `json:"players" bson:"players"`
 	Turns         []Turn       `json:"turns" bson:"turns"`

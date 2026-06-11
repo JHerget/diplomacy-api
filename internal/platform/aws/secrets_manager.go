@@ -39,7 +39,7 @@ func (s *SecretsManager) Get(ctx context.Context, secretName string) (*string, e
 	return result.SecretString, nil
 }
 
-func (s *SecretsManager) GetJson(ctx context.Context, secretName string) (*Secrets, error) {
+func (s *SecretsManager) GetJSON(ctx context.Context, secretName string) (*Secrets, error) {
 	rawSecrets, err := s.Get(ctx, secretName)
 	if err != nil {
 		return nil, err

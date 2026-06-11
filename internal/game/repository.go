@@ -2,7 +2,6 @@ package game
 
 import (
 	"context"
-	"diplomacy-api/internal/board"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -19,8 +18,8 @@ func MakeRepository(db *mongo.Client) *Repository {
 	}
 }
 
-func (r *Repository) Get(ctx context.Context, id string) (*board.Game, error) {
-	var game board.Game
+func (r *Repository) Get(ctx context.Context, id string) (*Game, error) {
+	var game Game
 
 	objectId, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
@@ -37,8 +36,8 @@ func (r *Repository) Get(ctx context.Context, id string) (*board.Game, error) {
 	return &game, nil
 }
 
-func (r *Repository) GetAll(ctx context.Context) ([]*board.Game, error) {
-	var games []*board.Game
+func (r *Repository) GetAll(ctx context.Context) ([]*Game, error) {
+	var games []*Game
 
 	cursor, err := r.collection.Find(ctx, bson.M{})
 	if err != nil {

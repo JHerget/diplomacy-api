@@ -13,6 +13,9 @@ build: format
 publish: build
 	terraform -chdir=terraform apply
 
+start: format
+	go run ./cmd/local
+
 format:
 	gofmt -w .
 

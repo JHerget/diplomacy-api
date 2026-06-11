@@ -2,20 +2,21 @@ package http
 
 import (
 	"encoding/json"
+	"net/http"
 
 	"github.com/aws/aws-lambda-go/events"
 )
 
-func Ok[T any](body *T) events.APIGatewayV2HTTPResponse {
-	return ResponseWithBody(200, body)
+func OK[T any](body *T) events.APIGatewayV2HTTPResponse {
+	return ResponseWithBody(http.StatusOK, body)
 }
 
 func BadRequest[T any](body *T) events.APIGatewayV2HTTPResponse {
-	return ResponseWithBody(400, body)
+	return ResponseWithBody(http.StatusBadRequest, body)
 }
 
 func InternalServerError[T any](body *T) events.APIGatewayV2HTTPResponse {
-	return ResponseWithBody(500, body)
+	return ResponseWithBody(http.StatusInternalServerError, body)
 }
 
 func ResponseNoBody(statusCode int) events.APIGatewayV2HTTPResponse {

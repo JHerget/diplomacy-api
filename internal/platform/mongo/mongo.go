@@ -15,7 +15,7 @@ func NewMongoDB(ctx context.Context) (*mongo.Client, error) {
 		return nil, err
 	}
 
-	secrets, err := secretsManager.GetJson(ctx, "diplomacy-credentials")
+	secrets, err := secretsManager.GetJSON(ctx, "diplomacy-credentials")
 	if err != nil {
 		return nil, err
 	}

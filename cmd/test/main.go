@@ -1,19 +1,11 @@
 package main
 
 import (
-	"context"
+	"diplomacy-api/internal/lambdas/test"
 
-	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
 )
 
-func handler(ctx context.Context, event events.APIGatewayV2HTTPRequest) (events.APIGatewayV2HTTPResponse, error) {
-	return events.APIGatewayV2HTTPResponse{
-		StatusCode: 200,
-		Body:       "Test lambda",
-	}, nil
-}
-
 func main() {
-	lambda.Start(handler)
+	lambda.Start(test.Handler)
 }
