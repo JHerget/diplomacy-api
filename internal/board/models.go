@@ -113,7 +113,7 @@ type Player struct {
 }
 
 type Phase struct {
-	Id          string `json:"id" bson:"id"`
+	Id          string `json:"id" bson:"_id"`
 	Name        string `json:"name" bson:"name"`
 	Description string `json:"description" bson:"description"`
 	PhaseOrder  int8   `json:"phaseOrder" bson:"phaseOrder"`
@@ -137,7 +137,7 @@ type Order struct {
 }
 
 type User struct {
-	Id          string `json:"id" bson:"id"`
+	Id          string `json:"id" bson:"_id"`
 	FirstName   string `json:"firstName" bson:"firstName"`
 	LastName    string `json:"lastName" bson:"lastName"`
 	Username    string `json:"username" bson:"username"`
@@ -148,7 +148,7 @@ type User struct {
 }
 
 type Game struct {
-	Id      string `json:"id" bson:"id"`
+	Id      string `json:"id" bson:"_id"`
 	OwnerId string `json:"ownerId" bson:"ownerId"`
 	Map     struct {
 		Id       string `json:"id" bson:"id"`
@@ -167,7 +167,7 @@ type Game struct {
 }
 
 type Map struct {
-	Id          string       `json:"id" bson:"id"`
+	Id          string       `json:"id" bson:"_id"`
 	Filename    string       `json:"filename" bson:"filename"`
 	Name        string       `json:"name" bson:"name"`
 	Players     []Player     `json:"players" bson:"players"`

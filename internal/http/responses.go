@@ -36,8 +36,8 @@ func ResponseWithBody[T any](statusCode int, body *T) events.APIGatewayV2HTTPRes
 
 	return events.APIGatewayV2HTTPResponse{
 		StatusCode: statusCode,
-		Body: string(jsonBody),
-		Headers: map[string]string {
+		Body:       string(jsonBody),
+		Headers: map[string]string{
 			"Content-Type": "application/json",
 		},
 	}
