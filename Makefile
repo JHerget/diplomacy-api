@@ -14,7 +14,8 @@ publish: build
 	terraform -chdir=terraform apply
 
 start: format
-	go run ./cmd/local
+	go build ./cmd/local
+	AWS_REGION=us-west-2 go run ./cmd/local
 
 format:
 	gofmt -w .
