@@ -4,6 +4,7 @@ import (
 	"context"
 	"diplomacy-api/internal/game"
 	"diplomacy-api/internal/http"
+	"diplomacy-api/internal/platform/aws"
 	"diplomacy-api/internal/platform/mongo"
 
 	"github.com/aws/aws-lambda-go/events"
@@ -19,8 +20,14 @@ func BoardHandler(ctx context.Context, event events.APIGatewayV2HTTPRequest) (ev
 		}), err
 	}
 
-	gameRepo := game.MakeRepository(db)
+	s3, err := aws.NewS3(ctx)
+	if err != nil {
+		return http.InternalServerError(&http.Error{
+			Message: err.Error(),
+		}), err
+	}
 
+	gameRepo := game.MakeRepository(db)
 	game, err := gameRepo.Get(ctx, gameId)
 	if err != nil {
 		return http.InternalServerError(&http.Error{
@@ -28,5 +35,12 @@ func BoardHandler(ctx context.Context, event events.APIGatewayV2HTTPRequest) (ev
 		}), err
 	}
 
-	return http.OK(game), nil
+	buf, err := s3.Get(ctx, "diplomacy-maps", game.Map.Filename)
+	if err != nil {
+		return http.InternalServerError(&http.Error{
+			Message: err.Error(),
+		}), err
+	}
+
+	return http.OK(&buf), nil
 }

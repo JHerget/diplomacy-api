@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"diplomacy-api/internal/lambdas"
+	"encoding/base64"
 	"io"
 	"log"
 	"net/http"
@@ -90,6 +91,16 @@ func writeAPIGatewayV2Response(w http.ResponseWriter, res events.APIGatewayV2HTT
 		status = http.StatusOK
 	}
 
+	body := []byte(res.Body)
+	if res.IsBase64Encoded {
+		decodedBody, err := base64.StdEncoding.DecodeString(res.Body)
+		if err != nil {
+			http.Error(w, "failed to decode response body", http.StatusInternalServerError)
+			return
+		}
+		body = decodedBody
+	}
+
 	w.WriteHeader(status)
-	_, _ = w.Write([]byte(res.Body))
+	_, _ = w.Write(body)
 }

@@ -1,6 +1,7 @@
 package http
 
 import (
+	"encoding/base64"
 	"encoding/json"
 	"net/http"
 
@@ -30,16 +31,30 @@ func ResponseWithBody[T any](statusCode int, body *T) events.APIGatewayV2HTTPRes
 		return ResponseNoBody(statusCode)
 	}
 
-	jsonBody, err := json.Marshal(body)
-	if err != nil {
-		return ResponseNoBody(statusCode)
-	}
+	switch v := any(*body).(type) {
+	case []byte:
+		return events.APIGatewayV2HTTPResponse{
+			StatusCode: statusCode,
+			Body:       base64.StdEncoding.EncodeToString(v),
+			Headers: map[string]string{
+				"Content-Type":  "image/png",
+				"Cache-Control": "no-store",
+			},
+			IsBase64Encoded: true,
+		}
 
-	return events.APIGatewayV2HTTPResponse{
-		StatusCode: statusCode,
-		Body:       string(jsonBody),
-		Headers: map[string]string{
-			"Content-Type": "application/json",
-		},
+	default:
+		jsonBody, err := json.Marshal(body)
+		if err != nil {
+			return ResponseNoBody(statusCode)
+		}
+
+		return events.APIGatewayV2HTTPResponse{
+			StatusCode: statusCode,
+			Body:       string(jsonBody),
+			Headers: map[string]string{
+				"Content-Type": "application/json",
+			},
+		}
 	}
 }
