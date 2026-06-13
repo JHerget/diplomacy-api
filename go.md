@@ -379,7 +379,54 @@ func sign(p1, p2, p3 image.Point) int {
 }
 ```
 
-Implement `drawLine` with Bresenham's algorithm so the triangle outline is deterministic and dependency-free.
+Implement `drawLine` with Bresenham's algorithm so the triangle outline is deterministic and dependency-free:
+
+```go
+func drawLine(img *image.RGBA, from, to image.Point, c color.RGBA) {
+    x0 := from.X
+    y0 := from.Y
+    x1 := to.X
+    y1 := to.Y
+
+    dx := abs(x1 - x0)
+    dy := -abs(y1 - y0)
+
+    sx := -1
+    if x0 < x1 {
+        sx = 1
+    }
+
+    sy := -1
+    if y0 < y1 {
+        sy = 1
+    }
+
+    err := dx + dy
+    for {
+        img.Set(x0, y0, c)
+        if x0 == x1 && y0 == y1 {
+            break
+        }
+
+        e2 := 2 * err
+        if e2 >= dy {
+            err += dy
+            x0 += sx
+        }
+        if e2 <= dx {
+            err += dx
+            y0 += sy
+        }
+    }
+}
+
+func abs(n int) int {
+    if n < 0 {
+        return -n
+    }
+    return n
+}
+```
 
 ### Full draw flow
 

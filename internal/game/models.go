@@ -66,8 +66,8 @@ type Unit struct {
 }
 
 type Coordinates struct {
-	X float32 `json:"x" bson:"x"`
-	Y float32 `json:"y" bson:"y"`
+	X float64 `json:"x" bson:"x"`
+	Y float64 `json:"y" bson:"y"`
 }
 
 type LocationReference struct {
@@ -123,16 +123,16 @@ type Turn struct {
 	Id         string  `json:"id" bson:"id"`
 	PhaseId    string  `json:"phaseId" bson:"phaseId"`
 	Orders     []Order `json:"orders" bson:"orders"`
-	TurnNumber int8    `json:"turnNumber" bson:"turnNumber"`
-	StartDate  int64   `json:"startDate" bson:"startDate"`
-	EndDate    int64   `json:"endDate" bson:"endDate"`
+	TurnNumber int     `json:"turnNumber" bson:"turnNumber"`
+	StartDate  int     `json:"startDate" bson:"startDate"`
+	EndDate    int     `json:"endDate" bson:"endDate"`
 }
 
 type Order struct {
 	Id          string `json:"id" bson:"id"`
 	PhaseId     string `json:"phaseId" bson:"phaseId"`
 	PlayerName  string `json:"playerName" bson:"playerName"`
-	CreatedDate int64  `json:"createdDate" bson:"createdDate"`
+	CreatedDate int    `json:"createdDate" bson:"createdDate"`
 	Value       string `json:"value" bson:"value"`
 }
 
@@ -157,11 +157,11 @@ type Game struct {
 	Board         []Providence `json:"board" bson:"board"`
 	Players       []Player     `json:"players" bson:"players"`
 	Turns         []Turn       `json:"turns" bson:"turns"`
-	DaysPerTurn   int8         `json:"daysPerTurn" bson:"daysPerTurn"`
-	TurnStartHour int8         `json:"turnStartHour" bson:"turnStartHour"`
-	Timezone      int8         `json:"timezone" bson:"timezone"`
-	StartDate     int64        `json:"startDate" bson:"startDate"`
-	EndDate       int64        `json:"endDate" bson:"endDate"`
+	DaysPerTurn   int          `json:"daysPerTurn" bson:"daysPerTurn"`
+	TurnStartHour int          `json:"turnStartHour" bson:"turnStartHour"`
+	Timezone      int          `json:"timezone" bson:"timezone"`
+	StartDate     int          `json:"startDate" bson:"startDate"`
+	EndDate       int          `json:"endDate" bson:"endDate"`
 	InProgress    bool         `json:"inProgress" bson:"inProgress"`
 	IsDeleted     bool         `json:"isDeleted" bson:"isDeleted"`
 }
