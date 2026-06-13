@@ -2,6 +2,7 @@ package lambdas
 
 import (
 	"context"
+	"diplomacy-api/internal/board"
 	"diplomacy-api/internal/game"
 	"diplomacy-api/internal/http"
 	"diplomacy-api/internal/platform/aws"
@@ -40,6 +41,13 @@ func BoardHandler(ctx context.Context, event events.APIGatewayV2HTTPRequest) (ev
 		return http.InternalServerError(&http.Error{
 			Message: err.Error(),
 		}), err
+	}
+
+	buf, err = board.Draw(buf, game)
+	if err != nil {
+		return http.InternalServerError(&http.Error{
+			Message: err.Error(),
+		}), nil
 	}
 
 	return http.OK(&buf), nil
