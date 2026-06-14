@@ -62,7 +62,7 @@ const applyMove = (move: MoveCommand): void => {
     });
 };
 
-const applyRetreat = (retreat: MoveCommand): void => {};
+const applyRetreat = (retreat: MoveCommand): void => { };
 
 const applySupport = (support: SupportCommand): void => {
     const dest = boardMap.get(support.move.destination.id)!;
@@ -75,9 +75,9 @@ const applySupport = (support: SupportCommand): void => {
     attack.support.push(support.location.id);
 };
 
-const applyConvoy = (convoy: ConvoyCommand): void => {};
-const applyReinforce = (reinforce: ReinforceCommand): void => {};
-const applyDisband = (disband: DisbandCommand): void => {};
+const applyConvoy = (convoy: ConvoyCommand): void => { };
+const applyReinforce = (reinforce: ReinforceCommand): void => { };
+const applyDisband = (disband: DisbandCommand): void => { };
 
 const finalizeState = (): Providence[] => {
     const board = [];
