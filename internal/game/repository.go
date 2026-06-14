@@ -12,7 +12,7 @@ type Repository struct {
 	collection *mongo.Collection
 }
 
-func MakeRepository(db *mongo.Client) *Repository {
+func NewRepository(db *mongo.Client) *Repository {
 	return &Repository{
 		collection: db.Database("diplomacy").Collection("games"),
 	}

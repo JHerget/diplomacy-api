@@ -28,7 +28,7 @@ func BoardHandler(ctx context.Context, event events.APIGatewayV2HTTPRequest) (ev
 		}), err
 	}
 
-	gameRepo := game.MakeRepository(db)
+	gameRepo := game.NewRepository(db)
 	game, err := gameRepo.Get(ctx, gameId)
 	if err != nil {
 		return http.InternalServerError(&http.Error{
