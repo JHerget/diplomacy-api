@@ -2,6 +2,7 @@ package board
 
 import (
 	"diplomacy-api/internal/game"
+	"diplomacy-api/internal/orders"
 	"diplomacy-api/internal/utils/list"
 )
 
@@ -18,9 +19,11 @@ type node struct {
 }
 
 func ApplyTurn(mapBuf []byte, turn *game.Turn) ([]byte, error) {
-	orders := list.Filter(turn.Orders, func(o *game.Order) bool {
+	allOrders := list.Filter(turn.Orders, func(o *game.Order) bool {
 		return o.PhaseId == turn.PhaseId
 	})
+	allCommands := orders.GetCommands(allOrders)
+	validCommands := orders.ValidateCommands(allCommands)
 
 	return mapBuf, nil
 }
