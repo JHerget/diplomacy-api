@@ -7,7 +7,7 @@ import (
 	"diplomacy-api/internal/http"
 	"diplomacy-api/internal/platform/aws"
 	"diplomacy-api/internal/platform/mongo"
-	"diplomacy-api/internal/utils/list"
+	"diplomacy-api/internal/utils"
 	"encoding/json"
 	"fmt"
 
@@ -54,7 +54,7 @@ func OrdersHandler(ctx context.Context, event events.APIGatewayV2HTTPRequest) (e
 		}), err
 	}
 
-	turn, ok := list.Find(g.Turns, func(t *game.Turn) bool {
+	turn, ok := utils.Find(g.Turns, func(t *game.Turn) bool {
 		return t.Id == turnId
 	})
 	if !ok {
@@ -71,18 +71,19 @@ func OrdersHandler(ctx context.Context, event events.APIGatewayV2HTTPRequest) (e
 		Value:       order.Value,
 	})
 
+	newBoard, err := board.ApplyTurn(g.Board, turn)
+	if err != nil {
+		return http.InternalServerError(&http.Error{
+			Message: err.Error(),
+		}), nil
+	}
+	g.Board = newBoard
+
 	buf, err := s3.Get(ctx, "diplomacy-maps", g.Map.Filename)
 	if err != nil {
 		return http.InternalServerError(&http.Error{
 			Message: err.Error(),
 		}), err
-	}
-
-	buf, err = board.ApplyTurn(buf, turn)
-	if err != nil {
-		return http.InternalServerError(&http.Error{
-			Message: err.Error(),
-		}), nil
 	}
 
 	buf, err = board.Draw(buf, g)

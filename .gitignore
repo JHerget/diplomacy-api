@@ -27,3 +27,4 @@ terraform.tfstate.*
 *.tfplan
 *.tfvars
 *.tfvars.json
+.gocache

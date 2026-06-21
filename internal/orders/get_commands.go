@@ -7,19 +7,19 @@ import (
 
 type rawCommand struct {
 	PlayerName string
-	Value string
+	Value      string
 }
 
 func GetCommands(orders []game.Order) game.Commands {
 	rawCommands := process(orders)
 	commands := game.Commands{
-		Hold: []game.MoveCommand{},
-		Move: []game.MoveCommand{},
-		Retreat: []game.MoveCommand{},
-		Support: []game.SupportCommand{},
-		Convoy: []game.SupportCommand{},
+		Hold:      []game.MoveCommand{},
+		Move:      []game.MoveCommand{},
+		Retreat:   []game.MoveCommand{},
+		Support:   []game.SupportCommand{},
+		Convoy:    []game.SupportCommand{},
 		Reinforce: []game.AdjustCommand{},
-		Disband: []game.AdjustCommand{},
+		Disband:   []game.AdjustCommand{},
 	}
 
 	for _, raw := range rawCommands {
@@ -28,9 +28,9 @@ func GetCommands(orders []game.Order) game.Commands {
 		result = game.CommandsRegex.Hold.FindStringSubmatch(raw.Value)
 		if result != nil {
 			commands.Hold = append(commands.Hold, game.MoveCommand{
-				PlayerName: raw.PlayerName,
-				UnitType: parseUnit(result[1]),
-				Location: parseLocationReference(result[2]),
+				PlayerName:  raw.PlayerName,
+				UnitType:    parseUnit(result[1]),
+				Location:    parseLocationReference(result[2]),
 				Destination: parseLocationReference(result[2]),
 			})
 			continue
@@ -39,20 +39,20 @@ func GetCommands(orders []game.Order) game.Commands {
 		result = game.CommandsRegex.Move.FindStringSubmatch(raw.Value)
 		if result != nil {
 			commands.Move = append(commands.Move, game.MoveCommand{
-				PlayerName: raw.PlayerName,
-				UnitType: parseUnit(result[1]),
-				Location: parseLocationReference(result[2]),
+				PlayerName:  raw.PlayerName,
+				UnitType:    parseUnit(result[1]),
+				Location:    parseLocationReference(result[2]),
 				Destination: parseLocationReference(result[3]),
 			})
 			continue
 		}
-		
+
 		result = game.CommandsRegex.Retreat.FindStringSubmatch(raw.Value)
 		if result != nil {
 			commands.Retreat = append(commands.Retreat, game.MoveCommand{
-				PlayerName: raw.PlayerName,
-				UnitType: parseUnit(result[1]),
-				Location: parseLocationReference(result[2]),
+				PlayerName:  raw.PlayerName,
+				UnitType:    parseUnit(result[1]),
+				Location:    parseLocationReference(result[2]),
 				Destination: parseLocationReference(result[3]),
 			})
 			continue
@@ -68,12 +68,12 @@ func GetCommands(orders []game.Order) game.Commands {
 
 			commands.Support = append(commands.Support, game.SupportCommand{
 				PlayerName: raw.PlayerName,
-				UnitType: parseUnit(result[1]),
-				Location: parseLocationReference(result[2]),
+				UnitType:   parseUnit(result[1]),
+				Location:   parseLocationReference(result[2]),
 				Move: game.MoveCommand{
-					PlayerName: raw.PlayerName,
-					UnitType: parseUnit(result[3]),
-					Location: parseLocationReference(result[4]),
+					PlayerName:  raw.PlayerName,
+					UnitType:    parseUnit(result[3]),
+					Location:    parseLocationReference(result[4]),
 					Destination: moveDest,
 				},
 			})
@@ -84,12 +84,12 @@ func GetCommands(orders []game.Order) game.Commands {
 		if result != nil {
 			commands.Convoy = append(commands.Convoy, game.SupportCommand{
 				PlayerName: raw.PlayerName,
-				UnitType: parseUnit(result[1]),
-				Location: parseLocationReference(result[2]),
+				UnitType:   parseUnit(result[1]),
+				Location:   parseLocationReference(result[2]),
 				Move: game.MoveCommand{
-					PlayerName: raw.PlayerName,
-					UnitType: parseUnit(result[3]),
-					Location: parseLocationReference(result[4]),
+					PlayerName:  raw.PlayerName,
+					UnitType:    parseUnit(result[3]),
+					Location:    parseLocationReference(result[4]),
 					Destination: parseLocationReference(result[5]),
 				},
 			})
@@ -100,8 +100,8 @@ func GetCommands(orders []game.Order) game.Commands {
 		if result != nil {
 			commands.Reinforce = append(commands.Reinforce, game.AdjustCommand{
 				PlayerName: raw.PlayerName,
-				UnitType: parseUnit(result[1]),
-				Location: parseLocationReference(result[2]),
+				UnitType:   parseUnit(result[1]),
+				Location:   parseLocationReference(result[2]),
 			})
 			continue
 		}
@@ -110,8 +110,8 @@ func GetCommands(orders []game.Order) game.Commands {
 		if result != nil {
 			commands.Disband = append(commands.Disband, game.AdjustCommand{
 				PlayerName: raw.PlayerName,
-				UnitType: parseUnit(result[1]),
-				Location: parseLocationReference(result[2]),
+				UnitType:   parseUnit(result[1]),
+				Location:   parseLocationReference(result[2]),
 			})
 			continue
 		}
@@ -129,7 +129,7 @@ func process(orders []game.Order) []rawCommand {
 		for _, c := range commands {
 			values = append(values, rawCommand{
 				PlayerName: o.PlayerName,
-				Value: strings.ToLower(strings.TrimSpace(c)),
+				Value:      strings.ToLower(strings.TrimSpace(c)),
 			})
 		}
 	}
@@ -145,11 +145,10 @@ func parseUnit(rawUnit string) game.UnitType {
 	return game.UnitFleet
 }
 
-
 func parseLocationReference(rawLocation string) game.LocationReference {
 	locParts := strings.Split(rawLocation, "-")
 	defaultRef := game.LocationReference{
-		Id: locParts[0],
+		Id:    locParts[0],
 		Coast: nil,
 	}
 
@@ -163,7 +162,7 @@ func parseLocationReference(rawLocation string) game.LocationReference {
 	switch coast {
 	case game.NorthCoast, game.SouthCoast, game.EastCoast, game.WestCoast:
 		return game.LocationReference{
-			Id: id,
+			Id:    id,
 			Coast: &coast,
 		}
 	default:
