@@ -5,6 +5,75 @@
         "version": "1.0.0"
     },
     "paths": {
+        "/games": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                },
+                "x-amazon-apigateway-integration": {
+                    "type": "AWS_PROXY",
+                    "httpMethod": "POST",
+                    "payloadFormatVersion": "2.0",
+                    "uri": "${games_arn}"
+                }
+            },
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                },
+                "x-amazon-apigateway-integration": {
+                    "type": "AWS_PROXY",
+                    "httpMethod": "POST",
+                    "payloadFormatVersion": "2.0",
+                    "uri": "${games_arn}"
+                }
+            }
+        },
+        "/games/{gid}": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                },
+                "x-amazon-apigateway-integration": {
+                    "type": "AWS_PROXY",
+                    "httpMethod": "POST",
+                    "payloadFormatVersion": "2.0",
+                    "uri": "${games_arn}"
+                }
+            },
+            "put": {
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                },
+                "x-amazon-apigateway-integration": {
+                    "type": "AWS_PROXY",
+                    "httpMethod": "POST",
+                    "payloadFormatVersion": "2.0",
+                    "uri": "${games_arn}"
+                }
+            },
+            "delete": {
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                },
+                "x-amazon-apigateway-integration": {
+                    "type": "AWS_PROXY",
+                    "httpMethod": "POST",
+                    "payloadFormatVersion": "2.0",
+                    "uri": "${games_arn}"
+                }
+            }
+        },
         "/games/{gid}/board": {
             "get": {
                 "responses": {
@@ -17,6 +86,75 @@
                     "httpMethod": "POST",
                     "payloadFormatVersion": "2.0",
                     "uri": "${board_arn}"
+                }
+            }
+        },
+        "/games/{gid}/turns": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                },
+                "x-amazon-apigateway-integration": {
+                    "type": "AWS_PROXY",
+                    "httpMethod": "POST",
+                    "payloadFormatVersion": "2.0",
+                    "uri": "${turns_arn}"
+                }
+            },
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                },
+                "x-amazon-apigateway-integration": {
+                    "type": "AWS_PROXY",
+                    "httpMethod": "POST",
+                    "payloadFormatVersion": "2.0",
+                    "uri": "${turns_arn}"
+                }
+            }
+        },
+        "/games/{gid}/turns/{tid}": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                },
+                "x-amazon-apigateway-integration": {
+                    "type": "AWS_PROXY",
+                    "httpMethod": "POST",
+                    "payloadFormatVersion": "2.0",
+                    "uri": "${turns_arn}"
+                }
+            },
+            "put": {
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                },
+                "x-amazon-apigateway-integration": {
+                    "type": "AWS_PROXY",
+                    "httpMethod": "POST",
+                    "payloadFormatVersion": "2.0",
+                    "uri": "${turns_arn}"
+                }
+            },
+            "delete": {
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                },
+                "x-amazon-apigateway-integration": {
+                    "type": "AWS_PROXY",
+                    "httpMethod": "POST",
+                    "payloadFormatVersion": "2.0",
+                    "uri": "${turns_arn}"
                 }
             }
         },
@@ -60,6 +198,159 @@
                     "httpMethod": "POST",
                     "payloadFormatVersion": "2.0",
                     "uri": "${orders_arn}"
+                }
+            }
+        },
+        "/games/{gid}/players": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                },
+                "x-amazon-apigateway-integration": {
+                    "type": "AWS_PROXY",
+                    "httpMethod": "POST",
+                    "payloadFormatVersion": "2.0",
+                    "uri": "${players_arn}"
+                }
+            },
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                },
+                "x-amazon-apigateway-integration": {
+                    "type": "AWS_PROXY",
+                    "httpMethod": "POST",
+                    "payloadFormatVersion": "2.0",
+                    "uri": "${players_arn}"
+                }
+            }
+        },
+        "/games/{gid}/players/{tid}": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                },
+                "x-amazon-apigateway-integration": {
+                    "type": "AWS_PROXY",
+                    "httpMethod": "POST",
+                    "payloadFormatVersion": "2.0",
+                    "uri": "${players_arn}"
+                }
+            },
+            "put": {
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                },
+                "x-amazon-apigateway-integration": {
+                    "type": "AWS_PROXY",
+                    "httpMethod": "POST",
+                    "payloadFormatVersion": "2.0",
+                    "uri": "${players_arn}"
+                }
+            },
+            "delete": {
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                },
+                "x-amazon-apigateway-integration": {
+                    "type": "AWS_PROXY",
+                    "httpMethod": "POST",
+                    "payloadFormatVersion": "2.0",
+                    "uri": "${players_arn}"
+                }
+            }
+        },
+        "/phases": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                },
+                "x-amazon-apigateway-integration": {
+                    "type": "AWS_PROXY",
+                    "httpMethod": "POST",
+                    "payloadFormatVersion": "2.0",
+                    "uri": "${phases_arn}"
+                }
+            }
+        },
+        "/maps": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                },
+                "x-amazon-apigateway-integration": {
+                    "type": "AWS_PROXY",
+                    "httpMethod": "POST",
+                    "payloadFormatVersion": "2.0",
+                    "uri": "${maps_arn}"
+                }
+            },
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                },
+                "x-amazon-apigateway-integration": {
+                    "type": "AWS_PROXY",
+                    "httpMethod": "POST",
+                    "payloadFormatVersion": "2.0",
+                    "uri": "${maps_arn}"
+                }
+            }
+        },
+        "/maps/{mid}": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                },
+                "x-amazon-apigateway-integration": {
+                    "type": "AWS_PROXY",
+                    "httpMethod": "POST",
+                    "payloadFormatVersion": "2.0",
+                    "uri": "${maps_arn}"
+                }
+            },
+            "put": {
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                },
+                "x-amazon-apigateway-integration": {
+                    "type": "AWS_PROXY",
+                    "httpMethod": "POST",
+                    "payloadFormatVersion": "2.0",
+                    "uri": "${maps_arn}"
+                }
+            },
+            "delete": {
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                },
+                "x-amazon-apigateway-integration": {
+                    "type": "AWS_PROXY",
+                    "httpMethod": "POST",
+                    "payloadFormatVersion": "2.0",
+                    "uri": "${maps_arn}"
                 }
             }
         },

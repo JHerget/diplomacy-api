@@ -1,5 +1,20 @@
 locals {
   lambdas = {
+    "turns" = {
+      zip = "../dist/turns.zip"
+    }
+    "games" = {
+      zip = "../dist/games.zip"
+    }
+    "maps" = {
+      zip = "../dist/maps.zip"
+    }
+    "phases" = {
+      zip = "../dist/phases.zip"
+    }
+    "players" = {
+      zip = "../dist/players.zip"
+    }
     "board" = {
       zip = "../dist/board.zip"
     }

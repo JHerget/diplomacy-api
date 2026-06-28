@@ -6,6 +6,11 @@ variable "aws_region" {
 locals {
   openapi = templatefile("openapi.json", {
     region     = var.aws_region
+    turns_arn  = aws_lambda_function.fn["turns"].arn
+    games_arn  = aws_lambda_function.fn["games"].arn
+    maps_arn  = aws_lambda_function.fn["maps"].arn
+    phases_arn  = aws_lambda_function.fn["phases"].arn
+    players_arn  = aws_lambda_function.fn["players"].arn
     board_arn  = aws_lambda_function.fn["board"].arn
     orders_arn = aws_lambda_function.fn["orders"].arn
     test_arn   = aws_lambda_function.fn["test"].arn
