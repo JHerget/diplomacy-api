@@ -2,7 +2,8 @@ package main
 
 import (
 	"context"
-	"diplomacy-api/internal/lambdas"
+	"diplomacy-api/internal/board"
+	"diplomacy-api/internal/orders"
 	"encoding/base64"
 	"io"
 	"log"
@@ -17,9 +18,8 @@ type lambdaHandler func(context.Context, events.APIGatewayV2HTTPRequest) (events
 func main() {
 	mux := http.NewServeMux()
 
-	mux.HandleFunc("GET /v1/test", adapt(lambdas.TestHandler))
-	mux.HandleFunc("GET /v1/games/{gid}/board", adapt(lambdas.BoardHandler))
-	mux.HandleFunc("POST /v1/games/{gid}/turns/{tid}/orders", adapt(lambdas.OrdersHandler))
+	mux.HandleFunc("GET /v1/games/{gid}/board", adapt(board.Get))
+	mux.HandleFunc("POST /v1/games/{gid}/turns/{tid}/orders", adapt(orders.Create))
 
 	log.Println("local API listening on http://localhost:8080")
 	log.Fatal(http.ListenAndServe(":8080", mux))

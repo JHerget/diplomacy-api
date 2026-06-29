@@ -1,11 +1,28 @@
 package main
 
 import (
-	"diplomacy-api/internal/lambdas"
+	"context"
+	"diplomacy-api/internal/board"
+	h "diplomacy-api/internal/http"
+	"net/http"
 
+	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
 )
 
+func handler(ctx context.Context, event events.APIGatewayV2HTTPRequest) (events.APIGatewayV2HTTPResponse, error) {
+	method := event.RequestContext.HTTP.Method
+
+	switch {
+	case method == http.MethodGet:
+		return board.Get(ctx, event)
+	default:
+		return h.BadRequest(&h.Error{
+			Message: "method not allowed",
+		}), nil
+	}
+}
+
 func main() {
-	lambda.Start(lambdas.BoardHandler)
+	lambda.Start(handler)
 }
