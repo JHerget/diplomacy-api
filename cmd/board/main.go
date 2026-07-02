@@ -13,8 +13,8 @@ import (
 func handler(ctx context.Context, event events.APIGatewayV2HTTPRequest) (events.APIGatewayV2HTTPResponse, error) {
 	method := event.RequestContext.HTTP.Method
 
-	switch {
-	case method == http.MethodGet:
+	switch method {
+	case http.MethodGet:
 		return board.Get(ctx, event)
 	default:
 		return h.BadRequest(&h.Error{

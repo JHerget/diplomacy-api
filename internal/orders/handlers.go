@@ -80,7 +80,18 @@ func Create(ctx context.Context, event events.APIGatewayV2HTTPRequest) (events.A
 		Value:       order.Value,
 	})
 
-	newBoard, err := board.ApplyTurn(g.Board, turn)
+	allOrders := utils.Filter(turn.Orders, func(o *game.Order) bool {
+		return o.PhaseId == turn.PhaseId
+	})
+	allCommands := GetCommands(allOrders)
+	validCommands := ValidateCommands(allCommands, g.Board)
+
+	if turn.TurnNumber%2 != 0 {
+		validCommands.Reinforce = nil
+		validCommands.Disband = nil
+	}
+
+	newBoard, err := board.ApplyTurn(g.Board, validCommands)
 	if err != nil {
 		return h.InternalServerError(&h.Error{
 			Message: err.Error(),

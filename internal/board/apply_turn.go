@@ -2,7 +2,6 @@ package board
 
 import (
 	"diplomacy-api/internal/game"
-	"diplomacy-api/internal/orders"
 	"diplomacy-api/internal/utils"
 )
 
@@ -22,13 +21,7 @@ type attack struct {
 	Support    []string
 }
 
-func ApplyTurn(board []game.Providence, turn *game.Turn) ([]game.Providence, error) {
-	allOrders := utils.Filter(turn.Orders, func(o *game.Order) bool {
-		return o.PhaseId == turn.PhaseId
-	})
-	allCommands := orders.GetCommands(allOrders)
-	validCommands := orders.ValidateCommands(allCommands, board)
-
+func ApplyTurn(board []game.Providence, commands game.Commands) ([]game.Providence, error) {
 	a := applicator{
 		BoardMap: make(map[string]*node),
 	}
@@ -40,15 +33,12 @@ func ApplyTurn(board []game.Providence, turn *game.Turn) ([]game.Providence, err
 		}
 	}
 
-	utils.ForEach(validCommands.Move, a.ApplyMove)
-	utils.ForEach(validCommands.Retreat, a.ApplyRetreat)
-	utils.ForEach(validCommands.Support, a.ApplySupport)
-	utils.ForEach(validCommands.Convoy, a.ApplyConvoy)
-
-	if turn.TurnNumber%2 == 0 {
-		utils.ForEach(validCommands.Reinforce, a.ApplyReinforce)
-		utils.ForEach(validCommands.Disband, a.ApplyDisband)
-	}
+	utils.ForEach(commands.Move, a.ApplyMove)
+	utils.ForEach(commands.Retreat, a.ApplyRetreat)
+	utils.ForEach(commands.Support, a.ApplySupport)
+	utils.ForEach(commands.Convoy, a.ApplyConvoy)
+	utils.ForEach(commands.Reinforce, a.ApplyReinforce)
+	utils.ForEach(commands.Disband, a.ApplyDisband)
 
 	return a.FinalizeState(), nil
 }
