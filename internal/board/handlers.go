@@ -28,21 +28,21 @@ func Get(ctx context.Context, event events.APIGatewayV2HTTPRequest) (events.APIG
 	}
 
 	gameRepo := game.NewRepository(db)
-	game, err := gameRepo.Get(ctx, gameId)
+	g, err := gameRepo.Get(ctx, gameId)
 	if err != nil {
 		return h.InternalServerError(&h.Error{
 			Message: err.Error(),
 		}), err
 	}
 
-	buf, err := s3.Get(ctx, "diplomacy-maps", game.Map.Filename)
+	buf, err := s3.Get(ctx, "diplomacy-maps", g.Map.Filename)
 	if err != nil {
 		return h.InternalServerError(&h.Error{
 			Message: err.Error(),
 		}), err
 	}
 
-	buf, err = Draw(buf, game)
+	buf, err = Draw(buf, g)
 	if err != nil {
 		return h.InternalServerError(&h.Error{
 			Message: err.Error(),

@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"diplomacy-api/internal/board"
+	"diplomacy-api/internal/game"
 	"diplomacy-api/internal/orders"
 	"encoding/base64"
 	"io"
@@ -18,6 +19,8 @@ type lambdaHandler func(context.Context, events.APIGatewayV2HTTPRequest) (events
 func main() {
 	mux := http.NewServeMux()
 
+	mux.HandleFunc("GET /v1/games", adapt(game.GetAll))
+	mux.HandleFunc("GET /v1/games/{gid}", adapt(game.GetByID))
 	mux.HandleFunc("GET /v1/games/{gid}/board", adapt(board.Get))
 	mux.HandleFunc("POST /v1/games/{gid}/turns/{tid}/orders", adapt(orders.Create))
 

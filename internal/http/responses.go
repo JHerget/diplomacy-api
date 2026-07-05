@@ -8,16 +8,16 @@ import (
 	"github.com/aws/aws-lambda-go/events"
 )
 
-func OK[T any](body *T) events.APIGatewayV2HTTPResponse {
-	return ResponseWithBody(http.StatusOK, body)
+func OK[T any](body T) events.APIGatewayV2HTTPResponse {
+	return ResponseWithBody(http.StatusOK, &body)
 }
 
-func BadRequest[T any](body *T) events.APIGatewayV2HTTPResponse {
-	return ResponseWithBody(http.StatusBadRequest, body)
+func BadRequest[T any](body T) events.APIGatewayV2HTTPResponse {
+	return ResponseWithBody(http.StatusBadRequest, &body)
 }
 
-func InternalServerError[T any](body *T) events.APIGatewayV2HTTPResponse {
-	return ResponseWithBody(http.StatusInternalServerError, body)
+func InternalServerError[T any](body T) events.APIGatewayV2HTTPResponse {
+	return ResponseWithBody(http.StatusInternalServerError, &body)
 }
 
 func ResponseNoBody(statusCode int) events.APIGatewayV2HTTPResponse {
