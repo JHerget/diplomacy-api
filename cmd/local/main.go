@@ -4,6 +4,7 @@ import (
 	"context"
 	"diplomacy-api/internal/board"
 	"diplomacy-api/internal/game"
+	"diplomacy-api/internal/maps"
 	"diplomacy-api/internal/orders"
 	"encoding/base64"
 	"io"
@@ -19,8 +20,11 @@ type lambdaHandler func(context.Context, events.APIGatewayV2HTTPRequest) (events
 func main() {
 	mux := http.NewServeMux()
 
+	mux.HandleFunc("GET /v1/maps", adapt(maps.GetAll))
+	mux.HandleFunc("GET /v1/maps/{mid}", adapt(maps.GetByID))
 	mux.HandleFunc("GET /v1/games", adapt(game.GetAll))
 	mux.HandleFunc("GET /v1/games/{gid}", adapt(game.GetByID))
+	mux.HandleFunc("POST /v1/games", adapt(game.Create))
 	mux.HandleFunc("GET /v1/games/{gid}/board", adapt(board.Get))
 	mux.HandleFunc("POST /v1/games/{gid}/turns/{tid}/orders", adapt(orders.Create))
 
@@ -63,7 +67,7 @@ func toAPIGatewayV2Request(r *http.Request) (events.APIGatewayV2HTTPRequest, err
 	}
 
 	params := map[string]string{}
-	for _, name := range []string{"gid", "tid"} {
+	for _, name := range []string{"gid", "tid", "mid"} {
 		if value := r.PathValue(name); value != "" {
 			params[name] = value
 		}

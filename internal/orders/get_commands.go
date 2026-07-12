@@ -1,7 +1,7 @@
 package orders
 
 import (
-	"diplomacy-api/internal/game"
+	"diplomacy-api/internal/models"
 	"strings"
 )
 
@@ -10,24 +10,24 @@ type rawCommand struct {
 	Value      string
 }
 
-func GetCommands(orders []game.Order) game.Commands {
+func GetCommands(orders []models.Order) models.Commands {
 	rawCommands := process(orders)
-	commands := game.Commands{
-		Hold:      []game.MoveCommand{},
-		Move:      []game.MoveCommand{},
-		Retreat:   []game.MoveCommand{},
-		Support:   []game.SupportCommand{},
-		Convoy:    []game.SupportCommand{},
-		Reinforce: []game.AdjustCommand{},
-		Disband:   []game.AdjustCommand{},
+	commands := models.Commands{
+		Hold:      []models.MoveCommand{},
+		Move:      []models.MoveCommand{},
+		Retreat:   []models.MoveCommand{},
+		Support:   []models.SupportCommand{},
+		Convoy:    []models.SupportCommand{},
+		Reinforce: []models.AdjustCommand{},
+		Disband:   []models.AdjustCommand{},
 	}
 
 	for _, raw := range rawCommands {
 		result := []string{}
 
-		result = game.CommandsRegex.Hold.FindStringSubmatch(raw.Value)
+		result = models.CommandsRegex.Hold.FindStringSubmatch(raw.Value)
 		if result != nil {
-			commands.Hold = append(commands.Hold, game.MoveCommand{
+			commands.Hold = append(commands.Hold, models.MoveCommand{
 				PlayerName:  raw.PlayerName,
 				UnitType:    parseUnit(result[1]),
 				Location:    parseLocationReference(result[2]),
@@ -36,9 +36,9 @@ func GetCommands(orders []game.Order) game.Commands {
 			continue
 		}
 
-		result = game.CommandsRegex.Move.FindStringSubmatch(raw.Value)
+		result = models.CommandsRegex.Move.FindStringSubmatch(raw.Value)
 		if result != nil {
-			commands.Move = append(commands.Move, game.MoveCommand{
+			commands.Move = append(commands.Move, models.MoveCommand{
 				PlayerName:  raw.PlayerName,
 				UnitType:    parseUnit(result[1]),
 				Location:    parseLocationReference(result[2]),
@@ -47,9 +47,9 @@ func GetCommands(orders []game.Order) game.Commands {
 			continue
 		}
 
-		result = game.CommandsRegex.Retreat.FindStringSubmatch(raw.Value)
+		result = models.CommandsRegex.Retreat.FindStringSubmatch(raw.Value)
 		if result != nil {
-			commands.Retreat = append(commands.Retreat, game.MoveCommand{
+			commands.Retreat = append(commands.Retreat, models.MoveCommand{
 				PlayerName:  raw.PlayerName,
 				UnitType:    parseUnit(result[1]),
 				Location:    parseLocationReference(result[2]),
@@ -58,7 +58,7 @@ func GetCommands(orders []game.Order) game.Commands {
 			continue
 		}
 
-		result = game.CommandsRegex.Support.FindStringSubmatch(raw.Value)
+		result = models.CommandsRegex.Support.FindStringSubmatch(raw.Value)
 		if result != nil {
 			moveDest := parseLocationReference(result[5])
 
@@ -66,11 +66,11 @@ func GetCommands(orders []game.Order) game.Commands {
 				moveDest = parseLocationReference(result[4])
 			}
 
-			commands.Support = append(commands.Support, game.SupportCommand{
+			commands.Support = append(commands.Support, models.SupportCommand{
 				PlayerName: raw.PlayerName,
 				UnitType:   parseUnit(result[1]),
 				Location:   parseLocationReference(result[2]),
-				Move: game.MoveCommand{
+				Move: models.MoveCommand{
 					PlayerName:  raw.PlayerName,
 					UnitType:    parseUnit(result[3]),
 					Location:    parseLocationReference(result[4]),
@@ -80,13 +80,13 @@ func GetCommands(orders []game.Order) game.Commands {
 			continue
 		}
 
-		result = game.CommandsRegex.Convoy.FindStringSubmatch(raw.Value)
+		result = models.CommandsRegex.Convoy.FindStringSubmatch(raw.Value)
 		if result != nil {
-			commands.Convoy = append(commands.Convoy, game.SupportCommand{
+			commands.Convoy = append(commands.Convoy, models.SupportCommand{
 				PlayerName: raw.PlayerName,
 				UnitType:   parseUnit(result[1]),
 				Location:   parseLocationReference(result[2]),
-				Move: game.MoveCommand{
+				Move: models.MoveCommand{
 					PlayerName:  raw.PlayerName,
 					UnitType:    parseUnit(result[3]),
 					Location:    parseLocationReference(result[4]),
@@ -96,9 +96,9 @@ func GetCommands(orders []game.Order) game.Commands {
 			continue
 		}
 
-		result = game.CommandsRegex.Reinforce.FindStringSubmatch(raw.Value)
+		result = models.CommandsRegex.Reinforce.FindStringSubmatch(raw.Value)
 		if result != nil {
-			commands.Reinforce = append(commands.Reinforce, game.AdjustCommand{
+			commands.Reinforce = append(commands.Reinforce, models.AdjustCommand{
 				PlayerName: raw.PlayerName,
 				UnitType:   parseUnit(result[1]),
 				Location:   parseLocationReference(result[2]),
@@ -106,9 +106,9 @@ func GetCommands(orders []game.Order) game.Commands {
 			continue
 		}
 
-		result = game.CommandsRegex.Disband.FindStringSubmatch(raw.Value)
+		result = models.CommandsRegex.Disband.FindStringSubmatch(raw.Value)
 		if result != nil {
-			commands.Disband = append(commands.Disband, game.AdjustCommand{
+			commands.Disband = append(commands.Disband, models.AdjustCommand{
 				PlayerName: raw.PlayerName,
 				UnitType:   parseUnit(result[1]),
 				Location:   parseLocationReference(result[2]),
@@ -120,7 +120,7 @@ func GetCommands(orders []game.Order) game.Commands {
 	return commands
 }
 
-func process(orders []game.Order) []rawCommand {
+func process(orders []models.Order) []rawCommand {
 	values := []rawCommand{}
 
 	for _, o := range orders {
@@ -137,18 +137,18 @@ func process(orders []game.Order) []rawCommand {
 	return values
 }
 
-func parseUnit(rawUnit string) game.UnitType {
+func parseUnit(rawUnit string) models.UnitType {
 	if strings.ToLower(rawUnit) == "a" {
-		return game.UnitArmy
+		return models.UnitArmy
 	}
 
-	return game.UnitFleet
+	return models.UnitFleet
 }
 
-func parseLocationReference(rawLocation string) game.LocationReference {
+func parseLocationReference(rawLocation string) models.LocationReference {
 	locParts := strings.Split(rawLocation, "-")
-	defaultRef := game.LocationReference{
-		Id:    locParts[0],
+	defaultRef := models.LocationReference{
+		ID:    locParts[0],
 		Coast: nil,
 	}
 
@@ -157,12 +157,12 @@ func parseLocationReference(rawLocation string) game.LocationReference {
 	}
 
 	id := locParts[0]
-	coast := game.Coast(locParts[1])
+	coast := models.Coast(locParts[1])
 
 	switch coast {
-	case game.NorthCoast, game.SouthCoast, game.EastCoast, game.WestCoast:
-		return game.LocationReference{
-			Id:    id,
+	case models.NorthCoast, models.SouthCoast, models.EastCoast, models.WestCoast:
+		return models.LocationReference{
+			ID:    id,
 			Coast: &coast,
 		}
 	default:

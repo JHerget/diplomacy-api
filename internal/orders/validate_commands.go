@@ -1,26 +1,26 @@
 package orders
 
 import (
-	"diplomacy-api/internal/game"
+	"diplomacy-api/internal/models"
 	"diplomacy-api/internal/utils"
 	"slices"
 )
 
 type validator struct {
-	BoardMap map[string]game.Providence
+	BoardMap map[string]models.Providence
 }
 
-func ValidateCommands(commands game.Commands, board []game.Providence) game.Commands {
+func ValidateCommands(commands models.Commands, board []models.Providence) models.Commands {
 	v := validator{
-		BoardMap: make(map[string]game.Providence),
+		BoardMap: make(map[string]models.Providence),
 	}
 	for _, p := range board {
-		v.BoardMap[p.Id] = p
+		v.BoardMap[p.ID] = p
 	}
 
-	return game.Commands{
+	return models.Commands{
 		Hold: utils.Filter(commands.Hold, v.IsValidHold),
-		Move: utils.Filter(commands.Move, func(c *game.MoveCommand) bool {
+		Move: utils.Filter(commands.Move, func(c *models.MoveCommand) bool {
 			return v.IsValidMove(c, true)
 		}),
 		Retreat:   utils.Filter(commands.Retreat, v.IsValidRetreat),
@@ -31,8 +31,8 @@ func ValidateCommands(commands game.Commands, board []game.Providence) game.Comm
 	}
 }
 
-func (v validator) IsValidHold(hold *game.MoveCommand) bool {
-	loc, ok := v.BoardMap[hold.Location.Id]
+func (v validator) IsValidHold(hold *models.MoveCommand) bool {
+	loc, ok := v.BoardMap[hold.Location.ID]
 	if !ok {
 		return false
 	}
@@ -50,7 +50,7 @@ func (v validator) IsValidHold(hold *game.MoveCommand) bool {
 	if loc.Unit.ControlledBy != hold.PlayerName {
 		return false
 	}
-	if hold.Location.Id != hold.Destination.Id {
+	if hold.Location.ID != hold.Destination.ID {
 		return false
 	}
 	if hold.Location.Coast != hold.Destination.Coast {
@@ -60,13 +60,13 @@ func (v validator) IsValidHold(hold *game.MoveCommand) bool {
 	return true
 }
 
-func (v validator) IsValidMove(move *game.MoveCommand, validatePlayer bool) bool {
-	loc, ok := v.BoardMap[move.Location.Id]
+func (v validator) IsValidMove(move *models.MoveCommand, validatePlayer bool) bool {
+	loc, ok := v.BoardMap[move.Location.ID]
 	if !ok {
 		return false
 	}
 
-	dest, ok := v.BoardMap[move.Destination.Id]
+	dest, ok := v.BoardMap[move.Destination.ID]
 	if !ok {
 		return false
 	}
@@ -95,13 +95,13 @@ func (v validator) IsValidMove(move *game.MoveCommand, validatePlayer bool) bool
 	return true
 }
 
-func (v validator) IsValidRetreat(retreat *game.MoveCommand) bool {
-	loc, ok := v.BoardMap[retreat.Location.Id]
+func (v validator) IsValidRetreat(retreat *models.MoveCommand) bool {
+	loc, ok := v.BoardMap[retreat.Location.ID]
 	if !ok {
 		return false
 	}
 
-	dest, ok := v.BoardMap[retreat.Destination.Id]
+	dest, ok := v.BoardMap[retreat.Destination.ID]
 	if !ok {
 		return false
 	}
@@ -130,13 +130,13 @@ func (v validator) IsValidRetreat(retreat *game.MoveCommand) bool {
 	return true
 }
 
-func (v validator) IsValidSupport(support *game.SupportCommand) bool {
-	loc, ok := v.BoardMap[support.Location.Id]
+func (v validator) IsValidSupport(support *models.SupportCommand) bool {
+	loc, ok := v.BoardMap[support.Location.ID]
 	if !ok {
 		return false
 	}
 
-	dest, ok := v.BoardMap[support.Move.Destination.Id]
+	dest, ok := v.BoardMap[support.Move.Destination.ID]
 	if !ok {
 		return false
 	}
@@ -165,13 +165,13 @@ func (v validator) IsValidSupport(support *game.SupportCommand) bool {
 	return true
 }
 
-func (v validator) IsValidConvoy(convoy *game.SupportCommand) bool {
-	loc, ok := v.BoardMap[convoy.Location.Id]
+func (v validator) IsValidConvoy(convoy *models.SupportCommand) bool {
+	loc, ok := v.BoardMap[convoy.Location.ID]
 	if !ok {
 		return false
 	}
 
-	dest, ok := v.BoardMap[convoy.Move.Destination.Id]
+	dest, ok := v.BoardMap[convoy.Move.Destination.ID]
 	if !ok {
 		return false
 	}
@@ -200,8 +200,8 @@ func (v validator) IsValidConvoy(convoy *game.SupportCommand) bool {
 	return true
 }
 
-func (v validator) IsValidReinforce(reinforce *game.AdjustCommand) bool {
-	loc, ok := v.BoardMap[reinforce.Location.Id]
+func (v validator) IsValidReinforce(reinforce *models.AdjustCommand) bool {
+	loc, ok := v.BoardMap[reinforce.Location.ID]
 	if !ok {
 		return false
 	}
@@ -222,18 +222,18 @@ func (v validator) IsValidReinforce(reinforce *game.AdjustCommand) bool {
 	if *loc.SupplyCenter.ControlledBy != reinforce.PlayerName {
 		return false
 	}
-	if reinforce.UnitType == game.UnitArmy && loc.Type == game.ProvidenceOcean {
+	if reinforce.UnitType == models.UnitArmy && loc.Type == models.ProvidenceOcean {
 		return false
 	}
-	if reinforce.UnitType == game.UnitFleet && loc.Type == game.ProvidenceInland {
+	if reinforce.UnitType == models.UnitFleet && loc.Type == models.ProvidenceInland {
 		return false
 	}
 
 	return true
 }
 
-func (v validator) IsValidDisband(disband *game.AdjustCommand) bool {
-	loc, ok := v.BoardMap[disband.Location.Id]
+func (v validator) IsValidDisband(disband *models.AdjustCommand) bool {
+	loc, ok := v.BoardMap[disband.Location.ID]
 	if !ok {
 		return false
 	}
@@ -264,8 +264,8 @@ func (v validator) IsValidDisband(disband *game.AdjustCommand) bool {
 	return true
 }
 
-func (v validator) IsValidLocation(ref game.LocationReference) bool {
-	loc, ok := v.BoardMap[ref.Id]
+func (v validator) IsValidLocation(ref models.LocationReference) bool {
+	loc, ok := v.BoardMap[ref.ID]
 	if !ok {
 		return false
 	}
@@ -292,21 +292,21 @@ func (v validator) IsValidLocation(ref game.LocationReference) bool {
 	return true
 }
 
-func (v validator) IsValidRoute(location game.Providence, destination game.Providence, destRef game.LocationReference) bool {
+func (v validator) IsValidRoute(location models.Providence, destination models.Providence, destRef models.LocationReference) bool {
 	if location.Unit == nil {
 		return false
 	}
 
-	if location.Type == game.ProvidenceOcean && destination.Type == game.ProvidenceInland {
+	if location.Type == models.ProvidenceOcean && destination.Type == models.ProvidenceInland {
 		return false
 	}
-	if location.Type == game.ProvidenceInland && destination.Type == game.ProvidenceOcean {
+	if location.Type == models.ProvidenceInland && destination.Type == models.ProvidenceOcean {
 		return false
 	}
-	if location.Type == game.ProvidenceInland && location.Unit.Type == game.UnitFleet {
+	if location.Type == models.ProvidenceInland && location.Unit.Type == models.UnitFleet {
 		return false
 	}
-	if location.Type == game.ProvidenceOcean && location.Unit.Type == game.UnitArmy {
+	if location.Type == models.ProvidenceOcean && location.Unit.Type == models.UnitArmy {
 		return false
 	}
 
@@ -314,7 +314,7 @@ func (v validator) IsValidRoute(location game.Providence, destination game.Provi
 
 	if destRef.Coast != nil {
 		if !hasCoastalRoutes {
-			return slices.Contains(destination.Routes, location.Id)
+			return slices.Contains(destination.Routes, location.ID)
 		}
 
 		routes, ok := destination.CoastalRoutes[*destRef.Coast]
@@ -322,11 +322,11 @@ func (v validator) IsValidRoute(location game.Providence, destination game.Provi
 			return false
 		}
 
-		return slices.Contains(routes, location.Id)
+		return slices.Contains(routes, location.ID)
 	}
 	if hasCoastalRoutes {
 		return false
 	}
 
-	return slices.Contains(destination.Routes, location.Id)
+	return slices.Contains(destination.Routes, location.ID)
 }

@@ -1,4 +1,4 @@
-package game
+package maps
 
 import (
 	"context"
@@ -15,12 +15,12 @@ type Repository struct {
 
 func NewRepository(db *mongo.Client) *Repository {
 	return &Repository{
-		collection: db.Database("diplomacy").Collection("games"),
+		collection: db.Database("diplomacy").Collection("maps"),
 	}
 }
 
-func (r *Repository) Get(ctx context.Context, id string) (*models.Game, error) {
-	var game models.Game
+func (r *Repository) Get(ctx context.Context, id string) (*models.Map, error) {
+	var m models.Map
 
 	objectID, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
@@ -29,16 +29,16 @@ func (r *Repository) Get(ctx context.Context, id string) (*models.Game, error) {
 
 	err = r.collection.FindOne(ctx, bson.M{
 		"_id": objectID,
-	}).Decode(&game)
+	}).Decode(&m)
 	if err != nil {
 		return nil, err
 	}
 
-	return &game, nil
+	return &m, nil
 }
 
-func (r *Repository) GetAll(ctx context.Context) ([]*models.Game, error) {
-	var games []*models.Game
+func (r *Repository) GetAllSummaries(ctx context.Context) ([]*models.MapSummary, error) {
+	var summaries []*models.MapSummary
 
 	cursor, err := r.collection.Find(ctx, bson.M{
 		"isDeleted": bson.M{"$ne": true},
@@ -48,21 +48,21 @@ func (r *Repository) GetAll(ctx context.Context) ([]*models.Game, error) {
 	}
 	defer cursor.Close(ctx)
 
-	if err := cursor.All(ctx, &games); err != nil {
+	if err := cursor.All(ctx, &summaries); err != nil {
 		return nil, err
 	}
 
-	return games, nil
+	return summaries, nil
 }
 
-func (r *Repository) Create(ctx context.Context, game *models.Game) error {
-	result, err := r.collection.InsertOne(ctx, game)
+func (r *Repository) Create(ctx context.Context, m *models.Map) error {
+	result, err := r.collection.InsertOne(ctx, m)
 	if err != nil {
 		return err
 	}
 
 	if oid, ok := result.InsertedID.(primitive.ObjectID); ok {
-		game.ID = oid.Hex()
+		m.ID = oid.Hex()
 	}
 
 	return nil

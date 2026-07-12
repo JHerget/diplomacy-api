@@ -23,7 +23,7 @@ build: format
 publish: build
 	terraform -chdir=terraform apply
 
-start: format
+start: build
 	go build -o dist/local ./cmd/local
 	AWS_REGION=us-west-2 go run ./cmd/local
 

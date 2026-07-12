@@ -1,1438 +1,1908 @@
 {
-    "_id": {
-        "$oid": "6956498133c5739468982b62"
+  "_id": {
+    "$oid": "6956498133c5739468982b62"
+  },
+  "filename": "diplomacy-map.png",
+  "name": "Original Diplomacy",
+  "players": [
+    {
+      "name": "Austria-Hungary",
+      "userId": null,
+      "color": "rgb(204,0,0)",
+      "isPlaying": false
     },
-    "filename": "diplomacy-map.png",
-    "name": "Original Diplomacy",
-    "players": [
-        {
-            "name": "Austria-Hungary",
-            "userId": null,
-            "color": "rgb(204,0,0)",
-            "isPlaying": false
-        },
-        {
-            "name": "England",
-            "userId": null,
-            "color": "rgb(51,102,255)",
-            "isPlaying": false
-        },
-        {
-            "name": "France",
-            "userId": null,
-            "color": "rgb(51,204,255)",
-            "isPlaying": false
-        },
-        {
-            "name": "Germany",
-            "userId": null,
-            "color": "rgb(115,115,115)",
-            "isPlaying": false
-        },
-        {
-            "name": "Italy",
-            "userId": null,
-            "color": "rgb(0,179,60)",
-            "isPlaying": false
-        },
-        {
-            "name": "Russia",
-            "userId": null,
-            "color": "rgb(217,217,217)",
-            "isPlaying": false
-        },
-        {
-            "name": "Turkey",
-            "userId": null,
-            "color": "rgb(230,230,0)",
-            "isPlaying": false
+    {
+      "name": "England",
+      "userId": null,
+      "color": "rgb(51,102,255)",
+      "isPlaying": false
+    },
+    {
+      "name": "France",
+      "userId": null,
+      "color": "rgb(51,204,255)",
+      "isPlaying": false
+    },
+    {
+      "name": "Germany",
+      "userId": null,
+      "color": "rgb(115,115,115)",
+      "isPlaying": false
+    },
+    {
+      "name": "Italy",
+      "userId": null,
+      "color": "rgb(0,179,60)",
+      "isPlaying": false
+    },
+    {
+      "name": "Russia",
+      "userId": null,
+      "color": "rgb(217,217,217)",
+      "isPlaying": false
+    },
+    {
+      "name": "Turkey",
+      "userId": null,
+      "color": "rgb(230,230,0)",
+      "isPlaying": false
+    }
+  ],
+  "providences": [
+    {
+      "id": "edi",
+      "name": "Edinburgh",
+      "supplyCenter": {
+        "controlledBy": "England",
+        "coordinates": {
+          "x": 288,
+          "y": 283
         }
-    ],
-    "providences": [
-        {
-            "id": "edi",
-            "name": "Edinburgh",
-            "supplyCenter": {
-                "controlledBy": "England",
-                "coordinates": {
-                    "x": 288,
-                    "y": 283
-                }
-            },
-            "unit": {
-                "id": "f4710e6f-9ad1-4a0b-8c68-9983215e5c41",
-                "controlledBy": "England",
-                "type": "ocean"
-            },
-            "coordinates": {
-                "x": 295,
-                "y": 300
-            },
-            "type": "coastal",
-            "routes": ["cly", "nrg", "nth", "yor", "lvp"],
-            "coastalRoutes": null
-        },
-        {
-            "id": "lvp",
-            "name": "Liverpool",
-            "supplyCenter": {
-                "controlledBy": "England",
-                "coordinates": {
-                    "x": 267,
-                    "y": 343
-                }
-            },
-            "unit": {
-                "id": "32eb54bd-a536-430b-8cb2-57c11d2ef9f1",
-                "controlledBy": "England",
-                "type": "inland"
-            },
-            "coordinates": {
-                "x": 281,
-                "y": 339
-            },
-            "type": "coastal",
-            "routes": ["cly", "edi", "yor", "wal", "iri", "nat"],
-            "coastalRoutes": null
-        },
-        {
-            "id": "lon",
-            "name": "London",
-            "supplyCenter": {
-                "controlledBy": "England",
-                "coordinates": {
-                    "x": 295,
-                    "y": 404
-                }
-            },
-            "unit": {
-                "id": "fbe7fa49-6782-4709-ad9f-943d91dc433d",
-                "controlledBy": "England",
-                "type": "ocean"
-            },
-            "coordinates": {
-                "x": 279,
-                "y": 399
-            },
-            "type": "coastal",
-            "routes": ["wal", "yor", "nth", "eng"],
-            "coastalRoutes": null
-        },
-        {
-            "id": "bre",
-            "name": "Brest",
-            "supplyCenter": {
-                "controlledBy": "France",
-                "coordinates": {
-                    "x": 200,
-                    "y": 459
-                }
-            },
-            "unit": {
-                "id": "fda17ae9-2deb-4bde-bc50-c986e735083a",
-                "controlledBy": "France",
-                "type": "ocean"
-            },
-            "coordinates": {
-                "x": 250,
-                "y": 490
-            },
-            "type": "coastal",
-            "routes": ["mid", "eng", "pic", "par", "gas"],
-            "coastalRoutes": null
-        },
-        {
-            "id": "par",
-            "name": "Paris",
-            "supplyCenter": {
-                "controlledBy": "France",
-                "coordinates": {
-                    "x": 317,
-                    "y": 481
-                }
-            },
-            "unit": {
-                "id": "47a5b2d1-2f95-46ce-9865-a44b49d6d5c3",
-                "controlledBy": "France",
-                "type": "inland"
-            },
-            "coordinates": {
-                "x": 304,
-                "y": 512
-            },
-            "type": "inland",
-            "routes": ["bre", "pic", "bur", "mar", "gas"],
-            "coastalRoutes": null
-        },
-        {
-            "id": "mar",
-            "name": "Marseilles",
-            "supplyCenter": {
-                "controlledBy": "France",
-                "coordinates": {
-                    "x": 346,
-                    "y": 628
-                }
-            },
-            "unit": {
-                "id": "771da699-2edf-4f4d-86ef-b26c98662d7f",
-                "controlledBy": "France",
-                "type": "inland"
-            },
-            "coordinates": {
-                "x": 333,
-                "y": 597
-            },
-            "type": "coastal",
-            "routes": ["gol", "spa", "spa-sc", "gas", "bur", "pie"],
-            "coastalRoutes": null
-        },
-        {
-            "id": "spa",
-            "name": "Spain",
-            "supplyCenter": {
-                "controlledBy": null,
-                "coordinates": {
-                    "x": 170,
-                    "y": 654
-                }
-            },
-            "unit": null,
-            "coordinates": {
-                "x": 198,
-                "y": 644
-            },
-            "type": "inland",
-            "routes": ["por", "mar", "gas"],
-            "coastalRoutes": null
-        },
-        {
-            "id": "spa-nc",
-            "name": "Spain (North Coast)",
-            "supplyCenter": null,
-            "unit": null,
-            "coordinates": {
-                "x": 156,
-                "y": 584
-            },
-            "type": "ocean",
-            "routes": ["por", "mid", "gas"],
-            "coastalRoutes": null
-        },
-        {
-            "id": "spa-sc",
-            "name": "Spain (South Coast)",
-            "supplyCenter": null,
-            "unit": null,
-            "coordinates": {
-                "x": 197,
-                "y": 713
-            },
-            "type": "ocean",
-            "routes": ["por", "mid", "wes", "gol", "mar"],
-            "coastalRoutes": null
-        },
-        {
-            "id": "por",
-            "name": "Portugal",
-            "supplyCenter": {
-                "controlledBy": null,
-                "coordinates": {
-                    "x": 73,
-                    "y": 658
-                }
-            },
-            "unit": null,
-            "coordinates": {
-                "x": 91,
-                "y": 641
-            },
-            "type": "coastal",
-            "routes": ["mid", "spa", "spa-nc", "spa-sc"],
-            "coastalRoutes": null
-        },
-        {
-            "id": "tun",
-            "name": "Tunis",
-            "supplyCenter": {
-                "controlledBy": null,
-                "coordinates": {
-                    "x": 430,
-                    "y": 786
-                }
-            },
-            "unit": null,
-            "coordinates": {
-                "x": 401,
-                "y": 805
-            },
-            "type": "coastal",
-            "routes": ["naf", "wes", "tyn", "ion"],
-            "coastalRoutes": null
-        },
-        {
-            "id": "rom",
-            "name": "Rome",
-            "supplyCenter": {
-                "controlledBy": "Italy",
-                "coordinates": {
-                    "x": 481,
-                    "y": 679
-                }
-            },
-            "unit": {
-                "id": "31d39361-1a2e-471b-be0f-9456a7922589",
-                "controlledBy": "Italy",
-                "type": "inland"
-            },
-            "coordinates": {
-                "x": 497,
-                "y": 680
-            },
-            "type": "coastal",
-            "routes": ["tus", "ven", "apu", "nap", "tyn"],
-            "coastalRoutes": null
-        },
-        {
-            "id": "nap",
-            "name": "Naples",
-            "supplyCenter": {
-                "controlledBy": "Italy",
-                "coordinates": {
-                    "x": 514,
-                    "y": 704
-                }
-            },
-            "unit": {
-                "id": "0488f1e3-8a30-41fd-8965-5f9b008524e9",
-                "controlledBy": "Italy",
-                "type": "ocean"
-            },
-            "coordinates": {
-                "x": 554,
-                "y": 739
-            },
-            "type": "coastal",
-            "routes": ["tyn", "rom", "apu", "ion"],
-            "coastalRoutes": null
-        },
-        {
-            "id": "ven",
-            "name": "Venice",
-            "supplyCenter": {
-                "controlledBy": "Italy",
-                "coordinates": {
-                    "x": 485,
-                    "y": 595
-                }
-            },
-            "unit": {
-                "id": "ae499592-290c-4790-8f89-4819e8237012",
-                "controlledBy": "Italy",
-                "type": "inland"
-            },
-            "coordinates": {
-                "x": 467,
-                "y": 604
-            },
-            "type": "coastal",
-            "routes": ["pie", "tyr", "tri", "adr", "apu", "rom", "tus"],
-            "coastalRoutes": null
-        },
-        {
-            "id": "mun",
-            "name": "Munich",
-            "supplyCenter": {
-                "controlledBy": "Germany",
-                "coordinates": {
-                    "x": 480,
-                    "y": 527
-                }
-            },
-            "unit": {
-                "id": "a8896b03-062a-4bbb-b4ee-b7cd5df2f8e9",
-                "controlledBy": "Germany",
-                "type": "inland"
-            },
-            "coordinates": {
-                "x": 467,
-                "y": 503
-            },
-            "type": "inland",
-            "routes": ["ruh", "kie", "ber", "sil", "boh", "tyr", "bur"],
-            "coastalRoutes": null
-        },
-        {
-            "id": "ber",
-            "name": "Berlin",
-            "supplyCenter": {
-                "controlledBy": "Germany",
-                "coordinates": {
-                    "x": 529,
-                    "y": 422
-                }
-            },
-            "unit": {
-                "id": "c6b39b72-46fd-4fad-b67c-12d40846613a",
-                "controlledBy": "Germany",
-                "type": "inland"
-            },
-            "coordinates": {
-                "x": 510,
-                "y": 429
-            },
-            "type": "coastal",
-            "routes": ["kie", "bal", "pru", "sil", "mun"],
-            "coastalRoutes": null
-        },
-        {
-            "id": "kie",
-            "name": "Kiel",
-            "supplyCenter": {
-                "controlledBy": "Germany",
-                "coordinates": {
-                    "x": 482,
-                    "y": 371
-                }
-            },
-            "unit": {
-                "id": "0a24d641-fe01-4406-bacc-60e8d3f9940b",
-                "controlledBy": "Germany",
-                "type": "ocean"
-            },
-            "coordinates": {
-                "x": 468,
-                "y": 407
-            },
-            "type": "coastal",
-            "routes": ["ruh", "hol", "hel", "den", "bal", "ber", "mun"],
-            "coastalRoutes": null
-        },
-        {
-            "id": "hol",
-            "name": "Holland",
-            "supplyCenter": {
-                "controlledBy": null,
-                "coordinates": {
-                    "x": 383,
-                    "y": 405
-                }
-            },
-            "unit": null,
-            "coordinates": {
-                "x": 411,
-                "y": 393
-            },
-            "type": "coastal",
-            "routes": ["nth", "hel", "kie", "ruh", "bel"],
-            "coastalRoutes": null
-        },
-        {
-            "id": "bel",
-            "name": "Belgium",
-            "supplyCenter": {
-                "controlledBy": null,
-                "coordinates": {
-                    "x": 367,
-                    "y": 438
-                }
-            },
-            "unit": null,
-            "coordinates": {
-                "x": 375,
-                "y": 451
-            },
-            "type": "coastal",
-            "routes": ["pic", "eng", "nth", "hol", "ruh", "bur"],
-            "coastalRoutes": null
-        },
-        {
-            "id": "vie",
-            "name": "Vienna",
-            "supplyCenter": {
-                "controlledBy": "Austria-Hungary",
-                "coordinates": {
-                    "x": 568,
-                    "y": 534
-                }
-            },
-            "unit": {
-                "id": "dfaae230-685d-4dec-9114-862fa1330769",
-                "controlledBy": "Austria-Hungary",
-                "type": "inland"
-            },
-            "coordinates": {
-                "x": 593,
-                "y": 537
-            },
-            "type": "inland",
-            "routes": ["boh", "gal", "bud", "tri", "tyr"],
-            "coastalRoutes": null
-        },
-        {
-            "id": "bud",
-            "name": "Budapest",
-            "supplyCenter": {
-                "controlledBy": "Austria-Hungary",
-                "coordinates": {
-                    "x": 616,
-                    "y": 552
-                }
-            },
-            "unit": {
-                "id": "3a9e2bd9-8a09-43fe-9db1-b20f45885a49",
-                "controlledBy": "Austria-Hungary",
-                "type": "inland"
-            },
-            "coordinates": {
-                "x": 666,
-                "y": 578
-            },
-            "type": "inland",
-            "routes": ["vie", "gal", "rum", "ser", "tri"],
-            "coastalRoutes": null
-        },
-        {
-            "id": "tri",
-            "name": "Trieste",
-            "supplyCenter": {
-                "controlledBy": "Austria-Hungary",
-                "coordinates": {
-                    "x": 513,
-                    "y": 593
-                }
-            },
-            "unit": {
-                "id": "44c6cbec-54c4-4bc0-b05c-219dc12d45ea",
-                "controlledBy": "Austria-Hungary",
-                "type": "ocean"
-            },
-            "coordinates": {
-                "x": 561,
-                "y": 621
-            },
-            "type": "coastal",
-            "routes": ["adr", "ven", "try", "vie", "bud", "ser", "alb"],
-            "coastalRoutes": null
-        },
-        {
-            "id": "rum",
-            "name": "Rumania",
-            "supplyCenter": {
-                "controlledBy": null,
-                "coordinates": {
-                    "x": 746,
-                    "y": 617
-                }
-            },
-            "unit": null,
-            "coordinates": {
-                "x": 764,
-                "y": 599
-            },
-            "type": "coastal",
-            "routes": [
-                "bud",
-                "gal",
-                "ukr",
-                "sev",
-                "bla",
-                "bul",
-                "bul-ec",
-                "ser"
-            ],
-            "coastalRoutes": null
-        },
-        {
-            "id": "bul",
-            "name": "Bulgaria",
-            "supplyCenter": {
-                "controlledBy": null,
-                "coordinates": {
-                    "x": 693,
-                    "y": 658
-                }
-            },
-            "unit": null,
-            "coordinates": {
-                "x": 729,
-                "y": 661
-            },
-            "type": "inland",
-            "routes": ["ser", "rum", "con", "gre"],
-            "coastalRoutes": null
-        },
-        {
-            "id": "bul-ec",
-            "name": "Bulgaria (East Coast)",
-            "supplyCenter": null,
-            "unit": null,
-            "coordinates": {
-                "x": 768,
-                "y": 637
-            },
-            "type": "ocean",
-            "routes": ["rum", "bla", "con"],
-            "coastalRoutes": null
-        },
-        {
-            "id": "bul-sc",
-            "name": "Bulgaria (South Coast)",
-            "supplyCenter": null,
-            "unit": null,
-            "coordinates": {
-                "x": 729,
-                "y": 682
-            },
-            "type": "coastal",
-            "routes": ["con", "aeg", "gre"],
-            "coastalRoutes": null
-        },
-        {
-            "id": "gre",
-            "name": "Greece",
-            "supplyCenter": {
-                "controlledBy": null,
-                "coordinates": {
-                    "x": 701,
-                    "y": 757
-                }
-            },
-            "unit": null,
-            "coordinates": {
-                "x": 662,
-                "y": 732
-            },
-            "type": "coastal",
-            "routes": ["ion", "alb", "ser", "bul", "bul-sc", "aeg"],
-            "coastalRoutes": null
-        },
-        {
-            "id": "ser",
-            "name": "Serbia",
-            "supplyCenter": {
-                "controlledBy": null,
-                "coordinates": {
-                    "x": 641,
-                    "y": 618
-                }
-            },
-            "unit": null,
-            "coordinates": {
-                "x": 651,
-                "y": 650
-            },
-            "type": "inland",
-            "routes": ["alb", "tri", "bud", "rum", "bul", "gre"],
-            "coastalRoutes": null
-        },
-        {
-            "id": "con",
-            "name": "Constantinople",
-            "supplyCenter": {
-                "controlledBy": "Turkey",
-                "coordinates": {
-                    "x": 798,
-                    "y": 683
-                }
-            },
-            "unit": {
-                "id": "42318637-b36a-40de-a5de-0b409e5e9d58",
-                "controlledBy": "Turkey",
-                "type": "inland"
-            },
-            "coordinates": {
-                "x": 802,
-                "y": 702
-            },
-            "type": "coastal",
-            "routes": ["aeg", "bul", "bul-ec", "bul-sc", "bla", "ank", "smy"],
-            "coastalRoutes": null
-        },
-        {
-            "id": "smy",
-            "name": "Smyrna",
-            "supplyCenter": {
-                "controlledBy": "Turkey",
-                "coordinates": {
-                    "x": 767,
-                    "y": 739
-                }
-            },
-            "unit": {
-                "id": "9ec4e4bf-8966-444e-9074-e7c404fd776c",
-                "controlledBy": "Turkey",
-                "type": "inland"
-            },
-            "coordinates": {
-                "x": 860,
-                "y": 737
-            },
-            "type": "coastal",
-            "routes": ["con", "ank", "arm", "syr", "eas", "aeg"],
-            "coastalRoutes": null
-        },
-        {
-            "id": "ank",
-            "name": "Ankara",
-            "supplyCenter": {
-                "controlledBy": "Turkey",
-                "coordinates": {
-                    "x": 870,
-                    "y": 692
-                }
-            },
-            "unit": {
-                "id": "250de842-5981-41c0-9bb6-ab3783f64b80",
-                "controlledBy": "Turkey",
-                "type": "ocean"
-            },
-            "coordinates": {
-                "x": 899,
-                "y": 674
-            },
-            "type": "coastal",
-            "routes": ["bla", "arm", "smy", "con"],
-            "coastalRoutes": null
-        },
-        {
-            "id": "sev",
-            "name": "Sevastopol",
-            "supplyCenter": {
-                "controlledBy": "Russia",
-                "coordinates": {
-                    "x": 881,
-                    "y": 595
-                }
-            },
-            "unit": {
-                "id": "a80951a8-43ef-4fe5-bbd8-2d541a642a69",
-                "controlledBy": "Russia",
-                "type": "ocean"
-            },
-            "coordinates": {
-                "x": 960,
-                "y": 494
-            },
-            "type": "coastal",
-            "routes": ["ukr", "mos", "arm", "bla", "rum"],
-            "coastalRoutes": null
-        },
-        {
-            "id": "mos",
-            "name": "Moscow",
-            "supplyCenter": {
-                "controlledBy": "Russia",
-                "coordinates": {
-                    "x": 916,
-                    "y": 349
-                }
-            },
-            "unit": {
-                "id": "8add7c60-becc-47a3-9409-847cb6d8501a",
-                "controlledBy": "Russia",
-                "type": "inland"
-            },
-            "coordinates": {
-                "x": 943,
-                "y": 351
-            },
-            "type": "inland",
-            "routes": ["lvn", "stp", "sev", "ukr", "war"],
-            "coastalRoutes": null
-        },
-        {
-            "id": "war",
-            "name": "Warsaw",
-            "supplyCenter": {
-                "controlledBy": "Russia",
-                "coordinates": {
-                    "x": 660,
-                    "y": 440
-                }
-            },
-            "unit": {
-                "id": "0b968723-f877-489f-a8ee-f5f7bfcc9ca4",
-                "controlledBy": "Russia",
-                "type": "inland"
-            },
-            "coordinates": {
-                "x": 718,
-                "y": 426
-            },
-            "type": "inland",
-            "routes": ["pru", "svn", "mos", "ukr", "gal", "sil"],
-            "coastalRoutes": null
-        },
-        {
-            "id": "stp",
-            "name": "St. Petersburg",
-            "supplyCenter": {
-                "controlledBy": "Russia",
-                "coordinates": {
-                    "x": 802,
-                    "y": 267
-                }
-            },
-            "unit": {
-                "id": "cfc4fbd9-b721-41a4-9ae5-f4196efb143d",
-                "controlledBy": "Russia",
-                "type": "ocean"
-            },
-            "coordinates": {
-                "x": 910,
-                "y": 217
-            },
-            "type": "inland",
-            "routes": ["fin", "mos", "lvn", "nor"],
-            "coastalRoutes": null
-        },
-        {
-            "id": "stp-nc",
-            "name": "St. Pertersburg (North Coast)",
-            "supplyCenter": null,
-            "unit": null,
-            "coordinates": {
-                "x": 911,
-                "y": 155
-            },
-            "type": "ocean",
-            "routes": ["bar", "nor"],
-            "coastalRoutes": null
-        },
-        {
-            "id": "stp-sc",
-            "name": "St. Petersburg (South Coast)",
-            "supplyCenter": null,
-            "unit": null,
-            "coordinates": {
-                "x": 782,
-                "y": 275
-            },
-            "type": "coastal",
-            "routes": ["bot", "fin", "lvn"],
-            "coastalRoutes": null
-        },
-        {
-            "id": "den",
-            "name": "Denmark",
-            "supplyCenter": {
-                "controlledBy": null,
-                "coordinates": {
-                    "x": 529,
-                    "y": 344
-                }
-            },
-            "unit": null,
-            "coordinates": {
-                "x": 479,
-                "y": 321
-            },
-            "type": "coastal",
-            "routes": ["kie", "hel", "nth", "ska", "bal"],
-            "coastalRoutes": null
-        },
-        {
-            "id": "nor",
-            "name": "Norway",
-            "supplyCenter": {
-                "controlledBy": null,
-                "coordinates": {
-                    "x": 527,
-                    "y": 240
-                }
-            },
-            "unit": null,
-            "coordinates": {
-                "x": 521,
-                "y": 196
-            },
-            "type": "coastal",
-            "routes": ["nrg", "bar", "swe", "ska", "nth"],
-            "coastalRoutes": null
-        },
-        {
-            "id": "swe",
-            "name": "Sweden",
-            "supplyCenter": {
-                "controlledBy": null,
-                "coordinates": {
-                    "x": 629,
-                    "y": 268
-                }
-            },
-            "unit": null,
-            "coordinates": {
-                "x": 598,
-                "y": 215
-            },
-            "type": "coastal",
-            "routes": ["nor", "fin", "bot", "bal", "ska"],
-            "coastalRoutes": null
-        },
-        {
-            "id": "cly",
-            "name": "Clyde",
-            "supplyCenter": null,
-            "unit": null,
-            "coordinates": {
-                "x": 273,
-                "y": 247
-            },
-            "type": "coastal",
-            "routes": ["nat", "nrg", "edi", "lvp"],
-            "coastalRoutes": null
-        },
-        {
-            "id": "yor",
-            "name": "York",
-            "supplyCenter": null,
-            "unit": null,
-            "coordinates": {
-                "x": 297,
-                "y": 366
-            },
-            "type": "coastal",
-            "routes": ["lon", "wal", "lvp", "edi", "nth"],
-            "coastalRoutes": null
-        },
-        {
-            "id": "wal",
-            "name": "Wales",
-            "supplyCenter": null,
-            "unit": null,
-            "coordinates": {
-                "x": 253,
-                "y": 373
-            },
-            "type": "coastal",
-            "routes": ["iri", "lvp", "yor", "lon", "eng"],
-            "coastalRoutes": null
-        },
-        {
-            "id": "pic",
-            "name": "Picardy",
-            "supplyCenter": null,
-            "unit": null,
-            "coordinates": {
-                "x": 324,
-                "y": 457
-            },
-            "type": "coastal",
-            "routes": ["bre", "eng", "bel", "bur", "par"],
-            "coastalRoutes": null
-        },
-        {
-            "id": "gas",
-            "name": "Gascony",
-            "supplyCenter": null,
-            "unit": null,
-            "coordinates": {
-                "x": 265,
-                "y": 574
-            },
-            "type": "coastal",
-            "routes": ["spa", "spa-nc", "mid", "bre", "par", "bur", "mar"],
-            "coastalRoutes": null
-        },
-        {
-            "id": "bur",
-            "name": "Burgundy",
-            "supplyCenter": null,
-            "unit": null,
-            "coordinates": {
-                "x": 361,
-                "y": 524
-            },
-            "type": "inland",
-            "routes": ["par", "pic", "bel", "ruh", "mun", "mar", "gas"],
-            "coastalRoutes": null
-        },
-        {
-            "id": "naf",
-            "name": "North Africa",
-            "supplyCenter": null,
-            "unit": null,
-            "coordinates": {
-                "x": 207,
-                "y": 805
-            },
-            "type": "coastal",
-            "routes": ["mid", "wes", "tun"],
-            "coastalRoutes": null
-        },
-        {
-            "id": "ruh",
-            "name": "Ruhr",
-            "supplyCenter": null,
-            "unit": null,
-            "coordinates": {
-                "x": 421,
-                "y": 461
-            },
-            "type": "inland",
-            "routes": ["bel", "hol", "kie", "mun", "bur"],
-            "coastalRoutes": null
-        },
-        {
-            "id": "pru",
-            "name": "Prussia",
-            "supplyCenter": null,
-            "unit": null,
-            "coordinates": {
-                "x": 629,
-                "y": 402
-            },
-            "type": "coastal",
-            "routes": ["ber", "bal", "lvn", "war", "sil"],
-            "coastalRoutes": null
-        },
-        {
-            "id": "sil",
-            "name": "Silesia",
-            "supplyCenter": null,
-            "unit": null,
-            "coordinates": {
-                "x": 570,
-                "y": 451
-            },
-            "type": "inland",
-            "routes": ["ber", "pru", "war", "gal", "boh", "mun"],
-            "coastalRoutes": null
-        },
-        {
-            "id": "boh",
-            "name": "Bohemia",
-            "supplyCenter": null,
-            "unit": null,
-            "coordinates": {
-                "x": 551,
-                "y": 499
-            },
-            "type": "inland",
-            "routes": ["mun", "sil", "gal", "vie", "tyr"],
-            "coastalRoutes": null
-        },
-        {
-            "id": "tyr",
-            "name": "Tyrolia",
-            "supplyCenter": null,
-            "unit": null,
-            "coordinates": {
-                "x": 513,
-                "y": 553
-            },
-            "type": "inland",
-            "routes": ["pie", "mun", "boh", "vie", "tri", "ven"],
-            "coastalRoutes": null
-        },
-        {
-            "id": "gal",
-            "name": "Galicia",
-            "supplyCenter": null,
-            "unit": null,
-            "coordinates": {
-                "x": 692,
-                "y": 508
-            },
-            "type": "inland",
-            "routes": ["sil", "war", "ukr", "rum", "bud", "vie", "boh"],
-            "coastalRoutes": null
-        },
-        {
-            "id": "pie",
-            "name": "Piedmont",
-            "supplyCenter": null,
-            "unit": null,
-            "coordinates": {
-                "x": 416,
-                "y": 592
-            },
-            "type": "coastal",
-            "routes": ["mar", "tyr", "ven", "tus", "gol"],
-            "coastalRoutes": null
-        },
-        {
-            "id": "tus",
-            "name": "Tuscany",
-            "supplyCenter": null,
-            "unit": null,
-            "coordinates": {
-                "x": 453,
-                "y": 634
-            },
-            "type": "coastal",
-            "routes": ["pie", "ven", "rom", "gol", "tyn"],
-            "coastalRoutes": null
-        },
-        {
-            "id": "apu",
-            "name": "Apulia",
-            "supplyCenter": null,
-            "unit": null,
-            "coordinates": {
-                "x": 551,
-                "y": 700
-            },
-            "type": "coastal",
-            "routes": ["adr", "ion", "nap", "rom", "ven"],
-            "coastalRoutes": null
-        },
-        {
-            "id": "alb",
-            "name": "Albania",
-            "supplyCenter": null,
-            "unit": null,
-            "coordinates": {
-                "x": 628,
-                "y": 688
-            },
-            "type": "coastal",
-            "routes": ["adr", "tri", "ser", "gre", "ion"],
-            "coastalRoutes": null
-        },
-        {
-            "id": "arm",
-            "name": "Armenia",
-            "supplyCenter": null,
-            "unit": null,
-            "coordinates": {
-                "x": 1003,
-                "y": 686
-            },
-            "type": "coastal",
-            "routes": ["bla", "sev", "syr", "smy", "ank"],
-            "coastalRoutes": null
-        },
-        {
-            "id": "syr",
-            "name": "Syria",
-            "supplyCenter": null,
-            "unit": null,
-            "coordinates": {
-                "x": 980,
-                "y": 783
-            },
-            "type": "coastal",
-            "routes": ["eas", "smy", "arm"],
-            "coastalRoutes": null
-        },
-        {
-            "id": "ukr",
-            "name": "Ukraine",
-            "supplyCenter": null,
-            "unit": null,
-            "coordinates": {
-                "x": 828,
-                "y": 484
-            },
-            "type": "inland",
-            "routes": ["gal", "war", "mos", "sev", "rum"],
-            "coastalRoutes": null
-        },
-        {
-            "id": "fin",
-            "name": "Finland",
-            "supplyCenter": null,
-            "unit": null,
-            "coordinates": {
-                "x": 747,
-                "y": 201
-            },
-            "type": "coastal",
-            "routes": ["swe", "stp", "stp-sc", "bot"],
-            "coastalRoutes": null
-        },
-        {
-            "id": "lvn",
-            "name": "Livonia",
-            "supplyCenter": null,
-            "unit": null,
-            "coordinates": {
-                "x": 731,
-                "y": 339
-            },
-            "type": "coastal",
-            "routes": ["bot", "stp", "stp-sc", "mos", "war", "pru", "bal"],
-            "coastalRoutes": null
-        },
-        {
-            "id": "bar",
-            "name": "Barents Sea",
-            "supplyCenter": null,
-            "unit": null,
-            "coordinates": {
-                "x": 852,
-                "y": 59
-            },
-            "type": "ocean",
-            "routes": ["nor", "nrg", "stp-nc"],
-            "coastalRoutes": null
-        },
-        {
-            "id": "nrg",
-            "name": "Norwegian Sea",
-            "supplyCenter": null,
-            "unit": null,
-            "coordinates": {
-                "x": 416,
-                "y": 124
-            },
-            "type": "ocean",
-            "routes": ["bar", "nor", "nth", "nat", "cly", "edi"],
-            "coastalRoutes": null
-        },
-        {
-            "id": "nth",
-            "name": "North Sea",
-            "supplyCenter": null,
-            "unit": null,
-            "coordinates": {
-                "x": 373,
-                "y": 316
-            },
-            "type": "ocean",
-            "routes": [
-                "edi",
-                "nrg",
-                "nor",
-                "ska",
-                "hel",
-                "den",
-                "lon",
-                "yor",
-                "hol",
-                "bel"
-            ],
-            "coastalRoutes": null
-        },
-        {
-            "id": "hel",
-            "name": "Helgoland Bight",
-            "supplyCenter": null,
-            "unit": null,
-            "coordinates": {
-                "x": 431,
-                "y": 350
-            },
-            "type": "ocean",
-            "routes": ["nth", "hol", "den", "kie"],
-            "coastalRoutes": null
-        },
-        {
-            "id": "ska",
-            "name": "Skagerrak",
-            "supplyCenter": null,
-            "unit": null,
-            "coordinates": {
-                "x": 508,
-                "y": 273
-            },
-            "type": "ocean",
-            "routes": ["nth", "nor", "swe", "den", "bal"],
-            "coastalRoutes": null
-        },
-        {
-            "id": "bal",
-            "name": "Baltic Sea",
-            "supplyCenter": null,
-            "unit": null,
-            "coordinates": {
-                "x": 616,
-                "y": 348
-            },
-            "type": "ocean",
-            "routes": ["den", "ska", "swe", "bot", "lvn", "pru", "ber", "kie"],
-            "coastalRoutes": null
-        },
-        {
-            "id": "bot",
-            "name": "Gulf of Bothnia",
-            "supplyCenter": null,
-            "unit": null,
-            "coordinates": {
-                "x": 663,
-                "y": 275
-            },
-            "type": "ocean",
-            "routes": ["swe", "fin", "stp-sc", "lvn", "bal"],
-            "coastalRoutes": null
-        },
-        {
-            "id": "nat",
-            "name": "North Atlantic",
-            "supplyCenter": null,
-            "unit": null,
-            "coordinates": {
-                "x": 133,
-                "y": 243
-            },
-            "type": "ocean",
-            "routes": ["nrg", "cly", "lvp", "iri", "mid"],
-            "coastalRoutes": null
-        },
-        {
-            "id": "iri",
-            "name": "Irish Sea",
-            "supplyCenter": null,
-            "unit": null,
-            "coordinates": {
-                "x": 182,
-                "y": 384
-            },
-            "type": "ocean",
-            "routes": ["nat", "lvp", "wal", "eng", "mid"],
-            "coastalRoutes": null
-        },
-        {
-            "id": "eng",
-            "name": "English Channel",
-            "supplyCenter": null,
-            "unit": null,
-            "coordinates": {
-                "x": 219,
-                "y": 433
-            },
-            "type": "ocean",
-            "routes": ["iri", "wal", "lon", "bel", "pic", "bre", "mid"],
-            "coastalRoutes": null
-        },
-        {
-            "id": "mid",
-            "name": "Mid Atlantic",
-            "supplyCenter": null,
-            "unit": null,
-            "coordinates": {
-                "x": 136,
-                "y": 510
-            },
-            "type": "ocean",
-            "routes": [
-                "nat",
-                "iri",
-                "eng",
-                "bre",
-                "gas",
-                "spa-nc",
-                "spa-sc",
-                "por",
-                "wes"
-            ],
-            "coastalRoutes": null
-        },
-        {
-            "id": "wes",
-            "name": "Western Mediterranean",
-            "supplyCenter": null,
-            "unit": null,
-            "coordinates": {
-                "x": 304,
-                "y": 737
-            },
-            "type": "ocean",
-            "routes": ["naf", "mid", "spa-sc", "gol", "tyn", "tun"],
-            "coastalRoutes": null
-        },
-        {
-            "id": "gol",
-            "name": "Gulf of Lyon",
-            "supplyCenter": null,
-            "unit": null,
-            "coordinates": {
-                "x": 344,
-                "y": 662
-            },
-            "type": "ocean",
-            "routes": ["spa-sc", "mar", "pie", "tus", "tyn", "wes"],
-            "coastalRoutes": null
-        },
-        {
-            "id": "tyn",
-            "name": "Tyrrhenian Sea",
-            "supplyCenter": null,
-            "unit": null,
-            "coordinates": {
-                "x": 465,
-                "y": 729
-            },
-            "type": "ocean",
-            "routes": ["gol", "tus", "rom", "nap", "tun", "wes"],
-            "coastalRoutes": null
-        },
-        {
-            "id": "ion",
-            "name": "Ionian Sea",
-            "supplyCenter": null,
-            "unit": null,
-            "coordinates": {
-                "x": 586,
-                "y": 801
-            },
-            "type": "ocean",
-            "routes": [
-                "tun",
-                "tyn",
-                "nap",
-                "adr",
-                "apu",
-                "alb",
-                "gre",
-                "aeg",
-                "eas"
-            ],
-            "coastalRoutes": null
-        },
-        {
-            "id": "adr",
-            "name": "Adriatic Sea",
-            "supplyCenter": null,
-            "unit": null,
-            "coordinates": {
-                "x": 533,
-                "y": 652
-            },
-            "type": "ocean",
-            "routes": ["ven", "tri", "alb", "ion", "apu"],
-            "coastalRoutes": null
-        },
-        {
-            "id": "aeg",
-            "name": "Aegean Sea",
-            "supplyCenter": null,
-            "unit": null,
-            "coordinates": {
-                "x": 730,
-                "y": 772
-            },
-            "type": "ocean",
-            "routes": ["gre", "bul-sc", "con", "smy", "eas", "ion"],
-            "coastalRoutes": null
-        },
-        {
-            "id": "eas",
-            "name": "Eastern Mediterranean",
-            "supplyCenter": null,
-            "unit": null,
-            "coordinates": {
-                "x": 836,
-                "y": 801
-            },
-            "type": "ocean",
-            "routes": ["ion", "aeg", "smy", "syr"],
-            "coastalRoutes": null
-        },
-        {
-            "id": "bla",
-            "name": "Black Sea",
-            "supplyCenter": null,
-            "unit": null,
-            "coordinates": {
-                "x": 878,
-                "y": 619
-            },
-            "type": "ocean",
-            "routes": ["sev", "arm", "ank", "con", "bul-ec", "rum"],
-            "coastalRoutes": null
+      },
+      "unit": {
+        "id": "f4710e6f-9ad1-4a0b-8c68-9983215e5c41",
+        "controlledBy": "England",
+        "type": "fleet"
+      },
+      "coordinates": {
+        "x": 295,
+        "y": 300
+      },
+      "type": "coastal",
+      "routes": [
+        "cly",
+        "nrg",
+        "nth",
+        "yor",
+        "lvp"
+      ],
+      "coastalRoutes": null
+    },
+    {
+      "id": "lvp",
+      "name": "Liverpool",
+      "supplyCenter": {
+        "controlledBy": "England",
+        "coordinates": {
+          "x": 267,
+          "y": 343
         }
-    ]
+      },
+      "unit": {
+        "id": "32eb54bd-a536-430b-8cb2-57c11d2ef9f1",
+        "controlledBy": "England",
+        "type": "army"
+      },
+      "coordinates": {
+        "x": 281,
+        "y": 339
+      },
+      "type": "coastal",
+      "routes": [
+        "cly",
+        "edi",
+        "yor",
+        "wal",
+        "iri",
+        "nat"
+      ],
+      "coastalRoutes": null
+    },
+    {
+      "id": "lon",
+      "name": "London",
+      "supplyCenter": {
+        "controlledBy": "England",
+        "coordinates": {
+          "x": 295,
+          "y": 404
+        }
+      },
+      "unit": {
+        "id": "fbe7fa49-6782-4709-ad9f-943d91dc433d",
+        "controlledBy": "England",
+        "type": "fleet"
+      },
+      "coordinates": {
+        "x": 279,
+        "y": 399
+      },
+      "type": "coastal",
+      "routes": [
+        "wal",
+        "yor",
+        "nth",
+        "eng"
+      ],
+      "coastalRoutes": null
+    },
+    {
+      "id": "bre",
+      "name": "Brest",
+      "supplyCenter": {
+        "controlledBy": "France",
+        "coordinates": {
+          "x": 200,
+          "y": 459
+        }
+      },
+      "unit": {
+        "id": "fda17ae9-2deb-4bde-bc50-c986e735083a",
+        "controlledBy": "France",
+        "type": "fleet"
+      },
+      "coordinates": {
+        "x": 250,
+        "y": 490
+      },
+      "type": "coastal",
+      "routes": [
+        "mid",
+        "eng",
+        "pic",
+        "par",
+        "gas"
+      ],
+      "coastalRoutes": null
+    },
+    {
+      "id": "par",
+      "name": "Paris",
+      "supplyCenter": {
+        "controlledBy": "France",
+        "coordinates": {
+          "x": 317,
+          "y": 481
+        }
+      },
+      "unit": {
+        "id": "47a5b2d1-2f95-46ce-9865-a44b49d6d5c3",
+        "controlledBy": "France",
+        "type": "army"
+      },
+      "coordinates": {
+        "x": 304,
+        "y": 512
+      },
+      "type": "inland",
+      "routes": [
+        "bre",
+        "pic",
+        "bur",
+        "mar",
+        "gas"
+      ],
+      "coastalRoutes": null
+    },
+    {
+      "id": "mar",
+      "name": "Marseilles",
+      "supplyCenter": {
+        "controlledBy": "France",
+        "coordinates": {
+          "x": 346,
+          "y": 628
+        }
+      },
+      "unit": {
+        "id": "771da699-2edf-4f4d-86ef-b26c98662d7f",
+        "controlledBy": "France",
+        "type": "army"
+      },
+      "coordinates": {
+        "x": 333,
+        "y": 597
+      },
+      "type": "coastal",
+      "routes": [
+        "gol",
+        "spa",
+        "spa-sc",
+        "gas",
+        "bur",
+        "pie"
+      ],
+      "coastalRoutes": null
+    },
+    {
+      "id": "spa",
+      "name": "Spain",
+      "supplyCenter": {
+        "controlledBy": null,
+        "coordinates": {
+          "x": 170,
+          "y": 654
+        }
+      },
+      "unit": null,
+      "coordinates": {
+        "x": 198,
+        "y": 644
+      },
+      "type": "inland",
+      "routes": [
+        "por",
+        "mar",
+        "gas"
+      ],
+      "coastalRoutes": null
+    },
+    {
+      "id": "spa-nc",
+      "name": "Spain (North Coast)",
+      "supplyCenter": null,
+      "unit": null,
+      "coordinates": {
+        "x": 156,
+        "y": 584
+      },
+      "type": "ocean",
+      "routes": [
+        "por",
+        "mid",
+        "gas"
+      ],
+      "coastalRoutes": null
+    },
+    {
+      "id": "spa-sc",
+      "name": "Spain (South Coast)",
+      "supplyCenter": null,
+      "unit": null,
+      "coordinates": {
+        "x": 197,
+        "y": 713
+      },
+      "type": "ocean",
+      "routes": [
+        "por",
+        "mid",
+        "wes",
+        "gol",
+        "mar"
+      ],
+      "coastalRoutes": null
+    },
+    {
+      "id": "por",
+      "name": "Portugal",
+      "supplyCenter": {
+        "controlledBy": null,
+        "coordinates": {
+          "x": 73,
+          "y": 658
+        }
+      },
+      "unit": null,
+      "coordinates": {
+        "x": 91,
+        "y": 641
+      },
+      "type": "coastal",
+      "routes": [
+        "mid",
+        "spa",
+        "spa-nc",
+        "spa-sc"
+      ],
+      "coastalRoutes": null
+    },
+    {
+      "id": "tun",
+      "name": "Tunis",
+      "supplyCenter": {
+        "controlledBy": null,
+        "coordinates": {
+          "x": 430,
+          "y": 786
+        }
+      },
+      "unit": null,
+      "coordinates": {
+        "x": 401,
+        "y": 805
+      },
+      "type": "coastal",
+      "routes": [
+        "naf",
+        "wes",
+        "tyn",
+        "ion"
+      ],
+      "coastalRoutes": null
+    },
+    {
+      "id": "rom",
+      "name": "Rome",
+      "supplyCenter": {
+        "controlledBy": "Italy",
+        "coordinates": {
+          "x": 481,
+          "y": 679
+        }
+      },
+      "unit": {
+        "id": "31d39361-1a2e-471b-be0f-9456a7922589",
+        "controlledBy": "Italy",
+        "type": "army"
+      },
+      "coordinates": {
+        "x": 497,
+        "y": 680
+      },
+      "type": "coastal",
+      "routes": [
+        "tus",
+        "ven",
+        "apu",
+        "nap",
+        "tyn"
+      ],
+      "coastalRoutes": null
+    },
+    {
+      "id": "nap",
+      "name": "Naples",
+      "supplyCenter": {
+        "controlledBy": "Italy",
+        "coordinates": {
+          "x": 514,
+          "y": 704
+        }
+      },
+      "unit": {
+        "id": "0488f1e3-8a30-41fd-8965-5f9b008524e9",
+        "controlledBy": "Italy",
+        "type": "fleet"
+      },
+      "coordinates": {
+        "x": 554,
+        "y": 739
+      },
+      "type": "coastal",
+      "routes": [
+        "tyn",
+        "rom",
+        "apu",
+        "ion"
+      ],
+      "coastalRoutes": null
+    },
+    {
+      "id": "ven",
+      "name": "Venice",
+      "supplyCenter": {
+        "controlledBy": "Italy",
+        "coordinates": {
+          "x": 485,
+          "y": 595
+        }
+      },
+      "unit": {
+        "id": "ae499592-290c-4790-8f89-4819e8237012",
+        "controlledBy": "Italy",
+        "type": "army"
+      },
+      "coordinates": {
+        "x": 467,
+        "y": 604
+      },
+      "type": "coastal",
+      "routes": [
+        "pie",
+        "tyr",
+        "tri",
+        "adr",
+        "apu",
+        "rom",
+        "tus"
+      ],
+      "coastalRoutes": null
+    },
+    {
+      "id": "mun",
+      "name": "Munich",
+      "supplyCenter": {
+        "controlledBy": "Germany",
+        "coordinates": {
+          "x": 480,
+          "y": 527
+        }
+      },
+      "unit": {
+        "id": "a8896b03-062a-4bbb-b4ee-b7cd5df2f8e9",
+        "controlledBy": "Germany",
+        "type": "army"
+      },
+      "coordinates": {
+        "x": 467,
+        "y": 503
+      },
+      "type": "inland",
+      "routes": [
+        "ruh",
+        "kie",
+        "ber",
+        "sil",
+        "boh",
+        "tyr",
+        "bur"
+      ],
+      "coastalRoutes": null
+    },
+    {
+      "id": "ber",
+      "name": "Berlin",
+      "supplyCenter": {
+        "controlledBy": "Germany",
+        "coordinates": {
+          "x": 529,
+          "y": 422
+        }
+      },
+      "unit": {
+        "id": "c6b39b72-46fd-4fad-b67c-12d40846613a",
+        "controlledBy": "Germany",
+        "type": "army"
+      },
+      "coordinates": {
+        "x": 510,
+        "y": 429
+      },
+      "type": "coastal",
+      "routes": [
+        "kie",
+        "bal",
+        "pru",
+        "sil",
+        "mun"
+      ],
+      "coastalRoutes": null
+    },
+    {
+      "id": "kie",
+      "name": "Kiel",
+      "supplyCenter": {
+        "controlledBy": "Germany",
+        "coordinates": {
+          "x": 482,
+          "y": 371
+        }
+      },
+      "unit": {
+        "id": "0a24d641-fe01-4406-bacc-60e8d3f9940b",
+        "controlledBy": "Germany",
+        "type": "fleet"
+      },
+      "coordinates": {
+        "x": 468,
+        "y": 407
+      },
+      "type": "coastal",
+      "routes": [
+        "ruh",
+        "hol",
+        "hel",
+        "den",
+        "bal",
+        "ber",
+        "mun"
+      ],
+      "coastalRoutes": null
+    },
+    {
+      "id": "hol",
+      "name": "Holland",
+      "supplyCenter": {
+        "controlledBy": null,
+        "coordinates": {
+          "x": 383,
+          "y": 405
+        }
+      },
+      "unit": null,
+      "coordinates": {
+        "x": 411,
+        "y": 393
+      },
+      "type": "coastal",
+      "routes": [
+        "nth",
+        "hel",
+        "kie",
+        "ruh",
+        "bel"
+      ],
+      "coastalRoutes": null
+    },
+    {
+      "id": "bel",
+      "name": "Belgium",
+      "supplyCenter": {
+        "controlledBy": null,
+        "coordinates": {
+          "x": 367,
+          "y": 438
+        }
+      },
+      "unit": null,
+      "coordinates": {
+        "x": 375,
+        "y": 451
+      },
+      "type": "coastal",
+      "routes": [
+        "pic",
+        "eng",
+        "nth",
+        "hol",
+        "ruh",
+        "bur"
+      ],
+      "coastalRoutes": null
+    },
+    {
+      "id": "vie",
+      "name": "Vienna",
+      "supplyCenter": {
+        "controlledBy": "Austria-Hungary",
+        "coordinates": {
+          "x": 568,
+          "y": 534
+        }
+      },
+      "unit": {
+        "id": "dfaae230-685d-4dec-9114-862fa1330769",
+        "controlledBy": "Austria-Hungary",
+        "type": "army"
+      },
+      "coordinates": {
+        "x": 593,
+        "y": 537
+      },
+      "type": "inland",
+      "routes": [
+        "boh",
+        "gal",
+        "bud",
+        "tri",
+        "tyr"
+      ],
+      "coastalRoutes": null
+    },
+    {
+      "id": "bud",
+      "name": "Budapest",
+      "supplyCenter": {
+        "controlledBy": "Austria-Hungary",
+        "coordinates": {
+          "x": 616,
+          "y": 552
+        }
+      },
+      "unit": {
+        "id": "3a9e2bd9-8a09-43fe-9db1-b20f45885a49",
+        "controlledBy": "Austria-Hungary",
+        "type": "army"
+      },
+      "coordinates": {
+        "x": 666,
+        "y": 578
+      },
+      "type": "inland",
+      "routes": [
+        "vie",
+        "gal",
+        "rum",
+        "ser",
+        "tri"
+      ],
+      "coastalRoutes": null
+    },
+    {
+      "id": "tri",
+      "name": "Trieste",
+      "supplyCenter": {
+        "controlledBy": "Austria-Hungary",
+        "coordinates": {
+          "x": 513,
+          "y": 593
+        }
+      },
+      "unit": {
+        "id": "44c6cbec-54c4-4bc0-b05c-219dc12d45ea",
+        "controlledBy": "Austria-Hungary",
+        "type": "fleet"
+      },
+      "coordinates": {
+        "x": 561,
+        "y": 621
+      },
+      "type": "coastal",
+      "routes": [
+        "adr",
+        "ven",
+        "try",
+        "vie",
+        "bud",
+        "ser",
+        "alb"
+      ],
+      "coastalRoutes": null
+    },
+    {
+      "id": "rum",
+      "name": "Rumania",
+      "supplyCenter": {
+        "controlledBy": null,
+        "coordinates": {
+          "x": 746,
+          "y": 617
+        }
+      },
+      "unit": null,
+      "coordinates": {
+        "x": 764,
+        "y": 599
+      },
+      "type": "coastal",
+      "routes": [
+        "bud",
+        "gal",
+        "ukr",
+        "sev",
+        "bla",
+        "bul",
+        "bul-ec",
+        "ser"
+      ],
+      "coastalRoutes": null
+    },
+    {
+      "id": "bul",
+      "name": "Bulgaria",
+      "supplyCenter": {
+        "controlledBy": null,
+        "coordinates": {
+          "x": 693,
+          "y": 658
+        }
+      },
+      "unit": null,
+      "coordinates": {
+        "x": 729,
+        "y": 661
+      },
+      "type": "inland",
+      "routes": [
+        "ser",
+        "rum",
+        "con",
+        "gre"
+      ],
+      "coastalRoutes": null
+    },
+    {
+      "id": "bul-ec",
+      "name": "Bulgaria (East Coast)",
+      "supplyCenter": null,
+      "unit": null,
+      "coordinates": {
+        "x": 768,
+        "y": 637
+      },
+      "type": "ocean",
+      "routes": [
+        "rum",
+        "bla",
+        "con"
+      ],
+      "coastalRoutes": null
+    },
+    {
+      "id": "bul-sc",
+      "name": "Bulgaria (South Coast)",
+      "supplyCenter": null,
+      "unit": null,
+      "coordinates": {
+        "x": 729,
+        "y": 682
+      },
+      "type": "coastal",
+      "routes": [
+        "con",
+        "aeg",
+        "gre"
+      ],
+      "coastalRoutes": null
+    },
+    {
+      "id": "gre",
+      "name": "Greece",
+      "supplyCenter": {
+        "controlledBy": null,
+        "coordinates": {
+          "x": 701,
+          "y": 757
+        }
+      },
+      "unit": null,
+      "coordinates": {
+        "x": 662,
+        "y": 732
+      },
+      "type": "coastal",
+      "routes": [
+        "ion",
+        "alb",
+        "ser",
+        "bul",
+        "bul-sc",
+        "aeg"
+      ],
+      "coastalRoutes": null
+    },
+    {
+      "id": "ser",
+      "name": "Serbia",
+      "supplyCenter": {
+        "controlledBy": null,
+        "coordinates": {
+          "x": 641,
+          "y": 618
+        }
+      },
+      "unit": null,
+      "coordinates": {
+        "x": 651,
+        "y": 650
+      },
+      "type": "inland",
+      "routes": [
+        "alb",
+        "tri",
+        "bud",
+        "rum",
+        "bul",
+        "gre"
+      ],
+      "coastalRoutes": null
+    },
+    {
+      "id": "con",
+      "name": "Constantinople",
+      "supplyCenter": {
+        "controlledBy": "Turkey",
+        "coordinates": {
+          "x": 798,
+          "y": 683
+        }
+      },
+      "unit": {
+        "id": "42318637-b36a-40de-a5de-0b409e5e9d58",
+        "controlledBy": "Turkey",
+        "type": "army"
+      },
+      "coordinates": {
+        "x": 802,
+        "y": 702
+      },
+      "type": "coastal",
+      "routes": [
+        "aeg",
+        "bul",
+        "bul-ec",
+        "bul-sc",
+        "bla",
+        "ank",
+        "smy"
+      ],
+      "coastalRoutes": null
+    },
+    {
+      "id": "smy",
+      "name": "Smyrna",
+      "supplyCenter": {
+        "controlledBy": "Turkey",
+        "coordinates": {
+          "x": 767,
+          "y": 739
+        }
+      },
+      "unit": {
+        "id": "9ec4e4bf-8966-444e-9074-e7c404fd776c",
+        "controlledBy": "Turkey",
+        "type": "army"
+      },
+      "coordinates": {
+        "x": 860,
+        "y": 737
+      },
+      "type": "coastal",
+      "routes": [
+        "con",
+        "ank",
+        "arm",
+        "syr",
+        "eas",
+        "aeg"
+      ],
+      "coastalRoutes": null
+    },
+    {
+      "id": "ank",
+      "name": "Ankara",
+      "supplyCenter": {
+        "controlledBy": "Turkey",
+        "coordinates": {
+          "x": 870,
+          "y": 692
+        }
+      },
+      "unit": {
+        "id": "250de842-5981-41c0-9bb6-ab3783f64b80",
+        "controlledBy": "Turkey",
+        "type": "fleet"
+      },
+      "coordinates": {
+        "x": 899,
+        "y": 674
+      },
+      "type": "coastal",
+      "routes": [
+        "bla",
+        "arm",
+        "smy",
+        "con"
+      ],
+      "coastalRoutes": null
+    },
+    {
+      "id": "sev",
+      "name": "Sevastopol",
+      "supplyCenter": {
+        "controlledBy": "Russia",
+        "coordinates": {
+          "x": 881,
+          "y": 595
+        }
+      },
+      "unit": {
+        "id": "a80951a8-43ef-4fe5-bbd8-2d541a642a69",
+        "controlledBy": "Russia",
+        "type": "fleet"
+      },
+      "coordinates": {
+        "x": 960,
+        "y": 494
+      },
+      "type": "coastal",
+      "routes": [
+        "ukr",
+        "mos",
+        "arm",
+        "bla",
+        "rum"
+      ],
+      "coastalRoutes": null
+    },
+    {
+      "id": "mos",
+      "name": "Moscow",
+      "supplyCenter": {
+        "controlledBy": "Russia",
+        "coordinates": {
+          "x": 916,
+          "y": 349
+        }
+      },
+      "unit": {
+        "id": "8add7c60-becc-47a3-9409-847cb6d8501a",
+        "controlledBy": "Russia",
+        "type": "army"
+      },
+      "coordinates": {
+        "x": 943,
+        "y": 351
+      },
+      "type": "inland",
+      "routes": [
+        "lvn",
+        "stp",
+        "sev",
+        "ukr",
+        "war"
+      ],
+      "coastalRoutes": null
+    },
+    {
+      "id": "war",
+      "name": "Warsaw",
+      "supplyCenter": {
+        "controlledBy": "Russia",
+        "coordinates": {
+          "x": 660,
+          "y": 440
+        }
+      },
+      "unit": {
+        "id": "0b968723-f877-489f-a8ee-f5f7bfcc9ca4",
+        "controlledBy": "Russia",
+        "type": "army"
+      },
+      "coordinates": {
+        "x": 718,
+        "y": 426
+      },
+      "type": "inland",
+      "routes": [
+        "pru",
+        "svn",
+        "mos",
+        "ukr",
+        "gal",
+        "sil"
+      ],
+      "coastalRoutes": null
+    },
+    {
+      "id": "stp",
+      "name": "St. Petersburg",
+      "supplyCenter": {
+        "controlledBy": "Russia",
+        "coordinates": {
+          "x": 802,
+          "y": 267
+        }
+      },
+      "unit": {
+        "id": "cfc4fbd9-b721-41a4-9ae5-f4196efb143d",
+        "controlledBy": "Russia",
+        "type": "fleet"
+      },
+      "coordinates": {
+        "x": 910,
+        "y": 217
+      },
+      "type": "inland",
+      "routes": [
+        "fin",
+        "mos",
+        "lvn",
+        "nor"
+      ],
+      "coastalRoutes": null
+    },
+    {
+      "id": "stp-nc",
+      "name": "St. Pertersburg (North Coast)",
+      "supplyCenter": null,
+      "unit": null,
+      "coordinates": {
+        "x": 911,
+        "y": 155
+      },
+      "type": "ocean",
+      "routes": [
+        "bar",
+        "nor"
+      ],
+      "coastalRoutes": null
+    },
+    {
+      "id": "stp-sc",
+      "name": "St. Petersburg (South Coast)",
+      "supplyCenter": null,
+      "unit": null,
+      "coordinates": {
+        "x": 782,
+        "y": 275
+      },
+      "type": "coastal",
+      "routes": [
+        "bot",
+        "fin",
+        "lvn"
+      ],
+      "coastalRoutes": null
+    },
+    {
+      "id": "den",
+      "name": "Denmark",
+      "supplyCenter": {
+        "controlledBy": null,
+        "coordinates": {
+          "x": 529,
+          "y": 344
+        }
+      },
+      "unit": null,
+      "coordinates": {
+        "x": 479,
+        "y": 321
+      },
+      "type": "coastal",
+      "routes": [
+        "kie",
+        "hel",
+        "nth",
+        "ska",
+        "bal"
+      ],
+      "coastalRoutes": null
+    },
+    {
+      "id": "nor",
+      "name": "Norway",
+      "supplyCenter": {
+        "controlledBy": null,
+        "coordinates": {
+          "x": 527,
+          "y": 240
+        }
+      },
+      "unit": null,
+      "coordinates": {
+        "x": 521,
+        "y": 196
+      },
+      "type": "coastal",
+      "routes": [
+        "nrg",
+        "bar",
+        "swe",
+        "ska",
+        "nth"
+      ],
+      "coastalRoutes": null
+    },
+    {
+      "id": "swe",
+      "name": "Sweden",
+      "supplyCenter": {
+        "controlledBy": null,
+        "coordinates": {
+          "x": 629,
+          "y": 268
+        }
+      },
+      "unit": null,
+      "coordinates": {
+        "x": 598,
+        "y": 215
+      },
+      "type": "coastal",
+      "routes": [
+        "nor",
+        "fin",
+        "bot",
+        "bal",
+        "ska"
+      ],
+      "coastalRoutes": null
+    },
+    {
+      "id": "cly",
+      "name": "Clyde",
+      "supplyCenter": null,
+      "unit": null,
+      "coordinates": {
+        "x": 273,
+        "y": 247
+      },
+      "type": "coastal",
+      "routes": [
+        "nat",
+        "nrg",
+        "edi",
+        "lvp"
+      ],
+      "coastalRoutes": null
+    },
+    {
+      "id": "yor",
+      "name": "York",
+      "supplyCenter": null,
+      "unit": null,
+      "coordinates": {
+        "x": 297,
+        "y": 366
+      },
+      "type": "coastal",
+      "routes": [
+        "lon",
+        "wal",
+        "lvp",
+        "edi",
+        "nth"
+      ],
+      "coastalRoutes": null
+    },
+    {
+      "id": "wal",
+      "name": "Wales",
+      "supplyCenter": null,
+      "unit": null,
+      "coordinates": {
+        "x": 253,
+        "y": 373
+      },
+      "type": "coastal",
+      "routes": [
+        "iri",
+        "lvp",
+        "yor",
+        "lon",
+        "eng"
+      ],
+      "coastalRoutes": null
+    },
+    {
+      "id": "pic",
+      "name": "Picardy",
+      "supplyCenter": null,
+      "unit": null,
+      "coordinates": {
+        "x": 324,
+        "y": 457
+      },
+      "type": "coastal",
+      "routes": [
+        "bre",
+        "eng",
+        "bel",
+        "bur",
+        "par"
+      ],
+      "coastalRoutes": null
+    },
+    {
+      "id": "gas",
+      "name": "Gascony",
+      "supplyCenter": null,
+      "unit": null,
+      "coordinates": {
+        "x": 265,
+        "y": 574
+      },
+      "type": "coastal",
+      "routes": [
+        "spa",
+        "spa-nc",
+        "mid",
+        "bre",
+        "par",
+        "bur",
+        "mar"
+      ],
+      "coastalRoutes": null
+    },
+    {
+      "id": "bur",
+      "name": "Burgundy",
+      "supplyCenter": null,
+      "unit": null,
+      "coordinates": {
+        "x": 361,
+        "y": 524
+      },
+      "type": "inland",
+      "routes": [
+        "par",
+        "pic",
+        "bel",
+        "ruh",
+        "mun",
+        "mar",
+        "gas"
+      ],
+      "coastalRoutes": null
+    },
+    {
+      "id": "naf",
+      "name": "North Africa",
+      "supplyCenter": null,
+      "unit": null,
+      "coordinates": {
+        "x": 207,
+        "y": 805
+      },
+      "type": "coastal",
+      "routes": [
+        "mid",
+        "wes",
+        "tun"
+      ],
+      "coastalRoutes": null
+    },
+    {
+      "id": "ruh",
+      "name": "Ruhr",
+      "supplyCenter": null,
+      "unit": null,
+      "coordinates": {
+        "x": 421,
+        "y": 461
+      },
+      "type": "inland",
+      "routes": [
+        "bel",
+        "hol",
+        "kie",
+        "mun",
+        "bur"
+      ],
+      "coastalRoutes": null
+    },
+    {
+      "id": "pru",
+      "name": "Prussia",
+      "supplyCenter": null,
+      "unit": null,
+      "coordinates": {
+        "x": 629,
+        "y": 402
+      },
+      "type": "coastal",
+      "routes": [
+        "ber",
+        "bal",
+        "lvn",
+        "war",
+        "sil"
+      ],
+      "coastalRoutes": null
+    },
+    {
+      "id": "sil",
+      "name": "Silesia",
+      "supplyCenter": null,
+      "unit": null,
+      "coordinates": {
+        "x": 570,
+        "y": 451
+      },
+      "type": "inland",
+      "routes": [
+        "ber",
+        "pru",
+        "war",
+        "gal",
+        "boh",
+        "mun"
+      ],
+      "coastalRoutes": null
+    },
+    {
+      "id": "boh",
+      "name": "Bohemia",
+      "supplyCenter": null,
+      "unit": null,
+      "coordinates": {
+        "x": 551,
+        "y": 499
+      },
+      "type": "inland",
+      "routes": [
+        "mun",
+        "sil",
+        "gal",
+        "vie",
+        "tyr"
+      ],
+      "coastalRoutes": null
+    },
+    {
+      "id": "tyr",
+      "name": "Tyrolia",
+      "supplyCenter": null,
+      "unit": null,
+      "coordinates": {
+        "x": 513,
+        "y": 553
+      },
+      "type": "inland",
+      "routes": [
+        "pie",
+        "mun",
+        "boh",
+        "vie",
+        "tri",
+        "ven"
+      ],
+      "coastalRoutes": null
+    },
+    {
+      "id": "gal",
+      "name": "Galicia",
+      "supplyCenter": null,
+      "unit": null,
+      "coordinates": {
+        "x": 692,
+        "y": 508
+      },
+      "type": "inland",
+      "routes": [
+        "sil",
+        "war",
+        "ukr",
+        "rum",
+        "bud",
+        "vie",
+        "boh"
+      ],
+      "coastalRoutes": null
+    },
+    {
+      "id": "pie",
+      "name": "Piedmont",
+      "supplyCenter": null,
+      "unit": null,
+      "coordinates": {
+        "x": 416,
+        "y": 592
+      },
+      "type": "coastal",
+      "routes": [
+        "mar",
+        "tyr",
+        "ven",
+        "tus",
+        "gol"
+      ],
+      "coastalRoutes": null
+    },
+    {
+      "id": "tus",
+      "name": "Tuscany",
+      "supplyCenter": null,
+      "unit": null,
+      "coordinates": {
+        "x": 453,
+        "y": 634
+      },
+      "type": "coastal",
+      "routes": [
+        "pie",
+        "ven",
+        "rom",
+        "gol",
+        "tyn"
+      ],
+      "coastalRoutes": null
+    },
+    {
+      "id": "apu",
+      "name": "Apulia",
+      "supplyCenter": null,
+      "unit": null,
+      "coordinates": {
+        "x": 551,
+        "y": 700
+      },
+      "type": "coastal",
+      "routes": [
+        "adr",
+        "ion",
+        "nap",
+        "rom",
+        "ven"
+      ],
+      "coastalRoutes": null
+    },
+    {
+      "id": "alb",
+      "name": "Albania",
+      "supplyCenter": null,
+      "unit": null,
+      "coordinates": {
+        "x": 628,
+        "y": 688
+      },
+      "type": "coastal",
+      "routes": [
+        "adr",
+        "tri",
+        "ser",
+        "gre",
+        "ion"
+      ],
+      "coastalRoutes": null
+    },
+    {
+      "id": "arm",
+      "name": "Armenia",
+      "supplyCenter": null,
+      "unit": null,
+      "coordinates": {
+        "x": 1003,
+        "y": 686
+      },
+      "type": "coastal",
+      "routes": [
+        "bla",
+        "sev",
+        "syr",
+        "smy",
+        "ank"
+      ],
+      "coastalRoutes": null
+    },
+    {
+      "id": "syr",
+      "name": "Syria",
+      "supplyCenter": null,
+      "unit": null,
+      "coordinates": {
+        "x": 980,
+        "y": 783
+      },
+      "type": "coastal",
+      "routes": [
+        "eas",
+        "smy",
+        "arm"
+      ],
+      "coastalRoutes": null
+    },
+    {
+      "id": "ukr",
+      "name": "Ukraine",
+      "supplyCenter": null,
+      "unit": null,
+      "coordinates": {
+        "x": 828,
+        "y": 484
+      },
+      "type": "inland",
+      "routes": [
+        "gal",
+        "war",
+        "mos",
+        "sev",
+        "rum"
+      ],
+      "coastalRoutes": null
+    },
+    {
+      "id": "fin",
+      "name": "Finland",
+      "supplyCenter": null,
+      "unit": null,
+      "coordinates": {
+        "x": 747,
+        "y": 201
+      },
+      "type": "coastal",
+      "routes": [
+        "swe",
+        "stp",
+        "stp-sc",
+        "bot"
+      ],
+      "coastalRoutes": null
+    },
+    {
+      "id": "lvn",
+      "name": "Livonia",
+      "supplyCenter": null,
+      "unit": null,
+      "coordinates": {
+        "x": 731,
+        "y": 339
+      },
+      "type": "coastal",
+      "routes": [
+        "bot",
+        "stp",
+        "stp-sc",
+        "mos",
+        "war",
+        "pru",
+        "bal"
+      ],
+      "coastalRoutes": null
+    },
+    {
+      "id": "bar",
+      "name": "Barents Sea",
+      "supplyCenter": null,
+      "unit": null,
+      "coordinates": {
+        "x": 852,
+        "y": 59
+      },
+      "type": "ocean",
+      "routes": [
+        "nor",
+        "nrg",
+        "stp-nc"
+      ],
+      "coastalRoutes": null
+    },
+    {
+      "id": "nrg",
+      "name": "Norwegian Sea",
+      "supplyCenter": null,
+      "unit": null,
+      "coordinates": {
+        "x": 416,
+        "y": 124
+      },
+      "type": "ocean",
+      "routes": [
+        "bar",
+        "nor",
+        "nth",
+        "nat",
+        "cly",
+        "edi"
+      ],
+      "coastalRoutes": null
+    },
+    {
+      "id": "nth",
+      "name": "North Sea",
+      "supplyCenter": null,
+      "unit": null,
+      "coordinates": {
+        "x": 373,
+        "y": 316
+      },
+      "type": "ocean",
+      "routes": [
+        "edi",
+        "nrg",
+        "nor",
+        "ska",
+        "hel",
+        "den",
+        "lon",
+        "yor",
+        "hol",
+        "bel"
+      ],
+      "coastalRoutes": null
+    },
+    {
+      "id": "hel",
+      "name": "Helgoland Bight",
+      "supplyCenter": null,
+      "unit": null,
+      "coordinates": {
+        "x": 431,
+        "y": 350
+      },
+      "type": "ocean",
+      "routes": [
+        "nth",
+        "hol",
+        "den",
+        "kie"
+      ],
+      "coastalRoutes": null
+    },
+    {
+      "id": "ska",
+      "name": "Skagerrak",
+      "supplyCenter": null,
+      "unit": null,
+      "coordinates": {
+        "x": 508,
+        "y": 273
+      },
+      "type": "ocean",
+      "routes": [
+        "nth",
+        "nor",
+        "swe",
+        "den",
+        "bal"
+      ],
+      "coastalRoutes": null
+    },
+    {
+      "id": "bal",
+      "name": "Baltic Sea",
+      "supplyCenter": null,
+      "unit": null,
+      "coordinates": {
+        "x": 616,
+        "y": 348
+      },
+      "type": "ocean",
+      "routes": [
+        "den",
+        "ska",
+        "swe",
+        "bot",
+        "lvn",
+        "pru",
+        "ber",
+        "kie"
+      ],
+      "coastalRoutes": null
+    },
+    {
+      "id": "bot",
+      "name": "Gulf of Bothnia",
+      "supplyCenter": null,
+      "unit": null,
+      "coordinates": {
+        "x": 663,
+        "y": 275
+      },
+      "type": "ocean",
+      "routes": [
+        "swe",
+        "fin",
+        "stp-sc",
+        "lvn",
+        "bal"
+      ],
+      "coastalRoutes": null
+    },
+    {
+      "id": "nat",
+      "name": "North Atlantic",
+      "supplyCenter": null,
+      "unit": null,
+      "coordinates": {
+        "x": 133,
+        "y": 243
+      },
+      "type": "ocean",
+      "routes": [
+        "nrg",
+        "cly",
+        "lvp",
+        "iri",
+        "mid"
+      ],
+      "coastalRoutes": null
+    },
+    {
+      "id": "iri",
+      "name": "Irish Sea",
+      "supplyCenter": null,
+      "unit": null,
+      "coordinates": {
+        "x": 182,
+        "y": 384
+      },
+      "type": "ocean",
+      "routes": [
+        "nat",
+        "lvp",
+        "wal",
+        "eng",
+        "mid"
+      ],
+      "coastalRoutes": null
+    },
+    {
+      "id": "eng",
+      "name": "English Channel",
+      "supplyCenter": null,
+      "unit": null,
+      "coordinates": {
+        "x": 219,
+        "y": 433
+      },
+      "type": "ocean",
+      "routes": [
+        "iri",
+        "wal",
+        "lon",
+        "bel",
+        "pic",
+        "bre",
+        "mid"
+      ],
+      "coastalRoutes": null
+    },
+    {
+      "id": "mid",
+      "name": "Mid Atlantic",
+      "supplyCenter": null,
+      "unit": null,
+      "coordinates": {
+        "x": 136,
+        "y": 510
+      },
+      "type": "ocean",
+      "routes": [
+        "nat",
+        "iri",
+        "eng",
+        "bre",
+        "gas",
+        "spa-nc",
+        "spa-sc",
+        "por",
+        "wes"
+      ],
+      "coastalRoutes": null
+    },
+    {
+      "id": "wes",
+      "name": "Western Mediterranean",
+      "supplyCenter": null,
+      "unit": null,
+      "coordinates": {
+        "x": 304,
+        "y": 737
+      },
+      "type": "ocean",
+      "routes": [
+        "naf",
+        "mid",
+        "spa-sc",
+        "gol",
+        "tyn",
+        "tun"
+      ],
+      "coastalRoutes": null
+    },
+    {
+      "id": "gol",
+      "name": "Gulf of Lyon",
+      "supplyCenter": null,
+      "unit": null,
+      "coordinates": {
+        "x": 344,
+        "y": 662
+      },
+      "type": "ocean",
+      "routes": [
+        "spa-sc",
+        "mar",
+        "pie",
+        "tus",
+        "tyn",
+        "wes"
+      ],
+      "coastalRoutes": null
+    },
+    {
+      "id": "tyn",
+      "name": "Tyrrhenian Sea",
+      "supplyCenter": null,
+      "unit": null,
+      "coordinates": {
+        "x": 465,
+        "y": 729
+      },
+      "type": "ocean",
+      "routes": [
+        "gol",
+        "tus",
+        "rom",
+        "nap",
+        "tun",
+        "wes"
+      ],
+      "coastalRoutes": null
+    },
+    {
+      "id": "ion",
+      "name": "Ionian Sea",
+      "supplyCenter": null,
+      "unit": null,
+      "coordinates": {
+        "x": 586,
+        "y": 801
+      },
+      "type": "ocean",
+      "routes": [
+        "tun",
+        "tyn",
+        "nap",
+        "adr",
+        "apu",
+        "alb",
+        "gre",
+        "aeg",
+        "eas"
+      ],
+      "coastalRoutes": null
+    },
+    {
+      "id": "adr",
+      "name": "Adriatic Sea",
+      "supplyCenter": null,
+      "unit": null,
+      "coordinates": {
+        "x": 533,
+        "y": 652
+      },
+      "type": "ocean",
+      "routes": [
+        "ven",
+        "tri",
+        "alb",
+        "ion",
+        "apu"
+      ],
+      "coastalRoutes": null
+    },
+    {
+      "id": "aeg",
+      "name": "Aegean Sea",
+      "supplyCenter": null,
+      "unit": null,
+      "coordinates": {
+        "x": 730,
+        "y": 772
+      },
+      "type": "ocean",
+      "routes": [
+        "gre",
+        "bul-sc",
+        "con",
+        "smy",
+        "eas",
+        "ion"
+      ],
+      "coastalRoutes": null
+    },
+    {
+      "id": "eas",
+      "name": "Eastern Mediterranean",
+      "supplyCenter": null,
+      "unit": null,
+      "coordinates": {
+        "x": 836,
+        "y": 801
+      },
+      "type": "ocean",
+      "routes": [
+        "ion",
+        "aeg",
+        "smy",
+        "syr"
+      ],
+      "coastalRoutes": null
+    },
+    {
+      "id": "bla",
+      "name": "Black Sea",
+      "supplyCenter": null,
+      "unit": null,
+      "coordinates": {
+        "x": 878,
+        "y": 619
+      },
+      "type": "ocean",
+      "routes": [
+        "sev",
+        "arm",
+        "ank",
+        "con",
+        "bul-ec",
+        "rum"
+      ],
+      "coastalRoutes": null
+    }
+  ]
 }

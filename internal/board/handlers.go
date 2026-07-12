@@ -6,6 +6,7 @@ import (
 	h "diplomacy-api/internal/http"
 	"diplomacy-api/internal/platform/aws"
 	"diplomacy-api/internal/platform/mongo"
+	"fmt"
 
 	"github.com/aws/aws-lambda-go/events"
 )
@@ -35,7 +36,8 @@ func Get(ctx context.Context, event events.APIGatewayV2HTTPRequest) (events.APIG
 		}), err
 	}
 
-	buf, err := s3.Get(ctx, "diplomacy-maps", g.Map.Filename)
+	filename := fmt.Sprintf("%s.png", g.Map.ID)
+	buf, err := s3.Get(ctx, "diplomacy-maps", filename)
 	if err != nil {
 		return h.InternalServerError(&h.Error{
 			Message: err.Error(),
@@ -46,7 +48,7 @@ func Get(ctx context.Context, event events.APIGatewayV2HTTPRequest) (events.APIG
 	if err != nil {
 		return h.InternalServerError(&h.Error{
 			Message: err.Error(),
-		}), nil
+		}), err
 	}
 
 	return h.OK(&buf), nil

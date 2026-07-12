@@ -2,7 +2,7 @@ package board
 
 import (
 	"bytes"
-	"diplomacy-api/internal/game"
+	"diplomacy-api/internal/models"
 	"fmt"
 	"image"
 	"image/color"
@@ -18,7 +18,7 @@ const (
 
 var black = color.RGBA{A: 255}
 
-func Draw(mapBuf []byte, g *game.Game) ([]byte, error) {
+func Draw(mapBuf []byte, g *models.Game) ([]byte, error) {
 	src, err := png.Decode(bytes.NewReader(mapBuf))
 	if err != nil {
 		return nil, err
@@ -55,9 +55,9 @@ func Draw(mapBuf []byte, g *game.Game) ([]byte, error) {
 			}
 
 			switch p.Unit.Type {
-			case game.UnitArmy:
+			case models.UnitArmy:
 				drawCircle(canvas, p.Coordinates, armyRadius, c)
-			case game.UnitFleet:
+			case models.UnitFleet:
 				drawTriangle(canvas, p.Coordinates, c)
 			default:
 				return nil, fmt.Errorf("unknown unit type %q", p.Unit.Type)
@@ -88,7 +88,7 @@ func parseRGBColor(s string) (color.RGBA, error) {
 	return color.RGBA{R: uint8(r), G: uint8(g), B: uint8(b), A: 255}, nil
 }
 
-func drawCircle(img *image.RGBA, coords game.Coordinates, radius int, fill color.RGBA) {
+func drawCircle(img *image.RGBA, coords models.Coordinates, radius int, fill color.RGBA) {
 	cx := int(math.Round(coords.X))
 	cy := int(math.Round(coords.Y))
 	r2 := radius * radius
@@ -112,7 +112,7 @@ func drawCircle(img *image.RGBA, coords game.Coordinates, radius int, fill color
 	}
 }
 
-func drawTriangle(img *image.RGBA, coords game.Coordinates, fill color.RGBA) {
+func drawTriangle(img *image.RGBA, coords models.Coordinates, fill color.RGBA) {
 	top := image.Point{X: int(math.Round(coords.X)), Y: int(math.Round(coords.Y)) - 5}
 	left := image.Point{X: int(math.Round(coords.X)) - 12, Y: int(math.Round(coords.Y)) + 5}
 	right := image.Point{X: int(math.Round(coords.X)) + 12, Y: int(math.Round(coords.Y)) + 5}

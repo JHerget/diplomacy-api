@@ -1,6 +1,7 @@
 package aws
 
 import (
+	"bytes"
 	"context"
 	"io"
 	"log"
@@ -45,4 +46,18 @@ func (s *S3) Get(ctx context.Context, bucket string, filename string) ([]byte, e
 	}
 
 	return buf, nil
+}
+
+func (s *S3) Put(ctx context.Context, bucket string, filename string, file []byte) error {
+	_, err := s.client.PutObject(ctx, &s3.PutObjectInput{
+		Bucket: aws.String(bucket),
+		Key:    aws.String(filename),
+		Body:   bytes.NewReader(file),
+	})
+	if err != nil {
+		log.Printf("failed to put file '%s': %v", filename, err)
+		return err
+	}
+
+	return nil
 }

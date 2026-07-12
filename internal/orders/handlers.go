@@ -5,6 +5,7 @@ import (
 	"diplomacy-api/internal/board"
 	"diplomacy-api/internal/game"
 	h "diplomacy-api/internal/http"
+	"diplomacy-api/internal/models"
 	"diplomacy-api/internal/platform/aws"
 	"diplomacy-api/internal/platform/mongo"
 	"diplomacy-api/internal/utils"
@@ -30,15 +31,15 @@ func GetByID(ctx context.Context, event events.APIGatewayV2HTTPRequest) (events.
 }
 
 func Create(ctx context.Context, event events.APIGatewayV2HTTPRequest) (events.APIGatewayV2HTTPResponse, error) {
-	gameId := event.PathParameters["gid"]
-	turnId := event.PathParameters["tid"]
+	gameID := event.PathParameters["gid"]
+	turnID := event.PathParameters["tid"]
 
 	var order orderRequest
 	err := json.Unmarshal([]byte(event.Body), &order)
 	if err != nil {
 		return h.BadRequest(&h.Error{
 			Message: "unable to parse request body",
-		}), nil
+		}), err
 	}
 
 	db, err := mongo.NewMongoDB(ctx)
@@ -56,32 +57,32 @@ func Create(ctx context.Context, event events.APIGatewayV2HTTPRequest) (events.A
 	}
 
 	gameRepo := game.NewRepository(db)
-	g, err := gameRepo.Get(ctx, gameId)
+	g, err := gameRepo.Get(ctx, gameID)
 	if err != nil {
 		return h.InternalServerError(&h.Error{
 			Message: err.Error(),
 		}), err
 	}
 
-	turn, ok := utils.Find(g.Turns, func(t *game.Turn) bool {
-		return t.Id == turnId
+	turn, ok := utils.Find(g.Turns, func(t *models.Turn) bool {
+		return t.ID == turnID
 	})
 	if !ok {
 		return h.BadRequest(&h.Error{
-			Message: fmt.Sprintf("invalid turn id '%s'", turnId),
-		}), nil
+			Message: fmt.Sprintf("invalid turn id '%s'", turnID),
+		}), fmt.Errorf("invalid turn id '%s'", turnID)
 	}
 
-	turn.Orders = append(turn.Orders, game.Order{
-		Id:          "",
-		PhaseId:     order.PhaseId,
+	turn.Orders = append(turn.Orders, models.Order{
+		ID:          "",
+		PhaseID:     order.PhaseID,
 		PlayerName:  order.PlayerName,
 		CreatedDate: 0,
 		Value:       order.Value,
 	})
 
-	allOrders := utils.Filter(turn.Orders, func(o *game.Order) bool {
-		return o.PhaseId == turn.PhaseId
+	allOrders := utils.Filter(turn.Orders, func(o *models.Order) bool {
+		return o.PhaseID == turn.PhaseID
 	})
 	allCommands := GetCommands(allOrders)
 	validCommands := ValidateCommands(allCommands, g.Board)
@@ -95,11 +96,12 @@ func Create(ctx context.Context, event events.APIGatewayV2HTTPRequest) (events.A
 	if err != nil {
 		return h.InternalServerError(&h.Error{
 			Message: err.Error(),
-		}), nil
+		}), err
 	}
 	g.Board = newBoard
 
-	buf, err := s3.Get(ctx, "diplomacy-maps", g.Map.Filename)
+	filename := fmt.Sprintf("%s.png", g.Map.ID)
+	buf, err := s3.Get(ctx, "diplomacy-maps", filename)
 	if err != nil {
 		return h.InternalServerError(&h.Error{
 			Message: err.Error(),
@@ -110,7 +112,7 @@ func Create(ctx context.Context, event events.APIGatewayV2HTTPRequest) (events.A
 	if err != nil {
 		return h.InternalServerError(&h.Error{
 			Message: err.Error(),
-		}), nil
+		}), err
 	}
 
 	return h.OK(&buf), nil
@@ -118,6 +120,6 @@ func Create(ctx context.Context, event events.APIGatewayV2HTTPRequest) (events.A
 
 type orderRequest struct {
 	PlayerName string `json:"playerName"`
-	PhaseId    string `json:"phaseId"`
+	PhaseID    string `json:"phaseID"`
 	Value      string `json:"value"`
 }

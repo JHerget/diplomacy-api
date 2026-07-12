@@ -12,6 +12,10 @@ func OK[T any](body T) events.APIGatewayV2HTTPResponse {
 	return ResponseWithBody(http.StatusOK, &body)
 }
 
+func Created[T any](body T) events.APIGatewayV2HTTPResponse {
+	return ResponseWithBody(http.StatusCreated, &body)
+}
+
 func BadRequest[T any](body T) events.APIGatewayV2HTTPResponse {
 	return ResponseWithBody(http.StatusBadRequest, &body)
 }

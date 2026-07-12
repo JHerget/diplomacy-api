@@ -3,10 +3,21 @@ package game
 import (
 	"context"
 	h "diplomacy-api/internal/http"
+	"diplomacy-api/internal/maps"
+	"diplomacy-api/internal/models"
 	"diplomacy-api/internal/platform/mongo"
+	"encoding/json"
+	"errors"
+	"fmt"
 	"net/http"
 
 	"github.com/aws/aws-lambda-go/events"
+)
+
+const (
+	GameInvalidDaysPerTurn   = "Days per turn must be greater than 0."
+	GameInvalidTurnStartHour = "Turn start hour must be greater than or equal to 0 and less than or equal to 23."
+	GameInvalidStartDate     = "Start date must be an epoch timestamp."
 )
 
 func GetAll(ctx context.Context, event events.APIGatewayV2HTTPRequest) (events.APIGatewayV2HTTPResponse, error) {
@@ -14,7 +25,7 @@ func GetAll(ctx context.Context, event events.APIGatewayV2HTTPRequest) (events.A
 	if err != nil {
 		return h.InternalServerError(&h.Error{
 			Message: err.Error(),
-		}), nil
+		}), err
 	}
 
 	gameRepo := NewRepository(db)
@@ -22,7 +33,7 @@ func GetAll(ctx context.Context, event events.APIGatewayV2HTTPRequest) (events.A
 	if err != nil {
 		return h.InternalServerError(&h.Error{
 			Message: err.Error(),
-		}), nil
+		}), err
 	}
 
 	return h.OK(allGames), nil
@@ -35,7 +46,7 @@ func GetByID(ctx context.Context, event events.APIGatewayV2HTTPRequest) (events.
 	if err != nil {
 		return h.InternalServerError(&h.Error{
 			Message: err.Error(),
-		}), nil
+		}), err
 	}
 
 	gameRepo := NewRepository(db)
@@ -43,24 +54,85 @@ func GetByID(ctx context.Context, event events.APIGatewayV2HTTPRequest) (events.
 	if err != nil {
 		return h.InternalServerError(&h.Error{
 			Message: err.Error(),
-		}), nil
+		}), err
 	}
 
 	return h.OK(g), nil
 }
 
 func Create(ctx context.Context, event events.APIGatewayV2HTTPRequest) (events.APIGatewayV2HTTPResponse, error) {
-	return events.APIGatewayV2HTTPResponse{
-		StatusCode: http.StatusOK,
-		Body:       "create game",
-	}, nil
+	var req createGameRequest
+	if err := json.Unmarshal([]byte(event.Body), &req); err != nil {
+		return h.InternalServerError(&h.Error{
+			Message: err.Error(),
+		}), err
+	}
+
+	if req.DaysPerTurn <= 0 {
+		return h.BadRequest(&h.Error{
+			Message: GameInvalidDaysPerTurn,
+		}), errors.New(GameInvalidDaysPerTurn)
+	}
+
+	if req.TurnStartHour < 0 || req.TurnStartHour > 23 {
+		return h.BadRequest(&h.Error{
+			Message: GameInvalidTurnStartHour,
+		}), errors.New(GameInvalidTurnStartHour)
+	}
+
+	if req.StartDate < 0 {
+		return h.BadRequest(&h.Error{
+			Message: GameInvalidStartDate,
+		}), errors.New(GameInvalidStartDate)
+	}
+
+	db, err := mongo.NewMongoDB(ctx)
+	if err != nil {
+		return h.InternalServerError(&h.Error{
+			Message: err.Error(),
+		}), err
+	}
+
+	gameRepo := NewRepository(db)
+	mapRepo := maps.NewRepository(db)
+
+	m, err := mapRepo.Get(ctx, req.MapID)
+	if err != nil {
+		return h.BadRequest(&h.Error{
+			Message: fmt.Sprintf("map with id '%s' not found: %s", req.MapID, err),
+		}), err
+	}
+
+	g := models.Game{
+		Map:           m.Summary(),
+		Board:         m.Providences,
+		Players:       m.Players,
+		DaysPerTurn:   req.DaysPerTurn,
+		TurnStartHour: req.TurnStartHour,
+		StartDate:     req.StartDate,
+	}
+
+	gameRepo.Create(ctx, &g)
+
+	return h.Created(&g), nil
 }
 
 func Update(ctx context.Context, event events.APIGatewayV2HTTPRequest) (events.APIGatewayV2HTTPResponse, error) {
-	return events.APIGatewayV2HTTPResponse{
-		StatusCode: http.StatusOK,
-		Body:       "update game",
-	}, nil
+	var req models.Game
+	if err := json.Unmarshal([]byte(event.Body), &req); err != nil {
+		return h.InternalServerError(&h.Error{
+			Message: err.Error(),
+		}), err
+	}
+
+	// db, err := mongo.NewMongoDB(ctx)
+	// if err != nil {
+	// 	return h.InternalServerError(&h.Error{
+	// 		Message: err.Error(),
+	// 	}), err
+	// }
+
+	return h.OK(req), nil
 }
 
 func Delete(ctx context.Context, event events.APIGatewayV2HTTPRequest) (events.APIGatewayV2HTTPResponse, error) {
@@ -68,4 +140,12 @@ func Delete(ctx context.Context, event events.APIGatewayV2HTTPRequest) (events.A
 		StatusCode: http.StatusOK,
 		Body:       "delete game",
 	}, nil
+}
+
+type createGameRequest struct {
+	MapID         string `json:"mapId"`
+	DaysPerTurn   int    `json:"daysPerTurn"`
+	TurnStartHour int    `json:"turnStartHour"`
+	Timezone      int    `json:"timezone"`
+	StartDate     int    `json:"startDate"`
 }
