@@ -51,5 +51,5 @@ func Get(ctx context.Context, event events.APIGatewayV2HTTPRequest) (events.APIG
 		}), err
 	}
 
-	return h.OK(&buf), nil
+	return h.OK(buf), nil
 }

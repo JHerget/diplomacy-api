@@ -7,3 +7,7 @@ type Order struct {
 	CreatedDate int    `json:"createdDate" bson:"createdDate"`
 	Value       string `json:"value" bson:"value"`
 }
+
+func (t *Order) Valid() error {
+	return nil
+}

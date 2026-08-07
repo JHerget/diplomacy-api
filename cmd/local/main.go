@@ -25,6 +25,8 @@ func main() {
 	mux.HandleFunc("GET /v1/games", adapt(game.GetAll))
 	mux.HandleFunc("GET /v1/games/{gid}", adapt(game.GetByID))
 	mux.HandleFunc("POST /v1/games", adapt(game.Create))
+	mux.HandleFunc("PUT /v1/games/{gid}", adapt(game.Update))
+	mux.HandleFunc("DELETE /v1/games/{gid}", adapt(game.Delete))
 	mux.HandleFunc("GET /v1/games/{gid}/board", adapt(board.Get))
 	mux.HandleFunc("POST /v1/games/{gid}/turns/{tid}/orders", adapt(orders.Create))
 

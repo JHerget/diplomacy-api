@@ -10,3 +10,7 @@ type Providence struct {
 	Routes        []string           `json:"routes" bson:"routes"`
 	CoastalRoutes map[Coast][]string `json:"coastalRoutes" bson:"coastalRoutes"`
 }
+
+func (p *Providence) Valid() error {
+	return nil
+}

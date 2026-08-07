@@ -67,3 +67,60 @@ func (r *Repository) Create(ctx context.Context, game *models.Game) error {
 
 	return nil
 }
+
+func (r *Repository) Update(ctx context.Context, game *models.Game) error {
+	objectID, err := primitive.ObjectIDFromHex(game.ID)
+	if err != nil {
+		return err
+	}
+
+	result, err := r.collection.UpdateOne(
+		ctx,
+		bson.M{"_id": objectID},
+		bson.M{
+			"$set": bson.M{
+				"ownerID":       game.OwnerID,
+				"map":           game.Map,
+				"board":         game.Board,
+				"players":       game.Players,
+				"turns":         game.Turns,
+				"daysPerTurn":   game.DaysPerTurn,
+				"turnStartHour": game.TurnStartHour,
+				"timezone":      game.Timezone,
+				"startDate":     game.StartDate,
+				"endDate":       game.EndDate,
+				"inProgress":    game.InProgress,
+				"isDeleted":     game.IsDeleted,
+			},
+		},
+	)
+	if err != nil {
+		return err
+	}
+	if result.MatchedCount == 0 {
+		return mongo.ErrNoDocuments
+	}
+
+	return nil
+}
+
+func (r *Repository) Delete(ctx context.Context, id string) error {
+	objectID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return err
+	}
+
+	result, err := r.collection.UpdateOne(
+		ctx,
+		bson.M{"_id": objectID},
+		bson.M{"$set": bson.M{"isDeleted": true}},
+	)
+	if err != nil {
+		return err
+	}
+	if result.MatchedCount == 0 {
+		return mongo.ErrNoDocuments
+	}
+
+	return nil
+}

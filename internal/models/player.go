@@ -6,3 +6,7 @@ type Player struct {
 	Color     string  `json:"color" bson:"color"`
 	IsPlaying bool    `json:"isPlaying" bson:"isPlaying"`
 }
+
+func (p *Player) Valid() error {
+	return nil
+}

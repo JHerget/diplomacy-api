@@ -8,3 +8,13 @@ type Turn struct {
 	StartDate  int     `json:"startDate" bson:"startDate"`
 	EndDate    int     `json:"endDate" bson:"endDate"`
 }
+
+func (t *Turn) Valid() error {
+	for _, o := range t.Orders {
+		if err := o.Valid(); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}

@@ -9,15 +9,14 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"net/http"
 
 	"github.com/aws/aws-lambda-go/events"
 )
 
 const (
-	GameInvalidDaysPerTurn   = "Days per turn must be greater than 0."
-	GameInvalidTurnStartHour = "Turn start hour must be greater than or equal to 0 and less than or equal to 23."
-	GameInvalidStartDate     = "Start date must be an epoch timestamp."
+	CreateGameErrInvalidDaysPerTurn   = "Days per turn must be greater than 0."
+	CreateGameErrInvalidTurnStartHour = "Turn start hour must be greater than or equal to 0 and less than or equal to 23."
+	CreateGameErrInvalidStartDate     = "Start date must be an epoch timestamp."
 )
 
 func GetAll(ctx context.Context, event events.APIGatewayV2HTTPRequest) (events.APIGatewayV2HTTPResponse, error) {
@@ -70,20 +69,20 @@ func Create(ctx context.Context, event events.APIGatewayV2HTTPRequest) (events.A
 
 	if req.DaysPerTurn <= 0 {
 		return h.BadRequest(&h.Error{
-			Message: GameInvalidDaysPerTurn,
-		}), errors.New(GameInvalidDaysPerTurn)
+			Message: CreateGameErrInvalidDaysPerTurn,
+		}), errors.New(CreateGameErrInvalidDaysPerTurn)
 	}
 
 	if req.TurnStartHour < 0 || req.TurnStartHour > 23 {
 		return h.BadRequest(&h.Error{
-			Message: GameInvalidTurnStartHour,
-		}), errors.New(GameInvalidTurnStartHour)
+			Message: CreateGameErrInvalidTurnStartHour,
+		}), errors.New(CreateGameErrInvalidTurnStartHour)
 	}
 
 	if req.StartDate < 0 {
 		return h.BadRequest(&h.Error{
-			Message: GameInvalidStartDate,
-		}), errors.New(GameInvalidStartDate)
+			Message: CreateGameErrInvalidStartDate,
+		}), errors.New(CreateGameErrInvalidStartDate)
 	}
 
 	db, err := mongo.NewMongoDB(ctx)
@@ -104,6 +103,7 @@ func Create(ctx context.Context, event events.APIGatewayV2HTTPRequest) (events.A
 	}
 
 	g := models.Game{
+		OwnerID:       "1",
 		Map:           m.Summary(),
 		Board:         m.Providences,
 		Players:       m.Players,
@@ -118,28 +118,54 @@ func Create(ctx context.Context, event events.APIGatewayV2HTTPRequest) (events.A
 }
 
 func Update(ctx context.Context, event events.APIGatewayV2HTTPRequest) (events.APIGatewayV2HTTPResponse, error) {
-	var req models.Game
-	if err := json.Unmarshal([]byte(event.Body), &req); err != nil {
+	var g models.Game
+	if err := json.Unmarshal([]byte(event.Body), &g); err != nil {
 		return h.InternalServerError(&h.Error{
 			Message: err.Error(),
 		}), err
 	}
 
-	// db, err := mongo.NewMongoDB(ctx)
-	// if err != nil {
-	// 	return h.InternalServerError(&h.Error{
-	// 		Message: err.Error(),
-	// 	}), err
-	// }
+	if err := g.Valid(); err != nil {
+		return h.BadRequest(&h.Error{
+			Message: err.Error(),
+		}), err
+	}
 
-	return h.OK(req), nil
+	db, err := mongo.NewMongoDB(ctx)
+	if err != nil {
+		return h.InternalServerError(&h.Error{
+			Message: err.Error(),
+		}), err
+	}
+
+	gameRepo := NewRepository(db)
+	if err := gameRepo.Update(ctx, &g); err != nil {
+		return h.InternalServerError(&h.Error{
+			Message: err.Error(),
+		}), err
+	}
+
+	return h.OK(g), nil
 }
 
 func Delete(ctx context.Context, event events.APIGatewayV2HTTPRequest) (events.APIGatewayV2HTTPResponse, error) {
-	return events.APIGatewayV2HTTPResponse{
-		StatusCode: http.StatusOK,
-		Body:       "delete game",
-	}, nil
+	gameID := event.PathParameters["gid"]
+
+	db, err := mongo.NewMongoDB(ctx)
+	if err != nil {
+		return h.InternalServerError(&h.Error{
+			Message: err.Error(),
+		}), err
+	}
+
+	gameRepo := NewRepository(db)
+	if err := gameRepo.Delete(ctx, gameID); err != nil {
+		return h.InternalServerError(&h.Error{
+			Message: err.Error(),
+		}), err
+	}
+
+	return h.NoContent(), nil
 }
 
 type createGameRequest struct {

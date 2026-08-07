@@ -16,6 +16,10 @@ func Created[T any](body T) events.APIGatewayV2HTTPResponse {
 	return ResponseWithBody(http.StatusCreated, &body)
 }
 
+func NoContent() events.APIGatewayV2HTTPResponse {
+	return ResponseNoBody(http.StatusNoContent)
+}
+
 func BadRequest[T any](body T) events.APIGatewayV2HTTPResponse {
 	return ResponseWithBody(http.StatusBadRequest, &body)
 }
