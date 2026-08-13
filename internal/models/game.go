@@ -1,6 +1,9 @@
 package models
 
-import "errors"
+import (
+	"errors"
+	"strings"
+)
 
 type Game struct {
 	ID            string       `json:"id" bson:"_id,omitempty"`
@@ -19,10 +22,10 @@ type Game struct {
 }
 
 func (g *Game) Valid() error {
-	if g.OwnerID == "" {
+	if strings.TrimSpace(g.OwnerID) == "" {
 		return errors.New("Missing owner id.")
 	}
-	if g.Map.ID == "" {
+	if strings.TrimSpace(g.Map.ID) == "" {
 		return errors.New("Missing map id.")
 	}
 

@@ -4,26 +4,24 @@ import (
 	"context"
 	h "diplomacy-api/internal/http"
 	"diplomacy-api/internal/maps"
-	"net/http"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
 )
 
 func handler(ctx context.Context, event events.APIGatewayV2HTTPRequest) (events.APIGatewayV2HTTPResponse, error) {
-	method := event.RequestContext.HTTP.Method
-	mapID := event.PathParameters["mid"]
-
-	switch {
-	case method == http.MethodGet && mapID == "":
+	switch event.RouteKey {
+	case "GET /maps":
 		return maps.GetAll(ctx, event)
-	case method == http.MethodGet && mapID != "":
+	case "GET /maps/{mid}":
 		return maps.GetByID(ctx, event)
-	case method == http.MethodPost && mapID == "":
+	case "GET /maps/{mid}/image":
+		return maps.GetImage(ctx, event)
+	case "POST /maps":
 		return maps.Create(ctx, event)
-	case method == http.MethodPut && mapID != "":
+	case "PUT /maps/{mid}":
 		return maps.Update(ctx, event)
-	case method == http.MethodDelete && mapID != "":
+	case "DELETE /maps/{mid}":
 		return maps.Delete(ctx, event)
 	default:
 		return h.BadRequest(&h.Error{

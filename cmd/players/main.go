@@ -4,26 +4,22 @@ import (
 	"context"
 	h "diplomacy-api/internal/http"
 	"diplomacy-api/internal/players"
-	"net/http"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
 )
 
 func handler(ctx context.Context, event events.APIGatewayV2HTTPRequest) (events.APIGatewayV2HTTPResponse, error) {
-	method := event.RequestContext.HTTP.Method
-	playerID := event.PathParameters["pid"]
-
-	switch {
-	case method == http.MethodGet && playerID == "":
+	switch event.RouteKey {
+	case "GET /games/{gid}/players":
 		return players.GetAll(ctx, event)
-	case method == http.MethodGet && playerID != "":
+	case "GET /games/{gid}/players/{pid}":
 		return players.GetByID(ctx, event)
-	case method == http.MethodPost && playerID == "":
+	case "POST /games/{gid}/players":
 		return players.Create(ctx, event)
-	case method == http.MethodPut && playerID != "":
+	case "PUT /games/{gid}/players/{pid}":
 		return players.Update(ctx, event)
-	case method == http.MethodDelete && playerID != "":
+	case "DELETE /games/{gid}/players/{pid}":
 		return players.Delete(ctx, event)
 	default:
 		return h.BadRequest(&h.Error{

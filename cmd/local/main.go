@@ -22,6 +22,11 @@ func main() {
 
 	mux.HandleFunc("GET /v1/maps", adapt(maps.GetAll))
 	mux.HandleFunc("GET /v1/maps/{mid}", adapt(maps.GetByID))
+	mux.HandleFunc("POST /v1/maps", adapt(maps.Create))
+	mux.HandleFunc("PUT /v1/maps/{mid}", adapt(maps.Update))
+	mux.HandleFunc("GET /v1/maps/{mid}/image", adapt(maps.GetImage))
+	mux.HandleFunc("POST /v1/maps/{mid}/image", adapt(maps.SetImage))
+
 	mux.HandleFunc("GET /v1/games", adapt(game.GetAll))
 	mux.HandleFunc("GET /v1/games/{gid}", adapt(game.GetByID))
 	mux.HandleFunc("POST /v1/games", adapt(game.Create))

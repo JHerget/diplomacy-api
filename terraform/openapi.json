@@ -354,6 +354,34 @@
                 }
             }
         },
+        "/maps/{mid}/image": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                },
+                "x-amazon-apigateway-integration": {
+                    "type": "AWS_PROXY",
+                    "httpMethod": "POST",
+                    "payloadFormatVersion": "2.0",
+                    "uri": "${maps_arn}"
+                }
+            },
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                },
+                "x-amazon-apigateway-integration": {
+                    "type": "AWS_PROXY",
+                    "httpMethod": "POST",
+                    "payloadFormatVersion": "2.0",
+                    "uri": "${maps_arn}"
+                }
+            }
+        },
         "/test": {
             "get": {
                 "responses": {

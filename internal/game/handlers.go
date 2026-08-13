@@ -7,16 +7,9 @@ import (
 	"diplomacy-api/internal/models"
 	"diplomacy-api/internal/platform/mongo"
 	"encoding/json"
-	"errors"
 	"fmt"
 
 	"github.com/aws/aws-lambda-go/events"
-)
-
-const (
-	CreateGameErrInvalidDaysPerTurn   = "Days per turn must be greater than 0."
-	CreateGameErrInvalidTurnStartHour = "Turn start hour must be greater than or equal to 0 and less than or equal to 23."
-	CreateGameErrInvalidStartDate     = "Start date must be an epoch timestamp."
 )
 
 func GetAll(ctx context.Context, event events.APIGatewayV2HTTPRequest) (events.APIGatewayV2HTTPResponse, error) {
@@ -67,24 +60,6 @@ func Create(ctx context.Context, event events.APIGatewayV2HTTPRequest) (events.A
 		}), err
 	}
 
-	if req.DaysPerTurn <= 0 {
-		return h.BadRequest(&h.Error{
-			Message: CreateGameErrInvalidDaysPerTurn,
-		}), errors.New(CreateGameErrInvalidDaysPerTurn)
-	}
-
-	if req.TurnStartHour < 0 || req.TurnStartHour > 23 {
-		return h.BadRequest(&h.Error{
-			Message: CreateGameErrInvalidTurnStartHour,
-		}), errors.New(CreateGameErrInvalidTurnStartHour)
-	}
-
-	if req.StartDate < 0 {
-		return h.BadRequest(&h.Error{
-			Message: CreateGameErrInvalidStartDate,
-		}), errors.New(CreateGameErrInvalidStartDate)
-	}
-
 	db, err := mongo.NewMongoDB(ctx)
 	if err != nil {
 		return h.InternalServerError(&h.Error{
@@ -110,6 +85,12 @@ func Create(ctx context.Context, event events.APIGatewayV2HTTPRequest) (events.A
 		DaysPerTurn:   req.DaysPerTurn,
 		TurnStartHour: req.TurnStartHour,
 		StartDate:     req.StartDate,
+	}
+
+	if err := g.Valid(); err != nil {
+		return h.BadRequest(&h.Error{
+			Message: err.Error(),
+		}), err
 	}
 
 	gameRepo.Create(ctx, &g)
