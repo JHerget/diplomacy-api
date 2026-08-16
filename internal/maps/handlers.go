@@ -9,7 +9,6 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
-	"net/http"
 
 	"github.com/aws/aws-lambda-go/events"
 )
@@ -120,10 +119,23 @@ func Update(ctx context.Context, event events.APIGatewayV2HTTPRequest) (events.A
 }
 
 func Delete(ctx context.Context, event events.APIGatewayV2HTTPRequest) (events.APIGatewayV2HTTPResponse, error) {
-	return events.APIGatewayV2HTTPResponse{
-		StatusCode: http.StatusOK,
-		Body:       "delete map",
-	}, nil
+	mid := event.PathParameters["mid"]
+
+	db, err := mongo.NewMongoDB(ctx)
+	if err != nil {
+		return h.InternalServerError(&h.Error{
+			Message: err.Error(),
+		}), err
+	}
+
+	mapRepo := NewRepository(db)
+	if err := mapRepo.Delete(ctx, mid); err != nil {
+		return h.InternalServerError(&h.Error{
+			Message: err.Error(),
+		}), err
+	}
+
+	return h.NoContent(), nil
 }
 
 func GetImage(ctx context.Context, event events.APIGatewayV2HTTPRequest) (events.APIGatewayV2HTTPResponse, error) {
