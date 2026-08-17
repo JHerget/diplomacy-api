@@ -6,6 +6,9 @@ import (
 	"diplomacy-api/internal/game"
 	"diplomacy-api/internal/maps"
 	"diplomacy-api/internal/orders"
+	"diplomacy-api/internal/phases"
+	"diplomacy-api/internal/platform/aws"
+	"diplomacy-api/internal/platform/mongo"
 	"diplomacy-api/internal/turns"
 	"encoding/base64"
 	"io"
@@ -19,29 +22,48 @@ import (
 type lambdaHandler func(context.Context, events.APIGatewayV2HTTPRequest) (events.APIGatewayV2HTTPResponse, error)
 
 func main() {
+	ctx := context.Background()
+	db, err := mongo.NewMongoDB(ctx)
+	if err != nil {
+		log.Fatal(err)
+	}
+	s3, err := aws.NewS3(ctx)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	gameRepo := game.NewRepository(db)
+	mapRepo := maps.NewRepository(db)
+	phaseRepo := phases.NewRepository(db)
+	boardHandler := board.NewHandler(gameRepo, s3)
+	gameHandler := game.NewHandler(gameRepo, mapRepo)
+	mapHandler := maps.NewHandler(mapRepo, s3)
+	orderHandler := orders.NewHandler(gameRepo)
+	turnHandler := turns.NewHandler(gameRepo, phaseRepo)
+
 	mux := http.NewServeMux()
 
-	mux.HandleFunc("GET /v1/maps", adapt(maps.GetAll))
-	mux.HandleFunc("GET /v1/maps/{mid}", adapt(maps.GetByID))
-	mux.HandleFunc("POST /v1/maps", adapt(maps.Create))
-	mux.HandleFunc("PUT /v1/maps/{mid}", adapt(maps.Update))
-	mux.HandleFunc("GET /v1/maps/{mid}/image", adapt(maps.GetImage))
-	mux.HandleFunc("POST /v1/maps/{mid}/image", adapt(maps.SetImage))
+	mux.HandleFunc("GET /v1/maps", adapt(mapHandler.GetAll))
+	mux.HandleFunc("GET /v1/maps/{mid}", adapt(mapHandler.GetByID))
+	mux.HandleFunc("POST /v1/maps", adapt(mapHandler.Create))
+	mux.HandleFunc("PUT /v1/maps/{mid}", adapt(mapHandler.Update))
+	mux.HandleFunc("GET /v1/maps/{mid}/image", adapt(mapHandler.GetImage))
+	mux.HandleFunc("POST /v1/maps/{mid}/image", adapt(mapHandler.SetImage))
 
-	mux.HandleFunc("GET /v1/games", adapt(game.GetAll))
-	mux.HandleFunc("GET /v1/games/{gid}", adapt(game.GetByID))
-	mux.HandleFunc("POST /v1/games", adapt(game.Create))
-	mux.HandleFunc("PUT /v1/games/{gid}", adapt(game.Update))
-	mux.HandleFunc("DELETE /v1/games/{gid}", adapt(game.Delete))
-	mux.HandleFunc("GET /v1/games/{gid}/board", adapt(board.Get))
-	mux.HandleFunc("GET /v1/games/{gid}/turns", adapt(turns.GetAll))
-	mux.HandleFunc("GET /v1/games/{gid}/turns/{tid}", adapt(turns.GetByID))
-	mux.HandleFunc("POST /v1/games/{gid}/turns", adapt(turns.Create))
-	mux.HandleFunc("PUT /v1/games/{gid}/turns/{tid}", adapt(turns.Update))
-	mux.HandleFunc("DELETE /v1/games/{gid}/turns/{tid}", adapt(turns.Delete))
-	mux.HandleFunc("GET /v1/games/{gid}/turns/{tid}/orders", adapt(orders.GetAll))
-	mux.HandleFunc("GET /v1/games/{gid}/turns/{tid}/orders/{oid}", adapt(orders.GetByID))
-	mux.HandleFunc("POST /v1/games/{gid}/turns/{tid}/orders", adapt(orders.Create))
+	mux.HandleFunc("GET /v1/games", adapt(gameHandler.GetAll))
+	mux.HandleFunc("GET /v1/games/{gid}", adapt(gameHandler.GetByID))
+	mux.HandleFunc("POST /v1/games", adapt(gameHandler.Create))
+	mux.HandleFunc("PUT /v1/games/{gid}", adapt(gameHandler.Update))
+	mux.HandleFunc("DELETE /v1/games/{gid}", adapt(gameHandler.Delete))
+	mux.HandleFunc("GET /v1/games/{gid}/board", adapt(boardHandler.Get))
+	mux.HandleFunc("GET /v1/games/{gid}/turns", adapt(turnHandler.GetAll))
+	mux.HandleFunc("GET /v1/games/{gid}/turns/{tid}", adapt(turnHandler.GetByID))
+	mux.HandleFunc("POST /v1/games/{gid}/turns", adapt(turnHandler.Create))
+	mux.HandleFunc("PUT /v1/games/{gid}/turns/{tid}", adapt(turnHandler.Update))
+	mux.HandleFunc("DELETE /v1/games/{gid}/turns/{tid}", adapt(turnHandler.Delete))
+	mux.HandleFunc("GET /v1/games/{gid}/turns/{tid}/orders", adapt(orderHandler.GetAll))
+	mux.HandleFunc("GET /v1/games/{gid}/turns/{tid}/orders/{oid}", adapt(orderHandler.GetByID))
+	mux.HandleFunc("POST /v1/games/{gid}/turns/{tid}/orders", adapt(orderHandler.Create))
 
 	log.Println("local API listening on http://localhost:8080")
 	log.Fatal(http.ListenAndServe(":8080", mux))

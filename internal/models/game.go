@@ -1,8 +1,10 @@
 package models
 
 import (
+	"diplomacy-api/internal/utils"
 	"errors"
 	"strings"
+	"time"
 )
 
 type Game struct {
@@ -61,4 +63,23 @@ func (g *Game) Valid() error {
 	}
 
 	return nil
+}
+
+func (g *Game) FindTurn(turnID string) (*Turn, bool) {
+	return utils.Find(g.Turns, func(t *Turn) bool {
+		return t.ID == turnID
+	})
+}
+
+func (g *Game) NextTurnStartDate() int {
+	sourceDate := g.StartDate
+	if len(g.Turns) > 0 {
+		sourceDate = g.Turns[len(g.Turns)-1].EndDate
+	}
+
+	location := time.FixedZone("game", g.Timezone*60*60)
+	t := time.Unix(int64(sourceDate), 0).In(location)
+	start := time.Date(t.Year(), t.Month(), t.Day(), g.TurnStartHour, 0, 0, 0, location)
+
+	return int(start.Unix())
 }
