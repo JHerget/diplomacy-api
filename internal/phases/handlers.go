@@ -11,17 +11,13 @@ import (
 func GetAll(ctx context.Context, event events.APIGatewayV2HTTPRequest) (events.APIGatewayV2HTTPResponse, error) {
 	db, err := mongo.NewMongoDB(ctx)
 	if err != nil {
-		return h.InternalServerError(&h.Error{
-			Message: err.Error(),
-		}), err
+		return h.InternalServerError(err), err
 	}
 
 	phaseRepo := NewRepository(db)
 	allPhases, err := phaseRepo.GetAll(ctx)
 	if err != nil {
-		return h.InternalServerError(&h.Error{
-			Message: err.Error(),
-		}), err
+		return h.InternalServerError(err), err
 	}
 
 	return h.OK(allPhases), nil

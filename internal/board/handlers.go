@@ -16,39 +16,29 @@ func Get(ctx context.Context, event events.APIGatewayV2HTTPRequest) (events.APIG
 
 	db, err := mongo.NewMongoDB(ctx)
 	if err != nil {
-		return h.InternalServerError(&h.Error{
-			Message: err.Error(),
-		}), err
+		return h.InternalServerError(err), err
 	}
 
 	s3, err := aws.NewS3(ctx)
 	if err != nil {
-		return h.InternalServerError(&h.Error{
-			Message: err.Error(),
-		}), err
+		return h.InternalServerError(err), err
 	}
 
 	gameRepo := game.NewRepository(db)
 	g, err := gameRepo.Get(ctx, gameId)
 	if err != nil {
-		return h.InternalServerError(&h.Error{
-			Message: err.Error(),
-		}), err
+		return h.InternalServerError(err), err
 	}
 
 	filename := fmt.Sprintf("%s.png", g.Map.ID)
 	buf, err := s3.Get(ctx, "diplomacy-maps", filename)
 	if err != nil {
-		return h.InternalServerError(&h.Error{
-			Message: err.Error(),
-		}), err
+		return h.InternalServerError(err), err
 	}
 
 	buf, err = Draw(buf, g)
 	if err != nil {
-		return h.InternalServerError(&h.Error{
-			Message: err.Error(),
-		}), err
+		return h.InternalServerError(err), err
 	}
 
 	return h.OK(buf), nil

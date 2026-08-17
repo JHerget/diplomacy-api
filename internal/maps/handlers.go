@@ -16,17 +16,13 @@ import (
 func GetAll(ctx context.Context, event events.APIGatewayV2HTTPRequest) (events.APIGatewayV2HTTPResponse, error) {
 	db, err := mongo.NewMongoDB(ctx)
 	if err != nil {
-		return h.InternalServerError(&h.Error{
-			Message: err.Error(),
-		}), err
+		return h.InternalServerError(err), err
 	}
 
 	mapRepo := NewRepository(db)
 	summaries, err := mapRepo.GetAllSummaries(ctx)
 	if err != nil {
-		return h.InternalServerError(&h.Error{
-			Message: err.Error(),
-		}), err
+		return h.InternalServerError(err), err
 	}
 
 	return h.OK(summaries), nil
@@ -37,17 +33,13 @@ func GetByID(ctx context.Context, event events.APIGatewayV2HTTPRequest) (events.
 
 	db, err := mongo.NewMongoDB(ctx)
 	if err != nil {
-		return h.InternalServerError(&h.Error{
-			Message: err.Error(),
-		}), err
+		return h.InternalServerError(err), err
 	}
 
 	mapRepo := NewRepository(db)
 	m, err := mapRepo.Get(ctx, mid)
 	if err != nil {
-		return h.InternalServerError(&h.Error{
-			Message: err.Error(),
-		}), err
+		return h.InternalServerError(err), err
 	}
 
 	return h.OK(m), nil
@@ -56,16 +48,12 @@ func GetByID(ctx context.Context, event events.APIGatewayV2HTTPRequest) (events.
 func Create(ctx context.Context, event events.APIGatewayV2HTTPRequest) (events.APIGatewayV2HTTPResponse, error) {
 	var req createMapRequest
 	if err := json.Unmarshal([]byte(event.Body), &req); err != nil {
-		return h.InternalServerError(&h.Error{
-			Message: err.Error(),
-		}), err
+		return h.InternalServerError(err), err
 	}
 
 	db, err := mongo.NewMongoDB(ctx)
 	if err != nil {
-		return h.InternalServerError(&h.Error{
-			Message: err.Error(),
-		}), err
+		return h.InternalServerError(err), err
 	}
 
 	mapRepo := NewRepository(db)
@@ -90,9 +78,7 @@ func Create(ctx context.Context, event events.APIGatewayV2HTTPRequest) (events.A
 func Update(ctx context.Context, event events.APIGatewayV2HTTPRequest) (events.APIGatewayV2HTTPResponse, error) {
 	var m models.Map
 	if err := json.Unmarshal([]byte(event.Body), &m); err != nil {
-		return h.InternalServerError(&h.Error{
-			Message: err.Error(),
-		}), err
+		return h.InternalServerError(err), err
 	}
 
 	if err := m.Valid(); err != nil {
@@ -103,16 +89,12 @@ func Update(ctx context.Context, event events.APIGatewayV2HTTPRequest) (events.A
 
 	db, err := mongo.NewMongoDB(ctx)
 	if err != nil {
-		return h.InternalServerError(&h.Error{
-			Message: err.Error(),
-		}), err
+		return h.InternalServerError(err), err
 	}
 
 	mapRepo := NewRepository(db)
 	if err := mapRepo.Update(ctx, &m); err != nil {
-		return h.InternalServerError(&h.Error{
-			Message: err.Error(),
-		}), err
+		return h.InternalServerError(err), err
 	}
 
 	return h.OK(m), nil
@@ -123,16 +105,12 @@ func Delete(ctx context.Context, event events.APIGatewayV2HTTPRequest) (events.A
 
 	db, err := mongo.NewMongoDB(ctx)
 	if err != nil {
-		return h.InternalServerError(&h.Error{
-			Message: err.Error(),
-		}), err
+		return h.InternalServerError(err), err
 	}
 
 	mapRepo := NewRepository(db)
 	if err := mapRepo.Delete(ctx, mid); err != nil {
-		return h.InternalServerError(&h.Error{
-			Message: err.Error(),
-		}), err
+		return h.InternalServerError(err), err
 	}
 
 	return h.NoContent(), nil
@@ -143,17 +121,13 @@ func GetImage(ctx context.Context, event events.APIGatewayV2HTTPRequest) (events
 
 	s3, err := aws.NewS3(ctx)
 	if err != nil {
-		return h.InternalServerError(&h.Error{
-			Message: err.Error(),
-		}), err
+		return h.InternalServerError(err), err
 	}
 
 	filename := fmt.Sprintf("%s.png", mid)
 	buf, err := s3.Get(ctx, "diplomacy-maps", filename)
 	if err != nil {
-		return h.InternalServerError(&h.Error{
-			Message: err.Error(),
-		}), err
+		return h.InternalServerError(err), err
 	}
 
 	return h.OK(buf), nil
@@ -164,17 +138,13 @@ func SetImage(ctx context.Context, event events.APIGatewayV2HTTPRequest) (events
 
 	db, err := mongo.NewMongoDB(ctx)
 	if err != nil {
-		return h.InternalServerError(&h.Error{
-			Message: err.Error(),
-		}), err
+		return h.InternalServerError(err), err
 	}
 
 	mapRepo := NewRepository(db)
 	m, err := mapRepo.Get(ctx, mid)
 	if err != nil {
-		return h.InternalServerError(&h.Error{
-			Message: err.Error(),
-		}), err
+		return h.InternalServerError(err), err
 	}
 
 	var buf []byte
@@ -192,16 +162,12 @@ func SetImage(ctx context.Context, event events.APIGatewayV2HTTPRequest) (events
 
 	s3, err := aws.NewS3(ctx)
 	if err != nil {
-		return h.InternalServerError(&h.Error{
-			Message: err.Error(),
-		}), err
+		return h.InternalServerError(err), err
 	}
 
 	filename := fmt.Sprintf("%s.png", m.ID)
 	if err := s3.Put(ctx, "diplomacy-maps", filename, buf); err != nil {
-		return h.InternalServerError(&h.Error{
-			Message: err.Error(),
-		}), err
+		return h.InternalServerError(err), err
 	}
 
 	return h.OK(buf), nil

@@ -33,3 +33,16 @@ func (r *Repository) GetAll(ctx context.Context) ([]*models.Phase, error) {
 
 	return phases, nil
 }
+
+func (r *Repository) GetByOrder(ctx context.Context, phaseOrder int8) (*models.Phase, error) {
+	var phase models.Phase
+
+	err := r.collection.FindOne(ctx, bson.M{
+		"phaseOrder": phaseOrder,
+	}).Decode(&phase)
+	if err != nil {
+		return nil, err
+	}
+
+	return &phase, nil
+}

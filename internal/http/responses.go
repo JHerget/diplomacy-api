@@ -24,8 +24,10 @@ func BadRequest[T any](body T) events.APIGatewayV2HTTPResponse {
 	return ResponseWithBody(http.StatusBadRequest, &body)
 }
 
-func InternalServerError[T any](body T) events.APIGatewayV2HTTPResponse {
-	return ResponseWithBody(http.StatusInternalServerError, &body)
+func InternalServerError(err error) events.APIGatewayV2HTTPResponse {
+	return ResponseWithBody(http.StatusInternalServerError, &Error{
+		Message: err.Error(),
+	})
 }
 
 func ResponseNoBody(statusCode int) events.APIGatewayV2HTTPResponse {

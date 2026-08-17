@@ -15,17 +15,13 @@ import (
 func GetAll(ctx context.Context, event events.APIGatewayV2HTTPRequest) (events.APIGatewayV2HTTPResponse, error) {
 	db, err := mongo.NewMongoDB(ctx)
 	if err != nil {
-		return h.InternalServerError(&h.Error{
-			Message: err.Error(),
-		}), err
+		return h.InternalServerError(err), err
 	}
 
 	gameRepo := NewRepository(db)
 	allGames, err := gameRepo.GetAll(ctx)
 	if err != nil {
-		return h.InternalServerError(&h.Error{
-			Message: err.Error(),
-		}), err
+		return h.InternalServerError(err), err
 	}
 
 	return h.OK(allGames), nil
@@ -36,17 +32,13 @@ func GetByID(ctx context.Context, event events.APIGatewayV2HTTPRequest) (events.
 
 	db, err := mongo.NewMongoDB(ctx)
 	if err != nil {
-		return h.InternalServerError(&h.Error{
-			Message: err.Error(),
-		}), err
+		return h.InternalServerError(err), err
 	}
 
 	gameRepo := NewRepository(db)
 	g, err := gameRepo.Get(ctx, gameID)
 	if err != nil {
-		return h.InternalServerError(&h.Error{
-			Message: err.Error(),
-		}), err
+		return h.InternalServerError(err), err
 	}
 
 	return h.OK(g), nil
@@ -55,16 +47,12 @@ func GetByID(ctx context.Context, event events.APIGatewayV2HTTPRequest) (events.
 func Create(ctx context.Context, event events.APIGatewayV2HTTPRequest) (events.APIGatewayV2HTTPResponse, error) {
 	var req createGameRequest
 	if err := json.Unmarshal([]byte(event.Body), &req); err != nil {
-		return h.InternalServerError(&h.Error{
-			Message: err.Error(),
-		}), err
+		return h.InternalServerError(err), err
 	}
 
 	db, err := mongo.NewMongoDB(ctx)
 	if err != nil {
-		return h.InternalServerError(&h.Error{
-			Message: err.Error(),
-		}), err
+		return h.InternalServerError(err), err
 	}
 
 	gameRepo := NewRepository(db)
@@ -101,9 +89,7 @@ func Create(ctx context.Context, event events.APIGatewayV2HTTPRequest) (events.A
 func Update(ctx context.Context, event events.APIGatewayV2HTTPRequest) (events.APIGatewayV2HTTPResponse, error) {
 	var g models.Game
 	if err := json.Unmarshal([]byte(event.Body), &g); err != nil {
-		return h.InternalServerError(&h.Error{
-			Message: err.Error(),
-		}), err
+		return h.InternalServerError(err), err
 	}
 
 	if err := g.Valid(); err != nil {
@@ -114,16 +100,12 @@ func Update(ctx context.Context, event events.APIGatewayV2HTTPRequest) (events.A
 
 	db, err := mongo.NewMongoDB(ctx)
 	if err != nil {
-		return h.InternalServerError(&h.Error{
-			Message: err.Error(),
-		}), err
+		return h.InternalServerError(err), err
 	}
 
 	gameRepo := NewRepository(db)
 	if err := gameRepo.Update(ctx, &g); err != nil {
-		return h.InternalServerError(&h.Error{
-			Message: err.Error(),
-		}), err
+		return h.InternalServerError(err), err
 	}
 
 	return h.OK(g), nil
@@ -134,16 +116,12 @@ func Delete(ctx context.Context, event events.APIGatewayV2HTTPRequest) (events.A
 
 	db, err := mongo.NewMongoDB(ctx)
 	if err != nil {
-		return h.InternalServerError(&h.Error{
-			Message: err.Error(),
-		}), err
+		return h.InternalServerError(err), err
 	}
 
 	gameRepo := NewRepository(db)
 	if err := gameRepo.Delete(ctx, gameID); err != nil {
-		return h.InternalServerError(&h.Error{
-			Message: err.Error(),
-		}), err
+		return h.InternalServerError(err), err
 	}
 
 	return h.NoContent(), nil

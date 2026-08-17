@@ -6,6 +6,7 @@ import (
 	"diplomacy-api/internal/game"
 	"diplomacy-api/internal/maps"
 	"diplomacy-api/internal/orders"
+	"diplomacy-api/internal/turns"
 	"encoding/base64"
 	"io"
 	"log"
@@ -33,6 +34,13 @@ func main() {
 	mux.HandleFunc("PUT /v1/games/{gid}", adapt(game.Update))
 	mux.HandleFunc("DELETE /v1/games/{gid}", adapt(game.Delete))
 	mux.HandleFunc("GET /v1/games/{gid}/board", adapt(board.Get))
+	mux.HandleFunc("GET /v1/games/{gid}/turns", adapt(turns.GetAll))
+	mux.HandleFunc("GET /v1/games/{gid}/turns/{tid}", adapt(turns.GetByID))
+	mux.HandleFunc("POST /v1/games/{gid}/turns", adapt(turns.Create))
+	mux.HandleFunc("PUT /v1/games/{gid}/turns/{tid}", adapt(turns.Update))
+	mux.HandleFunc("DELETE /v1/games/{gid}/turns/{tid}", adapt(turns.Delete))
+	mux.HandleFunc("GET /v1/games/{gid}/turns/{tid}/orders", adapt(orders.GetAll))
+	mux.HandleFunc("GET /v1/games/{gid}/turns/{tid}/orders/{oid}", adapt(orders.GetByID))
 	mux.HandleFunc("POST /v1/games/{gid}/turns/{tid}/orders", adapt(orders.Create))
 
 	log.Println("local API listening on http://localhost:8080")
@@ -74,7 +82,7 @@ func toAPIGatewayV2Request(r *http.Request) (events.APIGatewayV2HTTPRequest, err
 	}
 
 	params := map[string]string{}
-	for _, name := range []string{"gid", "tid", "mid"} {
+	for _, name := range []string{"gid", "tid", "oid", "mid"} {
 		if value := r.PathValue(name); value != "" {
 			params[name] = value
 		}
