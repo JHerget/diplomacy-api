@@ -9,6 +9,7 @@ import (
 	"diplomacy-api/internal/phases"
 	"diplomacy-api/internal/platform/aws"
 	"diplomacy-api/internal/platform/mongo"
+	"diplomacy-api/internal/players"
 	"diplomacy-api/internal/turns"
 	"encoding/base64"
 	"io"
@@ -39,6 +40,7 @@ func main() {
 	gameHandler := game.NewHandler(gameRepo, mapRepo)
 	mapHandler := maps.NewHandler(mapRepo, s3)
 	orderHandler := orders.NewHandler(gameRepo)
+	playerHandler := players.NewHandler(gameRepo)
 	turnHandler := turns.NewHandler(gameRepo, phaseRepo)
 
 	mux := http.NewServeMux()
@@ -56,6 +58,11 @@ func main() {
 	mux.HandleFunc("PUT /v1/games/{gid}", adapt(gameHandler.Update))
 	mux.HandleFunc("DELETE /v1/games/{gid}", adapt(gameHandler.Delete))
 	mux.HandleFunc("GET /v1/games/{gid}/board", adapt(boardHandler.Get))
+	mux.HandleFunc("GET /v1/games/{gid}/players", adapt(playerHandler.GetAll))
+	mux.HandleFunc("GET /v1/games/{gid}/players/{pid}", adapt(playerHandler.GetByID))
+	mux.HandleFunc("POST /v1/games/{gid}/players", adapt(playerHandler.Create))
+	mux.HandleFunc("PUT /v1/games/{gid}/players/{pid}", adapt(playerHandler.Update))
+	mux.HandleFunc("DELETE /v1/games/{gid}/players/{pid}", adapt(playerHandler.Delete))
 	mux.HandleFunc("GET /v1/games/{gid}/turns", adapt(turnHandler.GetAll))
 	mux.HandleFunc("GET /v1/games/{gid}/turns/{tid}", adapt(turnHandler.GetByID))
 	mux.HandleFunc("POST /v1/games/{gid}/turns", adapt(turnHandler.Create))
@@ -104,7 +111,7 @@ func toAPIGatewayV2Request(r *http.Request) (events.APIGatewayV2HTTPRequest, err
 	}
 
 	params := map[string]string{}
-	for _, name := range []string{"gid", "tid", "oid", "mid"} {
+	for _, name := range []string{"gid", "tid", "oid", "pid", "mid"} {
 		if value := r.PathValue(name); value != "" {
 			params[name] = value
 		}

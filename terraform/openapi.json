@@ -229,7 +229,7 @@
                 }
             }
         },
-        "/games/{gid}/players/{tid}": {
+        "/games/{gid}/players/{pid}": {
             "get": {
                 "responses": {
                     "200": {

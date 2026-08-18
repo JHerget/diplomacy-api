@@ -71,6 +71,12 @@ func (g *Game) FindTurn(turnID string) (*Turn, bool) {
 	})
 }
 
+func (g *Game) FindPlayer(playerID string) (*Player, bool) {
+	return utils.Find(g.Players, func(p *Player) bool {
+		return p.ID == playerID
+	})
+}
+
 func (g *Game) NextTurnStartDate() int {
 	sourceDate := g.StartDate
 	if len(g.Turns) > 0 {

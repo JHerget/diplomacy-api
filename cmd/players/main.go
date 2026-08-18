@@ -2,8 +2,11 @@ package main
 
 import (
 	"context"
+	"diplomacy-api/internal/game"
 	h "diplomacy-api/internal/http"
+	"diplomacy-api/internal/platform/mongo"
 	"diplomacy-api/internal/players"
+	"log"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
@@ -31,5 +34,11 @@ func handler(playerHandler *players.Handler) func(context.Context, events.APIGat
 }
 
 func main() {
-	lambda.Start(handler(players.NewHandler()))
+	db, err := mongo.NewMongoDB(context.Background())
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	playerHandler := players.NewHandler(game.NewRepository(db))
+	lambda.Start(handler(playerHandler))
 }
