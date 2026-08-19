@@ -7,6 +7,7 @@ import (
 	"diplomacy-api/internal/models"
 	"encoding/json"
 	"fmt"
+	"strconv"
 
 	"github.com/aws/aws-lambda-go/events"
 )
@@ -24,7 +25,22 @@ func NewHandler(gameRepo *Repository, mapRepo *maps.Repository) *Handler {
 }
 
 func (h *Handler) GetAll(ctx context.Context, event events.APIGatewayV2HTTPRequest) (events.APIGatewayV2HTTPResponse, error) {
-	allGames, err := h.gameRepo.GetAll(ctx)
+	filter := GameFilter{}
+	if externalID, ok := event.QueryStringParameters["external_id"]; ok {
+		filter.ExternalID = &externalID
+	}
+	if inProgress, ok := event.QueryStringParameters["in_progress"]; ok {
+		value, err := strconv.ParseBool(inProgress)
+		if err != nil {
+			err := fmt.Errorf("in_progress must be convertible to bool")
+			return http.BadRequest(&http.Error{
+				Message: err.Error(),
+			}), err
+		}
+		filter.InProgress = &value
+	}
+
+	allGames, err := h.gameRepo.GetAll(ctx, filter)
 	if err != nil {
 		return http.InternalServerError(err), err
 	}
@@ -58,6 +74,7 @@ func (h *Handler) Create(ctx context.Context, event events.APIGatewayV2HTTPReque
 
 	g := models.Game{
 		OwnerID:       "1",
+		ExternalID:    req.ExternalID,
 		Map:           m.Summary(),
 		Board:         m.Providences,
 		Players:       m.Players,
@@ -107,9 +124,10 @@ func (h *Handler) Delete(ctx context.Context, event events.APIGatewayV2HTTPReque
 }
 
 type createGameRequest struct {
-	MapID         string `json:"mapId"`
-	DaysPerTurn   int    `json:"daysPerTurn"`
-	TurnStartHour int    `json:"turnStartHour"`
-	Timezone      int    `json:"timezone"`
-	StartDate     int    `json:"startDate"`
+	ExternalID    *string `json:"externalId"`
+	MapID         string  `json:"mapId"`
+	DaysPerTurn   int     `json:"daysPerTurn"`
+	TurnStartHour int     `json:"turnStartHour"`
+	Timezone      int     `json:"timezone"`
+	StartDate     int     `json:"startDate"`
 }

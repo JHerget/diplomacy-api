@@ -13,6 +13,11 @@ type Repository struct {
 	collection *mongo.Collection
 }
 
+type GameFilter struct {
+	ExternalID *string
+	InProgress *bool
+}
+
 func NewRepository(db *mongo.Client) *Repository {
 	return &Repository{
 		collection: db.Database("diplomacy").Collection("games"),
@@ -37,12 +42,20 @@ func (r *Repository) Get(ctx context.Context, id string) (*models.Game, error) {
 	return &game, nil
 }
 
-func (r *Repository) GetAll(ctx context.Context) ([]*models.Game, error) {
+func (r *Repository) GetAll(ctx context.Context, filter GameFilter) ([]*models.Game, error) {
 	var games []*models.Game
 
-	cursor, err := r.collection.Find(ctx, bson.M{
+	query := bson.M{
 		"isDeleted": bson.M{"$ne": true},
-	})
+	}
+	if filter.ExternalID != nil {
+		query["externalId"] = *filter.ExternalID
+	}
+	if filter.InProgress != nil {
+		query["inProgress"] = *filter.InProgress
+	}
+
+	cursor, err := r.collection.Find(ctx, query)
 	if err != nil {
 		return nil, err
 	}

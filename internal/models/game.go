@@ -9,6 +9,7 @@ import (
 
 type Game struct {
 	ID            string       `json:"id" bson:"_id,omitempty"`
+	ExternalID    *string      `json:"externalId" bson:"externalId"`
 	OwnerID       string       `json:"ownerID" bson:"ownerID"`
 	Map           MapSummary   `json:"map" bson:"map"`
 	Board         []Providence `json:"board" bson:"board"`

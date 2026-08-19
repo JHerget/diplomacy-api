@@ -7,6 +7,24 @@
     "paths": {
         "/games": {
             "get": {
+                "parameters": [
+                    {
+                        "name": "external_id",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "in_progress",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK"
