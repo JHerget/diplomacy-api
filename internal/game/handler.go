@@ -81,6 +81,7 @@ func (h *Handler) Create(ctx context.Context, event events.APIGatewayV2HTTPReque
 		DaysPerTurn:   req.DaysPerTurn,
 		TurnStartHour: req.TurnStartHour,
 		StartDate:     req.StartDate,
+		InProgress:    true,
 	}
 
 	if err := g.Valid(); err != nil {
