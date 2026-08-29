@@ -79,6 +79,7 @@ func (h *Handler) Create(ctx context.Context, event events.APIGatewayV2HTTPReque
 		Board:         m.Providences,
 		Players:       m.Players,
 		DaysPerTurn:   req.DaysPerTurn,
+		Timezone:      req.Timezone,
 		TurnStartHour: req.TurnStartHour,
 		StartDate:     req.StartDate,
 		InProgress:    true,
