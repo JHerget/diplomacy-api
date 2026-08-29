@@ -99,6 +99,7 @@ func (h *Handler) Create(ctx context.Context, event events.APIGatewayV2HTTPReque
 
 	player := &g.Players[unassignedPlayers[selected.Int64()]]
 	player.UserID = req.UserID
+	player.IsPlaying = true
 
 	if err := g.Valid(); err != nil {
 		return http.BadRequest(&http.Error{
