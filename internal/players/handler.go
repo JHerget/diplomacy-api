@@ -58,10 +58,25 @@ func (h *Handler) Create(ctx context.Context, event events.APIGatewayV2HTTPReque
 	if err := json.Unmarshal([]byte(event.Body), &req); err != nil {
 		return http.InternalServerError(err), err
 	}
+	if req.UserID == nil {
+		err := fmt.Errorf("Missing user id.")
+		return http.BadRequest(&http.Error{
+			Message: err.Error(),
+		}), err
+	}
 
 	g, err := h.gameRepo.Get(ctx, gameID)
 	if err != nil {
 		return http.InternalServerError(err), err
+	}
+
+	for i := range g.Players {
+		if g.Players[i].UserID != nil && *g.Players[i].UserID == *req.UserID {
+			err := fmt.Errorf("User is already assigned to a player.")
+			return http.BadRequest(&http.Error{
+				Message: err.Error(),
+			}), err
+		}
 	}
 
 	unassignedPlayers := []int{}
