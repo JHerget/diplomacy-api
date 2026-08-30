@@ -85,6 +85,15 @@ func (h *Handler) Create(ctx context.Context, event events.APIGatewayV2HTTPReque
 		return invalidTurnID(turnID)
 	}
 
+	for i := range g.Players {
+		if g.Players[i].Name == order.PlayerName && !g.Players[i].IsPlaying {
+			err := fmt.Errorf("Player is not playing anymore.")
+			return http.BadRequest(&http.Error{
+				Message: err.Error(),
+			}), err
+		}
+	}
+
 	id, err := utils.RandomID()
 	if err != nil {
 		return http.InternalServerError(err), err
