@@ -13,14 +13,16 @@ import (
 )
 
 type Handler struct {
-	gameRepo *Repository
-	mapRepo  *maps.Repository
+	gameRepo      *Repository
+	mapRepo       *maps.Repository
+	turnScheduler TurnScheduler
 }
 
-func NewHandler(gameRepo *Repository, mapRepo *maps.Repository) *Handler {
+func NewHandler(gameRepo *Repository, mapRepo *maps.Repository, turnScheduler TurnScheduler) *Handler {
 	return &Handler{
-		gameRepo: gameRepo,
-		mapRepo:  mapRepo,
+		gameRepo:      gameRepo,
+		mapRepo:       mapRepo,
+		turnScheduler: turnScheduler,
 	}
 }
 
@@ -91,7 +93,17 @@ func (h *Handler) Create(ctx context.Context, event events.APIGatewayV2HTTPReque
 		}), err
 	}
 
-	h.gameRepo.Create(ctx, &g)
+	if err := h.gameRepo.Create(ctx, &g); err != nil {
+		return http.InternalServerError(err), err
+	}
+
+	if err := h.turnScheduler.Create(ctx, &g); err != nil {
+		if deleteErr := h.gameRepo.Delete(ctx, g.ID); deleteErr != nil {
+			err = fmt.Errorf("create turn schedule failed: %w; rollback delete failed: %w", err, deleteErr)
+			return http.InternalServerError(err), err
+		}
+		return http.InternalServerError(err), err
+	}
 
 	return http.Created(&g), nil
 }
@@ -117,6 +129,10 @@ func (h *Handler) Update(ctx context.Context, event events.APIGatewayV2HTTPReque
 
 func (h *Handler) Delete(ctx context.Context, event events.APIGatewayV2HTTPRequest) (events.APIGatewayV2HTTPResponse, error) {
 	gameID := event.PathParameters["gid"]
+
+	if err := h.turnScheduler.Delete(ctx, gameID); err != nil {
+		return http.InternalServerError(err), err
+	}
 
 	if err := h.gameRepo.Delete(ctx, gameID); err != nil {
 		return http.InternalServerError(err), err

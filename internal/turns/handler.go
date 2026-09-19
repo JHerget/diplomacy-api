@@ -17,12 +17,28 @@ import (
 type Handler struct {
 	gameRepo  *game.Repository
 	phaseRepo *phases.Repository
+	notifier  Notifier
 }
 
-func NewHandler(gameRepo *game.Repository, phaseRepo *phases.Repository) *Handler {
+type Notifier interface {
+	Send(ctx context.Context, message models.NotificationMessage) error
+}
+
+type NoopNotifier struct{}
+
+func (NoopNotifier) Send(ctx context.Context, message models.NotificationMessage) error {
+	return nil
+}
+
+func NewHandler(gameRepo *game.Repository, phaseRepo *phases.Repository, notifier Notifier) *Handler {
+	if notifier == nil {
+		notifier = NoopNotifier{}
+	}
+
 	return &Handler{
 		gameRepo:  gameRepo,
 		phaseRepo: phaseRepo,
+		notifier:  notifier,
 	}
 }
 
@@ -60,6 +76,26 @@ func (h *Handler) Create(ctx context.Context, event events.APIGatewayV2HTTPReque
 	g, err := h.gameRepo.Get(ctx, gameID)
 	if err != nil {
 		return http.InternalServerError(err), err
+	}
+	
+	if currentTurn := g.CurrentTurn(); currentTurn != nil {
+		if !currentTurn.IsFinished(g.Players) {
+			err := fmt.Errorf("current turn is not finished")
+			return http.BadRequest(&http.Error{
+				Message: err.Error(),
+			}), err
+		}
+
+		if g.ExternalID != nil && *g.ExternalID != "" {
+			err := h.notifier.Send(ctx, models.NotificationMessage{
+				ChannelID: *g.ExternalID,
+				GameID:    gameID,
+				TurnID:    currentTurn.ID,
+			})
+			if err != nil {
+				return http.InternalServerError(err), err
+			}
+		}
 	}
 
 	phase, err := h.phaseRepo.GetByOrder(ctx, 0)

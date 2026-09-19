@@ -5,6 +5,7 @@ import (
 	"diplomacy-api/internal/game"
 	h "diplomacy-api/internal/http"
 	"diplomacy-api/internal/maps"
+	platformaws "diplomacy-api/internal/platform/aws"
 	"diplomacy-api/internal/platform/mongo"
 	"log"
 
@@ -39,6 +40,13 @@ func main() {
 		log.Fatal(err)
 	}
 
-	gameHandler := game.NewHandler(game.NewRepository(db), maps.NewRepository(db))
+	scheduler, err := platformaws.NewScheduler(context.Background())
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	gameHandler := game.NewHandler(game.NewRepository(db), maps.NewRepository(db), &game.TurnScheduler{
+		scheduler: scheduler,
+	})
 	lambda.Start(handler(gameHandler))
 }

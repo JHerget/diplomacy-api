@@ -37,11 +37,11 @@ func main() {
 	mapRepo := maps.NewRepository(db)
 	phaseRepo := phases.NewRepository(db)
 	boardHandler := board.NewHandler(gameRepo, s3)
-	gameHandler := game.NewHandler(gameRepo, mapRepo)
+	gameHandler := game.NewHandler(gameRepo, mapRepo, nil)
 	mapHandler := maps.NewHandler(mapRepo, s3)
 	orderHandler := orders.NewHandler(gameRepo)
 	playerHandler := players.NewHandler(gameRepo)
-	turnHandler := turns.NewHandler(gameRepo, phaseRepo)
+	turnHandler := turns.NewHandler(gameRepo, phaseRepo, nil)
 
 	mux := http.NewServeMux()
 

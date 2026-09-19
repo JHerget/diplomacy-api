@@ -90,3 +90,23 @@ func (g *Game) NextTurnStartDate() int {
 
 	return int(start.Unix())
 }
+
+func (g *Game) CurrentTurn() *Turn {
+	if len(g.Turns) == 0 {
+		return nil
+	}
+
+	var latestTurn *Turn
+	for _, turn := range g.Turns {
+		if latestTurn == nil {
+			latestTurn = &turn
+			continue
+		}
+
+		if turn.TurnNumber > latestTurn.TurnNumber {
+			latestTurn = &turn
+		}
+	}
+
+	return latestTurn
+}

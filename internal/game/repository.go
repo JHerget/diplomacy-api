@@ -33,7 +33,8 @@ func (r *Repository) Get(ctx context.Context, id string) (*models.Game, error) {
 	}
 
 	err = r.collection.FindOne(ctx, bson.M{
-		"_id": objectID,
+		"_id":       objectID,
+		"isDeleted": bson.M{"$ne": true},
 	}).Decode(&game)
 	if err != nil {
 		return nil, err

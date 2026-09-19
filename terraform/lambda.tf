@@ -2,9 +2,16 @@ locals {
   lambdas = {
     "turns" = {
       zip = "../dist/turns.zip"
+      environment = {
+        EVENTS_QUEUE_URL = aws_sqs_queue.diplomacy_api_events.url
+      }
     }
     "games" = {
       zip = "../dist/games.zip"
+      environment = {
+        TURN_SCHEDULE_EVENT_BUS_ARN = local.default_event_bus_arn
+        TURN_SCHEDULE_ROLE_ARN      = aws_iam_role.scheduler_turns_role.arn
+      }
     }
     "maps" = {
       zip = "../dist/maps.zip"
@@ -132,4 +139,12 @@ resource "aws_lambda_function" "fn" {
   #     subnet_ids = [aws_subnet.private[0].id, aws_subnet.private[1].id]
   #     security_group_ids = [aws_security_group.lambda_vpc.id]
   # }
+
+  dynamic "environment" {
+    for_each = lookup(each.value, "environment", null) == null ? [] : [each.value.environment]
+
+    content {
+      variables = environment.value
+    }
+  }
 }

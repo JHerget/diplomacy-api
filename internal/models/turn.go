@@ -1,6 +1,9 @@
 package models
 
-import "diplomacy-api/internal/utils"
+import (
+	"diplomacy-api/internal/utils"
+	"time"
+)
 
 type Turn struct {
 	ID         string  `json:"id" bson:"id"`
@@ -31,4 +34,23 @@ func (t *Turn) FindPlayerOrder(playerName string) (*Order, bool) {
 	return utils.Find(t.Orders, func(o *Order) bool {
 		return o.PlayerName == playerName
 	})
+}
+
+func (t *Turn) IsFinished(players []Player) bool {
+	if time.Now().UTC().Unix() >= int64(t.EndDate) {
+		return true
+	}
+
+	submitted := map[string]bool{}
+	for _, order := range t.Orders {
+		submitted[order.PlayerName] = true
+	}
+
+	for _, player := range players {
+		if player.IsPlaying && !submitted[player.Name] {
+			return false
+		}
+	}
+
+	return true
 }
