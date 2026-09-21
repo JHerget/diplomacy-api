@@ -1,35 +1,45 @@
 locals {
+  turns_lambda_arn = "arn:aws:lambda:${var.aws_region}:${data.aws_caller_identity.current.account_id}:function:diplomacy-api-v1-turns"
+
+  common_lambda_environment = {
+    EVENTS_QUEUE_URL = aws_sqs_queue.diplomacy_api_events.url
+  }
+
   lambdas = {
     "turns" = {
-      zip = "../dist/turns.zip"
-      environment = {
-        EVENTS_QUEUE_URL = aws_sqs_queue.diplomacy_api_events.url
-      }
+      zip         = "../dist/turns.zip"
+      environment = {}
     }
     "games" = {
       zip = "../dist/games.zip"
       environment = {
-        TURN_SCHEDULE_EVENT_BUS_ARN = local.default_event_bus_arn
-        TURN_SCHEDULE_ROLE_ARN      = aws_iam_role.scheduler_turns_role.arn
+        TURN_SCHEDULE_LAMBDA_ARN = local.turns_lambda_arn
+        TURN_SCHEDULE_ROLE_ARN   = aws_iam_role.scheduler_turns_role.arn
       }
     }
     "maps" = {
-      zip = "../dist/maps.zip"
+      zip         = "../dist/maps.zip"
+      environment = {}
     }
     "phases" = {
-      zip = "../dist/phases.zip"
+      zip         = "../dist/phases.zip"
+      environment = {}
     }
     "players" = {
-      zip = "../dist/players.zip"
+      zip         = "../dist/players.zip"
+      environment = {}
     }
     "board" = {
-      zip = "../dist/board.zip"
+      zip         = "../dist/board.zip"
+      environment = {}
     }
     "orders" = {
-      zip = "../dist/orders.zip"
+      zip         = "../dist/orders.zip"
+      environment = {}
     }
     "test" = {
-      zip = "../dist/test.zip"
+      zip         = "../dist/test.zip"
+      environment = {}
     }
   }
 }
@@ -140,11 +150,7 @@ resource "aws_lambda_function" "fn" {
   #     security_group_ids = [aws_security_group.lambda_vpc.id]
   # }
 
-  dynamic "environment" {
-    for_each = lookup(each.value, "environment", null) == null ? [] : [each.value.environment]
-
-    content {
-      variables = environment.value
-    }
+  environment {
+    variables = merge(local.common_lambda_environment, each.value.environment)
   }
 }

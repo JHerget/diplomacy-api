@@ -1,9 +1,5 @@
 data "aws_caller_identity" "current" {}
 
-locals {
-  default_event_bus_arn = "arn:aws:events:${var.aws_region}:${data.aws_caller_identity.current.account_id}:event-bus/default"
-}
-
 data "aws_iam_policy_document" "scheduler_assume_role" {
   statement {
     actions = ["sts:AssumeRole"]
@@ -19,75 +15,22 @@ resource "aws_iam_role" "scheduler_turns_role" {
   assume_role_policy = data.aws_iam_policy_document.scheduler_assume_role.json
 }
 
-resource "aws_iam_policy" "scheduler_put_turn_events" {
-  name = "diplomacy-turn-scheduler-events-policy"
+resource "aws_iam_policy" "scheduler_invoke_turns_lambda" {
+  name = "diplomacy-turn-scheduler-lambda-policy"
 
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [{
       Effect   = "Allow"
-      Action   = "events:PutEvents"
-      Resource = local.default_event_bus_arn
+      Action   = "lambda:InvokeFunction"
+      Resource = aws_lambda_function.fn["turns"].arn
     }]
   })
 }
 
-resource "aws_iam_role_policy_attachment" "scheduler_put_turn_events" {
+resource "aws_iam_role_policy_attachment" "scheduler_invoke_turns_lambda" {
   role       = aws_iam_role.scheduler_turns_role.name
-  policy_arn = aws_iam_policy.scheduler_put_turn_events.arn
-}
-
-data "aws_iam_policy_document" "eventbridge_api_target_assume_role" {
-  statement {
-    actions = ["sts:AssumeRole"]
-    principals {
-      type        = "Service"
-      identifiers = ["events.amazonaws.com"]
-    }
-  }
-}
-
-resource "aws_iam_role" "eventbridge_api_target_role" {
-  name               = "diplomacy-eventbridge-api-target-role"
-  assume_role_policy = data.aws_iam_policy_document.eventbridge_api_target_assume_role.json
-}
-
-resource "aws_iam_policy" "eventbridge_invoke_turns_api" {
-  name = "diplomacy-eventbridge-turns-api-policy"
-
-  policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [{
-      Effect = "Allow"
-      Action = "execute-api:Invoke"
-      Resource = "${aws_apigatewayv2_api.http_api.execution_arn}/${aws_apigatewayv2_stage.v1.name}/POST/games/*/turns"
-    }]
-  })
-}
-
-resource "aws_iam_role_policy_attachment" "eventbridge_invoke_turns_api" {
-  role       = aws_iam_role.eventbridge_api_target_role.name
-  policy_arn = aws_iam_policy.eventbridge_invoke_turns_api.arn
-}
-
-resource "aws_cloudwatch_event_rule" "scheduled_turns" {
-  name = "diplomacy-api-scheduled-turns"
-
-  event_pattern = jsonencode({
-    source        = ["diplomacy-api.turn-scheduler"]
-    "detail-type" = ["CreateTurn"]
-  })
-}
-
-resource "aws_cloudwatch_event_target" "scheduled_turns_api" {
-  rule     = aws_cloudwatch_event_rule.scheduled_turns.name
-  arn      = "${aws_apigatewayv2_api.http_api.execution_arn}/${aws_apigatewayv2_stage.v1.name}/POST/games/*/turns"
-  role_arn = aws_iam_role.eventbridge_api_target_role.arn
-  input    = "{}"
-
-  http_target {
-    path_parameter_values = ["$.detail.gameId"]
-  }
+  policy_arn = aws_iam_policy.scheduler_invoke_turns_lambda.arn
 }
 
 resource "aws_iam_policy" "lambda_turn_scheduler" {
@@ -103,7 +46,7 @@ resource "aws_iam_policy" "lambda_turn_scheduler" {
           "scheduler:DeleteSchedule",
           "scheduler:GetSchedule"
         ]
-        Resource = "arn:aws:scheduler:${var.aws_region}:${data.aws_caller_identity.current.account_id}:schedule/default/diplomacy-turn-*"
+        Resource = "arn:aws:scheduler:${var.aws_region}:${data.aws_caller_identity.current.account_id}:schedule/default/diplomacy-game-*"
       },
       {
         Effect   = "Allow"
@@ -122,4 +65,12 @@ resource "aws_iam_policy" "lambda_turn_scheduler" {
 resource "aws_iam_role_policy_attachment" "lambda_turn_scheduler_access" {
   role       = aws_iam_role.lambda_role.name
   policy_arn = aws_iam_policy.lambda_turn_scheduler.arn
+}
+
+output "turn_scheduler_role_arn" {
+  value = aws_iam_role.scheduler_turns_role.arn
+}
+
+output "turn_schedule_lambda_arn" {
+  value = local.turns_lambda_arn
 }

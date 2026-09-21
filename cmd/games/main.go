@@ -45,8 +45,6 @@ func main() {
 		log.Fatal(err)
 	}
 
-	gameHandler := game.NewHandler(game.NewRepository(db), maps.NewRepository(db), &game.TurnScheduler{
-		scheduler: scheduler,
-	})
+	gameHandler := game.NewHandler(game.NewRepository(db), maps.NewRepository(db), game.NewTurnScheduler(scheduler))
 	lambda.Start(handler(gameHandler))
 }

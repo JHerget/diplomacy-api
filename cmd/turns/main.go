@@ -8,14 +8,44 @@ import (
 	platformaws "diplomacy-api/internal/platform/aws"
 	"diplomacy-api/internal/platform/mongo"
 	"diplomacy-api/internal/turns"
+	"encoding/json"
+	"errors"
 	"log"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
 )
 
-func handler(turnHandler *turns.Handler) func(context.Context, events.APIGatewayV2HTTPRequest) (events.APIGatewayV2HTTPResponse, error) {
-	return func(ctx context.Context, event events.APIGatewayV2HTTPRequest) (events.APIGatewayV2HTTPResponse, error) {
+func decodeTurnEvent(input json.RawMessage) (events.APIGatewayV2HTTPRequest, error) {
+	var envelope struct {
+		RouteKey string `json:"routeKey"`
+		GameID   string `json:"gameId"`
+	}
+	if err := json.Unmarshal(input, &envelope); err != nil {
+		return events.APIGatewayV2HTTPRequest{}, err
+	}
+	if envelope.RouteKey != "" {
+		var event events.APIGatewayV2HTTPRequest
+		if err := json.Unmarshal(input, &event); err != nil {
+			return events.APIGatewayV2HTTPRequest{}, err
+		}
+		return event, nil
+	}
+	if envelope.GameID == "" {
+		return events.APIGatewayV2HTTPRequest{}, errors.New("missing gameId")
+	}
+	return events.APIGatewayV2HTTPRequest{
+		RouteKey:       "POST /games/{gid}/turns",
+		PathParameters: map[string]string{"gid": envelope.GameID},
+	}, nil
+}
+
+func handler(turnHandler *turns.Handler) func(context.Context, json.RawMessage) (events.APIGatewayV2HTTPResponse, error) {
+	return func(ctx context.Context, input json.RawMessage) (events.APIGatewayV2HTTPResponse, error) {
+		event, err := decodeTurnEvent(input)
+		if err != nil {
+			return h.BadRequest(&h.Error{Message: err.Error()}), err
+		}
 		switch event.RouteKey {
 		case "GET /games/{gid}/turns":
 			return turnHandler.GetAll(ctx, event)

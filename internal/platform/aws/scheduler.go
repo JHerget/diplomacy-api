@@ -13,17 +13,15 @@ import (
 )
 
 type Scheduler struct {
-	client      *awsscheduler.Client
-	roleARN     string
-	eventBusARN string
+	client    *awsscheduler.Client
+	roleARN   string
+	lambdaARN string
 }
 
 type Schedule struct {
 	Name       string
 	Expression string
 	StartDate  time.Time
-	Source     string
-	DetailType string
 	Input      string
 }
 
@@ -32,22 +30,23 @@ func NewScheduler(ctx context.Context) (*Scheduler, error) {
 	if err != nil {
 		return nil, err
 	}
+	roleARN := os.Getenv("TURN_SCHEDULE_ROLE_ARN")
+	if roleARN == "" {
+		return nil, errors.New("missing TURN_SCHEDULE_ROLE_ARN")
+	}
+	lambdaARN := os.Getenv("TURN_SCHEDULE_LAMBDA_ARN")
+	if lambdaARN == "" {
+		return nil, errors.New("missing TURN_SCHEDULE_LAMBDA_ARN")
+	}
 
 	return &Scheduler{
-		client:      awsscheduler.NewFromConfig(cfg),
-		roleARN:     os.Getenv("TURN_SCHEDULE_ROLE_ARN"),
-		eventBusARN: os.Getenv("TURN_SCHEDULE_EVENT_BUS_ARN"),
+		client:    awsscheduler.NewFromConfig(cfg),
+		roleARN:   roleARN,
+		lambdaARN: lambdaARN,
 	}, nil
 }
 
 func (s *Scheduler) Create(ctx context.Context, schedule Schedule) error {
-	if s.roleARN == "" {
-		return errors.New("missing scheduler role ARN")
-	}
-	if s.eventBusARN == "" {
-		return errors.New("missing scheduler event bus ARN")
-	}
-
 	_, err := s.client.CreateSchedule(ctx, &awsscheduler.CreateScheduleInput{
 		Name:               aws.String(schedule.Name),
 		ScheduleExpression: aws.String(schedule.Expression),
@@ -56,13 +55,9 @@ func (s *Scheduler) Create(ctx context.Context, schedule Schedule) error {
 			Mode: schedulertypes.FlexibleTimeWindowModeOff,
 		},
 		Target: &schedulertypes.Target{
-			Arn:     aws.String(s.eventBusARN),
+			Arn:     aws.String(s.lambdaARN),
 			RoleArn: aws.String(s.roleARN),
-			EventBridgeParameters: &schedulertypes.EventBridgeParameters{
-				DetailType: aws.String(schedule.DetailType),
-				Source:     aws.String(schedule.Source),
-			},
-			Input: aws.String(schedule.Input),
+			Input:   aws.String(schedule.Input),
 		},
 	})
 	return err

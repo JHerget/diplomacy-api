@@ -3,6 +3,7 @@ package models
 import (
 	"diplomacy-api/internal/utils"
 	"errors"
+	"fmt"
 	"strings"
 	"time"
 )
@@ -109,4 +110,49 @@ func (g *Game) CurrentTurn() *Turn {
 	}
 
 	return latestTurn
+}
+
+func (g *Game) NewTurn() (*Turn, error) {
+	id, err := utils.RandomID()
+	if err != nil {
+		return nil, err
+	}
+
+	startDate := g.NextTurnStartDate()
+	endDate := int(time.Unix(int64(startDate), 0).UTC().AddDate(0, 0, g.DaysPerTurn).Unix())
+	turn := Turn{
+		ID:         id,
+		PhaseID:    "",
+		Orders:     []Order{},
+		TurnNumber: len(g.Turns) + 1,
+		StartDate:  startDate,
+		EndDate:    endDate,
+	}
+	g.Turns = append(g.Turns, turn)
+
+	if err := g.Valid(); err != nil {
+		return nil, err
+	}
+
+	return &turn, nil
+}
+
+func (g *Game) RemoveTurn(turnID string) error {
+	index := -1
+	for i := range g.Turns {
+		if g.Turns[i].ID == turnID {
+			index = i
+			break
+		}
+	}
+	if index == -1 {
+		return fmt.Errorf("invalid turn id '%s'", turnID)
+	}
+	g.Turns = append(g.Turns[:index], g.Turns[index+1:]...)
+
+	if err := g.Valid(); err != nil {
+		return err
+	}
+
+	return nil
 }

@@ -1,3 +1,7 @@
+export TURN_SCHEDULE_ROLE_ARN=arn:aws:iam::620486971062:role/diplomacy-turn-scheduler-role
+export TURN_SCHEDULE_LAMBDA_ARN=arn:aws:lambda:us-west-2:620486971062:function:diplomacy-api-v1-turns
+export EVENTS_QUEUE_URL=https://sqs.us-west-2.amazonaws.com/620486971062/diplomacy-api-v1-events
+
 build: format
 	rm -rf dist
 	mkdir -p dist/board dist/orders dist/test

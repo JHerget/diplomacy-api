@@ -6,10 +6,9 @@ import (
 	"diplomacy-api/internal/http"
 	"diplomacy-api/internal/models"
 	"diplomacy-api/internal/phases"
-	"diplomacy-api/internal/utils"
+	"diplomacy-api/internal/platform/aws"
 	"encoding/json"
 	"fmt"
-	"time"
 
 	"github.com/aws/aws-lambda-go/events"
 )
@@ -17,24 +16,10 @@ import (
 type Handler struct {
 	gameRepo  *game.Repository
 	phaseRepo *phases.Repository
-	notifier  Notifier
+	notifier  *aws.SQS
 }
 
-type Notifier interface {
-	Send(ctx context.Context, message models.NotificationMessage) error
-}
-
-type NoopNotifier struct{}
-
-func (NoopNotifier) Send(ctx context.Context, message models.NotificationMessage) error {
-	return nil
-}
-
-func NewHandler(gameRepo *game.Repository, phaseRepo *phases.Repository, notifier Notifier) *Handler {
-	if notifier == nil {
-		notifier = NoopNotifier{}
-	}
-
+func NewHandler(gameRepo *game.Repository, phaseRepo *phases.Repository, notifier *aws.SQS) *Handler {
 	return &Handler{
 		gameRepo:  gameRepo,
 		phaseRepo: phaseRepo,
@@ -77,57 +62,38 @@ func (h *Handler) Create(ctx context.Context, event events.APIGatewayV2HTTPReque
 	if err != nil {
 		return http.InternalServerError(err), err
 	}
-	
-	if currentTurn := g.CurrentTurn(); currentTurn != nil {
-		if !currentTurn.IsFinished(g.Players) {
-			err := fmt.Errorf("current turn is not finished")
-			return http.BadRequest(&http.Error{
-				Message: err.Error(),
-			}), err
-		}
 
-		if g.ExternalID != nil && *g.ExternalID != "" {
-			err := h.notifier.Send(ctx, models.NotificationMessage{
-				ChannelID: *g.ExternalID,
-				GameID:    gameID,
-				TurnID:    currentTurn.ID,
-			})
-			if err != nil {
-				return http.InternalServerError(err), err
-			}
-		}
-	}
-
-	phase, err := h.phaseRepo.GetByOrder(ctx, 0)
-	if err != nil {
-		return http.InternalServerError(err), err
-	}
-
-	id, err := utils.RandomID()
-	if err != nil {
-		return http.InternalServerError(err), err
-	}
-
-	startDate := g.NextTurnStartDate()
-	endDate := int(time.Unix(int64(startDate), 0).UTC().AddDate(0, 0, g.DaysPerTurn).Unix())
-	turn := models.Turn{
-		ID:         id,
-		PhaseID:    phase.ID,
-		Orders:     []models.Order{},
-		TurnNumber: len(g.Turns) + 1,
-		StartDate:  startDate,
-		EndDate:    endDate,
-	}
-	g.Turns = append(g.Turns, turn)
-
-	if err := g.Valid(); err != nil {
+	currentTurn := g.CurrentTurn()
+	if currentTurn != nil && !currentTurn.IsFinished(g.Players) {
+		err := fmt.Errorf("current turn is not finished")
 		return http.BadRequest(&http.Error{
 			Message: err.Error(),
 		}), err
 	}
 
+	turn, err := g.NewTurn()
+	if err != nil {
+		return http.InternalServerError(err), err
+	}
+
 	if err := h.gameRepo.Update(ctx, g); err != nil {
 		return http.InternalServerError(err), err
+	}
+
+	if g.ExternalID != nil && *g.ExternalID != "" {
+		turnID := turn.ID
+		if currentTurn != nil {
+			turnID = currentTurn.ID
+		}
+
+		err := h.notifier.Send(ctx, models.NotificationMessage{
+			ChannelID: *g.ExternalID,
+			GameID:    gameID,
+			TurnID:    turnID,
+		})
+		if err != nil {
+			return http.InternalServerError(err), err
+		}
 	}
 
 	return http.Created(turn), nil
@@ -178,19 +144,7 @@ func (h *Handler) Delete(ctx context.Context, event events.APIGatewayV2HTTPReque
 		return http.InternalServerError(err), err
 	}
 
-	index := -1
-	for i := range g.Turns {
-		if g.Turns[i].ID == turnID {
-			index = i
-			break
-		}
-	}
-	if index == -1 {
-		return invalidTurnID(turnID)
-	}
-	g.Turns = append(g.Turns[:index], g.Turns[index+1:]...)
-
-	if err := g.Valid(); err != nil {
+	if err := g.RemoveTurn(turnID); err != nil {
 		return http.BadRequest(&http.Error{
 			Message: err.Error(),
 		}), err

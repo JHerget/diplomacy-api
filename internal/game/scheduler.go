@@ -9,13 +9,14 @@ import (
 	"time"
 )
 
-const (
-	turnScheduleSource     = "diplomacy-api.turn-scheduler"
-	turnScheduleDetailType = "CreateTurn"
-)
-
 type TurnScheduler struct {
 	scheduler *aws.Scheduler
+}
+
+func NewTurnScheduler(scheduler *aws.Scheduler) *TurnScheduler {
+	return &TurnScheduler{
+		scheduler: scheduler,
+	}
 }
 
 func (ts *TurnScheduler) Create(ctx context.Context, game *models.Game) error {
@@ -30,8 +31,6 @@ func (ts *TurnScheduler) Create(ctx context.Context, game *models.Game) error {
 		Name:       turnScheduleName(game.ID),
 		Expression: turnScheduleExpression(game),
 		StartDate:  time.Unix(int64(game.StartDate), 0).UTC(),
-		Source:     turnScheduleSource,
-		DetailType: turnScheduleDetailType,
 		Input:      string(input),
 	})
 }
@@ -41,7 +40,7 @@ func (ts *TurnScheduler) Delete(ctx context.Context, gameID string) error {
 }
 
 func turnScheduleName(gameID string) string {
-	return fmt.Sprintf("diplomacy-turn-%s", gameID)
+	return fmt.Sprintf("diplomacy-game-%s", gameID)
 }
 
 func turnScheduleExpression(game *models.Game) string {

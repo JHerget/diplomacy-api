@@ -32,16 +32,24 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	scheduler, err := aws.NewScheduler(ctx)
+	if err != nil {
+		log.Fatal(err)
+	}
+	sqs, err := aws.NewSQS(ctx)
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	gameRepo := game.NewRepository(db)
 	mapRepo := maps.NewRepository(db)
 	phaseRepo := phases.NewRepository(db)
 	boardHandler := board.NewHandler(gameRepo, s3)
-	gameHandler := game.NewHandler(gameRepo, mapRepo, nil)
+	gameHandler := game.NewHandler(gameRepo, mapRepo, game.NewTurnScheduler(scheduler))
 	mapHandler := maps.NewHandler(mapRepo, s3)
 	orderHandler := orders.NewHandler(gameRepo)
 	playerHandler := players.NewHandler(gameRepo)
-	turnHandler := turns.NewHandler(gameRepo, phaseRepo, nil)
+	turnHandler := turns.NewHandler(gameRepo, phaseRepo, sqs)
 
 	mux := http.NewServeMux()
 

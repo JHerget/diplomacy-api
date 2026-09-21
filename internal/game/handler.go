@@ -15,10 +15,10 @@ import (
 type Handler struct {
 	gameRepo      *Repository
 	mapRepo       *maps.Repository
-	turnScheduler TurnScheduler
+	turnScheduler *TurnScheduler
 }
 
-func NewHandler(gameRepo *Repository, mapRepo *maps.Repository, turnScheduler TurnScheduler) *Handler {
+func NewHandler(gameRepo *Repository, mapRepo *maps.Repository, turnScheduler *TurnScheduler) *Handler {
 	return &Handler{
 		gameRepo:      gameRepo,
 		mapRepo:       mapRepo,
