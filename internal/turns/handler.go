@@ -81,15 +81,10 @@ func (h *Handler) Create(ctx context.Context, event events.APIGatewayV2HTTPReque
 	}
 
 	if g.ExternalID != nil && *g.ExternalID != "" {
-		turnID := turn.ID
-		if currentTurn != nil {
-			turnID = currentTurn.ID
-		}
-
 		err := h.notifier.Send(ctx, models.NotificationMessage{
 			ChannelID: *g.ExternalID,
 			GameID:    gameID,
-			TurnID:    turnID,
+			TurnID:    turn.ID,
 		})
 		if err != nil {
 			return http.InternalServerError(err), err
