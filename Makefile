@@ -33,6 +33,8 @@ run: build
 
 setup: build
 	cp diplomacy-api.service /etc/systemd/system/
+	systemctl daemon-reload
+	systemctl enable --now diplomacy-api
 
 format:
 	gofmt -w .
