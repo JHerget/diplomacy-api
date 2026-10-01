@@ -31,6 +31,9 @@ run: build
 	go build -o dist/local ./cmd/local
 	AWS_REGION=us-west-2 go run ./cmd/local
 
+setup: build
+	cp diplomacy-api.service /etc/systemd/system/
+
 format:
 	gofmt -w .
 
