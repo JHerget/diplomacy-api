@@ -1,6 +1,7 @@
 export TURN_SCHEDULE_ROLE_ARN=arn:aws:iam::620486971062:role/diplomacy-turn-scheduler-role
 export TURN_SCHEDULE_LAMBDA_ARN=arn:aws:lambda:us-west-2:620486971062:function:diplomacy-api-v1-turns
 export EVENTS_QUEUE_URL=https://sqs.us-west-2.amazonaws.com/620486971062/diplomacy-api-v1-events
+export AWS_REGION=us-west-2
 
 build: format
 	rm -rf dist
@@ -14,6 +15,7 @@ build: format
 	GOOS=linux GOARCH=arm64 go build -o dist/board/bootstrap ./cmd/board
 	GOOS=linux GOARCH=arm64 go build -o dist/orders/bootstrap ./cmd/orders
 	GOOS=linux GOARCH=arm64 go build -o dist/test/bootstrap ./cmd/test
+	go build -o dist/local ./cmd/local
 
 	cd dist/turns && zip ../turns.zip bootstrap
 	cd dist/games && zip ../games.zip bootstrap
@@ -28,14 +30,13 @@ publish: build
 	terraform -chdir=terraform apply
 
 run: build
-	go build -o dist/local ./cmd/local
-	AWS_REGION=us-west-2 go run ./cmd/local
+	go run ./cmd/local
 
 setup: build
-	install -m 644 diplomacy-api.service /etc/systemd/system/diplomacy-api.service
-	systemctl daemon-reload
-	systemctl enable diplomacy-api
-	systemctl restart diplomacy-api
+	sudo install -m 644 diplomacy-api.service /etc/systemd/system/diplomacy-api.service
+	sudo systemctl daemon-reload
+	sudo systemctl enable diplomacy-api
+	sudo systemctl restart diplomacy-api
 
 format:
 	gofmt -w .
