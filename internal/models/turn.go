@@ -7,7 +7,6 @@ import (
 
 type Turn struct {
 	ID         string  `json:"id" bson:"id"`
-	PhaseID    string  `json:"phaseID" bson:"phaseID"`
 	Orders     []Order `json:"orders" bson:"orders"`
 	TurnNumber int     `json:"turnNumber" bson:"turnNumber"`
 	StartDate  int     `json:"startDate" bson:"startDate"`

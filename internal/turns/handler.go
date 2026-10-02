@@ -5,7 +5,6 @@ import (
 	"diplomacy-api/internal/game"
 	"diplomacy-api/internal/http"
 	"diplomacy-api/internal/models"
-	"diplomacy-api/internal/phases"
 	"diplomacy-api/internal/platform/aws"
 	"encoding/json"
 	"fmt"
@@ -14,16 +13,14 @@ import (
 )
 
 type Handler struct {
-	gameRepo  *game.Repository
-	phaseRepo *phases.Repository
-	notifier  *aws.SQS
+	gameRepo *game.Repository
+	notifier *aws.SQS
 }
 
-func NewHandler(gameRepo *game.Repository, phaseRepo *phases.Repository, notifier *aws.SQS) *Handler {
+func NewHandler(gameRepo *game.Repository, notifier *aws.SQS) *Handler {
 	return &Handler{
-		gameRepo:  gameRepo,
-		phaseRepo: phaseRepo,
-		notifier:  notifier,
+		gameRepo: gameRepo,
+		notifier: notifier,
 	}
 }
 

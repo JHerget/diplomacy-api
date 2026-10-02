@@ -101,7 +101,6 @@ func (h *Handler) Create(ctx context.Context, event events.APIGatewayV2HTTPReque
 
 	savedOrder := models.Order{
 		ID:          id,
-		PhaseID:     order.PhaseID,
 		PlayerName:  order.PlayerName,
 		CreatedDate: int(time.Now().UTC().Unix()),
 		Value:       order.Value,
@@ -137,7 +136,6 @@ func (h *Handler) Create(ctx context.Context, event events.APIGatewayV2HTTPReque
 
 type orderRequest struct {
 	PlayerName string `json:"playerName"`
-	PhaseID    string `json:"phaseID"`
 	Value      string `json:"value"`
 }
 

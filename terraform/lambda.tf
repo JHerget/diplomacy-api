@@ -21,10 +21,6 @@ locals {
       zip         = "../dist/maps.zip"
       environment = {}
     }
-    "phases" = {
-      zip         = "../dist/phases.zip"
-      environment = {}
-    }
     "players" = {
       zip         = "../dist/players.zip"
       environment = {}

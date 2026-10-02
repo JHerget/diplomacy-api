@@ -122,7 +122,6 @@ func (g *Game) NewTurn() (*Turn, error) {
 	endDate := int(time.Unix(int64(startDate), 0).UTC().AddDate(0, 0, g.DaysPerTurn).Unix())
 	turn := Turn{
 		ID:         id,
-		PhaseID:    "",
 		Orders:     []Order{},
 		TurnNumber: len(g.Turns) + 1,
 		StartDate:  startDate,

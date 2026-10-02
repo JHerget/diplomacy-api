@@ -288,21 +288,6 @@
                 }
             }
         },
-        "/phases": {
-            "get": {
-                "responses": {
-                    "200": {
-                        "description": "OK"
-                    }
-                },
-                "x-amazon-apigateway-integration": {
-                    "type": "AWS_PROXY",
-                    "httpMethod": "POST",
-                    "payloadFormatVersion": "2.0",
-                    "uri": "${phases_arn}"
-                }
-            }
-        },
         "/maps": {
             "get": {
                 "responses": {

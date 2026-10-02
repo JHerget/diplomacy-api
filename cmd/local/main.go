@@ -6,7 +6,6 @@ import (
 	"diplomacy-api/internal/game"
 	"diplomacy-api/internal/maps"
 	"diplomacy-api/internal/orders"
-	"diplomacy-api/internal/phases"
 	"diplomacy-api/internal/platform/aws"
 	"diplomacy-api/internal/platform/mongo"
 	"diplomacy-api/internal/players"
@@ -43,13 +42,12 @@ func main() {
 
 	gameRepo := game.NewRepository(db)
 	mapRepo := maps.NewRepository(db)
-	phaseRepo := phases.NewRepository(db)
 	boardHandler := board.NewHandler(gameRepo, s3)
 	gameHandler := game.NewHandler(gameRepo, mapRepo, game.NewTurnScheduler(scheduler))
 	mapHandler := maps.NewHandler(mapRepo, s3)
 	orderHandler := orders.NewHandler(gameRepo)
 	playerHandler := players.NewHandler(gameRepo)
-	turnHandler := turns.NewHandler(gameRepo, phaseRepo, sqs)
+	turnHandler := turns.NewHandler(gameRepo, sqs)
 
 	mux := http.NewServeMux()
 

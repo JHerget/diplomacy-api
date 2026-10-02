@@ -4,7 +4,6 @@ import (
 	"context"
 	"diplomacy-api/internal/game"
 	h "diplomacy-api/internal/http"
-	"diplomacy-api/internal/phases"
 	platformaws "diplomacy-api/internal/platform/aws"
 	"diplomacy-api/internal/platform/mongo"
 	"diplomacy-api/internal/turns"
@@ -76,6 +75,6 @@ func main() {
 		log.Fatal(err)
 	}
 
-	turnHandler := turns.NewHandler(game.NewRepository(db), phases.NewRepository(db), sqs)
+	turnHandler := turns.NewHandler(game.NewRepository(db), sqs)
 	lambda.Start(handler(turnHandler))
 }
