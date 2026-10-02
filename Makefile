@@ -32,9 +32,10 @@ run: build
 	AWS_REGION=us-west-2 go run ./cmd/local
 
 setup: build
-	cp diplomacy-api.service /etc/systemd/system/
+	install -m 644 discord-api.service /etc/systemd/system/discord-api.service
 	systemctl daemon-reload
-	systemctl enable --now diplomacy-api
+	systemctl enable discord-api
+	systemctl restart discord-api
 
 format:
 	gofmt -w .
