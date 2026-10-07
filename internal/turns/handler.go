@@ -61,11 +61,19 @@ func (h *Handler) Create(ctx context.Context, event events.APIGatewayV2HTTPReque
 	}
 
 	currentTurn := g.CurrentTurn()
-	if currentTurn != nil && !currentTurn.IsFinished(g.Players) {
-		err := fmt.Errorf("current turn is not finished")
-		return http.BadRequest(&http.Error{
-			Message: err.Error(),
-		}), err
+	if currentTurn != nil {
+		if !currentTurn.IsFinished(g.Players) {
+			err := fmt.Errorf("current turn is not finished")
+			return http.BadRequest(&http.Error{
+				Message: err.Error(),
+			}), err
+		}
+
+		if err := currentTurn.Apply(); err != nil {
+			return http.BadRequest(&http.Error{
+				Message: err.Error(),
+			}), err
+		}
 	}
 
 	turn, err := g.NewTurn()
