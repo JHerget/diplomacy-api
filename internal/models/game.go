@@ -97,19 +97,14 @@ func (g *Game) CurrentTurn() *Turn {
 		return nil
 	}
 
-	var latestTurn *Turn
+	latestTurn := len(g.Turns)
 	for _, turn := range g.Turns {
-		if latestTurn == nil {
-			latestTurn = &turn
-			continue
-		}
-
-		if turn.TurnNumber > latestTurn.TurnNumber {
-			latestTurn = &turn
+		if turn.TurnNumber == latestTurn {
+			return &turn
 		}
 	}
 
-	return latestTurn
+	return nil
 }
 
 func (g *Game) NewTurn() (*Turn, error) {
