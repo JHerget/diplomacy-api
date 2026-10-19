@@ -124,9 +124,9 @@ func process(orders []models.Order) []rawCommand {
 	values := []rawCommand{}
 
 	for _, o := range orders {
-		commands := strings.Split(o.Value, ",")
+		commands := strings.SplitSeq(o.Value, ",")
 
-		for _, c := range commands {
+		for c := range commands {
 			values = append(values, rawCommand{
 				PlayerName: o.PlayerName,
 				Value:      strings.ToLower(strings.TrimSpace(c)),

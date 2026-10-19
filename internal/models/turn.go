@@ -54,6 +54,6 @@ func (t *Turn) IsFinished(players []Player) bool {
 	return true
 }
 
-func (* Turn) Apply() error {
+func (*Turn) Apply() error {
 	return nil
 }
