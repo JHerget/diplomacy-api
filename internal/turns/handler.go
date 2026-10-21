@@ -2,6 +2,7 @@ package turns
 
 import (
 	"context"
+	"diplomacy-api/internal/board"
 	"diplomacy-api/internal/game"
 	"diplomacy-api/internal/http"
 	"diplomacy-api/internal/models"
@@ -69,11 +70,13 @@ func (h *Handler) Create(ctx context.Context, event events.APIGatewayV2HTTPReque
 			}), err
 		}
 
-		if err := currentTurn.Apply(); err != nil {
+		newBoard, err := board.ApplyTurn(g.Board, currentTurn)
+		if err != nil {
 			return http.BadRequest(&http.Error{
 				Message: err.Error(),
 			}), err
 		}
+		g.Board = newBoard
 	}
 
 	turn, err := g.NewTurn()

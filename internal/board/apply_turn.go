@@ -2,6 +2,7 @@ package board
 
 import (
 	"diplomacy-api/internal/models"
+	"diplomacy-api/internal/orders"
 	"diplomacy-api/internal/utils"
 )
 
@@ -21,7 +22,10 @@ type attack struct {
 	Support    []string
 }
 
-func ApplyTurn(board []models.Providence, commands models.Commands) ([]models.Providence, error) {
+func ApplyTurn(board []models.Providence, turn *models.Turn) ([]models.Providence, error) {
+	allCommands := orders.GetCommands(turn.Orders)
+	validCommands := orders.ValidateCommands(allCommands, board)
+
 	a := applicator{
 		BoardMap: make(map[string]*node),
 	}
@@ -33,12 +37,12 @@ func ApplyTurn(board []models.Providence, commands models.Commands) ([]models.Pr
 		}
 	}
 
-	utils.ForEach(commands.Move, a.ApplyMove)
-	utils.ForEach(commands.Retreat, a.ApplyRetreat)
-	utils.ForEach(commands.Support, a.ApplySupport)
-	utils.ForEach(commands.Convoy, a.ApplyConvoy)
-	utils.ForEach(commands.Reinforce, a.ApplyReinforce)
-	utils.ForEach(commands.Disband, a.ApplyDisband)
+	utils.ForEach(validCommands.Move, a.ApplyMove)
+	utils.ForEach(validCommands.Retreat, a.ApplyRetreat)
+	utils.ForEach(validCommands.Support, a.ApplySupport)
+	utils.ForEach(validCommands.Convoy, a.ApplyConvoy)
+	utils.ForEach(validCommands.Reinforce, a.ApplyReinforce)
+	utils.ForEach(validCommands.Disband, a.ApplyDisband)
 
 	return a.FinalizeState(), nil
 }
