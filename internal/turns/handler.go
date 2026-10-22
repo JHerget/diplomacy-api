@@ -79,9 +79,17 @@ func (h *Handler) Create(ctx context.Context, event events.APIGatewayV2HTTPReque
 		g.Board = newBoard
 	}
 
-	turn, err := g.NewTurn()
-	if err != nil {
-		return http.InternalServerError(err), err
+	var turn *models.Turn
+	gameFinished := g.IsFinished()
+
+	if gameFinished {
+		turn = currentTurn
+		g.InProgress = false
+	} else {
+		turn, err = g.NewTurn()
+		if err != nil {
+			return http.InternalServerError(err), err
+		}
 	}
 
 	if err := h.gameRepo.Update(ctx, g); err != nil {
@@ -97,6 +105,10 @@ func (h *Handler) Create(ctx context.Context, event events.APIGatewayV2HTTPReque
 		if err != nil {
 			return http.InternalServerError(err), err
 		}
+	}
+
+	if gameFinished {
+		return http.OK(turn), nil
 	}
 
 	return http.Created(turn), nil

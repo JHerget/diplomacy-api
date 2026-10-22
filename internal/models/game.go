@@ -150,3 +150,27 @@ func (g *Game) RemoveTurn(turnID string) error {
 
 	return nil
 }
+
+func (g *Game) IsFinished() bool {
+	winningScore := 18
+	playerScores := make(map[string]int)
+
+	for _, p := range g.Board {
+		if p.SupplyCenter == nil {
+			continue
+		}
+		if p.SupplyCenter.ControlledBy == nil {
+			continue
+		}
+
+		playerScores[*p.SupplyCenter.ControlledBy]++
+	}
+
+	for _, score := range playerScores {
+		if score >= winningScore {
+			return true
+		}
+	}
+
+	return false
+}
