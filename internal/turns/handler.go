@@ -108,7 +108,10 @@ func (h *Handler) Create(ctx context.Context, event events.APIGatewayV2HTTPReque
 	}
 
 	if gameFinished {
-		return http.OK(turn), nil
+		err = fmt.Errorf("the game is finished")
+		return http.BadRequest(&http.Error{
+			Message: err.Error(),
+		}), err
 	}
 
 	return http.Created(turn), nil
