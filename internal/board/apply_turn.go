@@ -37,14 +37,18 @@ func ApplyTurn(board []models.Providence, turn *models.Turn) ([]models.Providenc
 		}
 	}
 
+	isFallTurn := turn.TurnNumber % 2 == 0
+
 	utils.ForEach(validCommands.Move, a.ApplyMove)
 	utils.ForEach(validCommands.Retreat, a.ApplyRetreat)
 	utils.ForEach(validCommands.Support, a.ApplySupport)
 	utils.ForEach(validCommands.Convoy, a.ApplyConvoy)
-	utils.ForEach(validCommands.Reinforce, a.ApplyReinforce)
 	utils.ForEach(validCommands.Disband, a.ApplyDisband)
+	if isFallTurn {
+		utils.ForEach(validCommands.Reinforce, a.ApplyReinforce)
+	}
 
-	return a.FinalizeState(), nil
+	return a.FinalizeState(isFallTurn), nil
 }
 
 func (a applicator) ApplyMove(move models.MoveCommand) {
@@ -88,7 +92,7 @@ func (a applicator) ApplyConvoy(convoy models.SupportCommand)      {}
 func (a applicator) ApplyReinforce(reinforce models.AdjustCommand) {}
 func (a applicator) ApplyDisband(disband models.AdjustCommand)     {}
 
-func (a applicator) FinalizeState() []models.Providence {
+func (a applicator) FinalizeState(fallTurn bool) []models.Providence {
 	board := make([]models.Providence, 0)
 
 	for _, n := range a.BoardMap {
@@ -111,6 +115,17 @@ func (a applicator) FinalizeState() []models.Providence {
 			_ = a.resolve(dest)
 			board = append(board, a.resolve(top))
 			stack = stack[:len(stack)-1]
+		}
+	}
+
+	if fallTurn {
+		for index, p := range board {
+			if p.SupplyCenter == nil || p.Unit == nil {
+				continue
+			}
+
+			p.SupplyCenter.ControlledBy = &p.Unit.ControlledBy
+			board[index] = p
 		}
 	}
 
