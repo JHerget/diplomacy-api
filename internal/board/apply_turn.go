@@ -37,7 +37,7 @@ func ApplyTurn(board []models.Providence, turn *models.Turn) ([]models.Providenc
 		}
 	}
 
-	isFallTurn := turn.TurnNumber % 2 == 0
+	isFallTurn := turn.TurnNumber%2 == 0
 
 	utils.ForEach(validCommands.Move, a.ApplyMove)
 	utils.ForEach(validCommands.Retreat, a.ApplyRetreat)

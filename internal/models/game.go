@@ -152,6 +152,10 @@ func (g *Game) RemoveTurn(turnID string) error {
 }
 
 func (g *Game) IsFinished() bool {
+	if !g.InProgress {
+		return true
+	}
+
 	winningScore := 18
 	playerScores := make(map[string]int)
 
