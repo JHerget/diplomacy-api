@@ -77,15 +77,17 @@ func (h *Handler) Create(ctx context.Context, event events.APIGatewayV2HTTPReque
 			}), err
 		}
 		g.Board = newBoard
+		g.UpdatePlayerStatuses()
 	}
 
 	var turn *models.Turn
-	gameFinished := g.IsFinished()
+	gameJustFinished := g.IsFinished() && g.InProgress
 
-	if gameFinished {
+	if gameJustFinished {
 		turn = currentTurn
 		g.InProgress = false
-	} else {
+	}
+	if g.InProgress {
 		turn, err = g.NewTurn()
 		if err != nil {
 			return http.InternalServerError(err), err
@@ -96,18 +98,20 @@ func (h *Handler) Create(ctx context.Context, event events.APIGatewayV2HTTPReque
 		return http.InternalServerError(err), err
 	}
 
-	if g.ExternalID != nil && *g.ExternalID != "" {
-		err := h.notifier.Send(ctx, models.NotificationMessage{
-			ChannelID: *g.ExternalID,
-			GameID:    gameID,
-			TurnID:    turn.ID,
-		})
-		if err != nil {
-			return http.InternalServerError(err), err
+	if g.InProgress || gameJustFinished {
+		if g.ExternalID != nil && *g.ExternalID != "" {
+			err := h.notifier.Send(ctx, models.NotificationMessage{
+				ChannelID: *g.ExternalID,
+				GameID:    gameID,
+				TurnID:    turn.ID,
+			})
+			if err != nil {
+				return http.InternalServerError(err), err
+			}
 		}
 	}
 
-	if gameFinished {
+	if !g.InProgress {
 		err = fmt.Errorf("the game is finished")
 		return http.BadRequest(&http.Error{
 			Message: err.Error(),

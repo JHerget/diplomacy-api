@@ -1,9 +1,11 @@
 package models
 
 import (
+	"crypto/rand"
 	"diplomacy-api/internal/utils"
 	"errors"
 	"fmt"
+	"math/big"
 	"strings"
 	"time"
 )
@@ -152,10 +154,6 @@ func (g *Game) RemoveTurn(turnID string) error {
 }
 
 func (g *Game) IsFinished() bool {
-	if !g.InProgress {
-		return true
-	}
-
 	winningScore := 18
 	playerScores := make(map[string]int)
 
@@ -177,4 +175,52 @@ func (g *Game) IsFinished() bool {
 	}
 
 	return false
+}
+
+func (g *Game) UpdatePlayerStatuses() {
+	playerUnits := make(map[string]int)
+
+	for _, p := range g.Board {
+		if p.Unit == nil {
+			continue
+		}
+
+		playerUnits[p.Unit.ControlledBy]++
+	}
+
+	for index, p := range g.Players {
+		if playerUnits[p.Name] == 0 {
+			p.IsPlaying = false
+			g.Players[index] = p
+		}
+	}
+}
+
+func (g *Game) AssignPlayer(userID string) (*Player, error) {
+	for i := range g.Players {
+		if g.Players[i].UserID != nil && *g.Players[i].UserID == userID {
+			return nil, fmt.Errorf("User is already assigned to a player.")
+		}
+	}
+
+	unassignedPlayers := []int{}
+	for i := range g.Players {
+		if g.Players[i].UserID == nil {
+			unassignedPlayers = append(unassignedPlayers, i)
+		}
+	}
+	if len(unassignedPlayers) == 0 {
+		return nil, fmt.Errorf("The game is full.")
+	}
+
+	selected, err := rand.Int(rand.Reader, big.NewInt(int64(len(unassignedPlayers))))
+	if err != nil {
+		return nil, err
+	}
+
+	player := &g.Players[unassignedPlayers[selected.Int64()]]
+	player.UserID = &userID
+	player.IsPlaying = true
+
+	return player, nil
 }

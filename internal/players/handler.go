@@ -2,13 +2,11 @@ package players
 
 import (
 	"context"
-	"crypto/rand"
 	"diplomacy-api/internal/game"
 	"diplomacy-api/internal/http"
 	"diplomacy-api/internal/models"
 	"encoding/json"
 	"fmt"
-	"math/big"
 
 	"github.com/aws/aws-lambda-go/events"
 )
@@ -70,36 +68,12 @@ func (h *Handler) Create(ctx context.Context, event events.APIGatewayV2HTTPReque
 		return http.InternalServerError(err), err
 	}
 
-	for i := range g.Players {
-		if g.Players[i].UserID != nil && *g.Players[i].UserID == *req.UserID {
-			err := fmt.Errorf("User is already assigned to a player.")
-			return http.BadRequest(&http.Error{
-				Message: err.Error(),
-			}), err
-		}
-	}
-
-	unassignedPlayers := []int{}
-	for i := range g.Players {
-		if g.Players[i].UserID == nil {
-			unassignedPlayers = append(unassignedPlayers, i)
-		}
-	}
-	if len(unassignedPlayers) == 0 {
-		err := fmt.Errorf("The game is full.")
+	player, err := g.AssignPlayer(*req.UserID)
+	if err != nil {
 		return http.BadRequest(&http.Error{
 			Message: err.Error(),
 		}), err
 	}
-
-	selected, err := rand.Int(rand.Reader, big.NewInt(int64(len(unassignedPlayers))))
-	if err != nil {
-		return http.InternalServerError(err), err
-	}
-
-	player := &g.Players[unassignedPlayers[selected.Int64()]]
-	player.UserID = req.UserID
-	player.IsPlaying = true
 
 	if err := g.Valid(); err != nil {
 		return http.BadRequest(&http.Error{
