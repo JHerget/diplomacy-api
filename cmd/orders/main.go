@@ -17,8 +17,12 @@ func handler(orderHandler *orders.Handler) func(context.Context, events.APIGatew
 		switch event.RouteKey {
 		case "GET /games/{gid}/turns/{tid}/orders":
 			return orderHandler.GetAll(ctx, event)
+		case "GET /games/{gid}/turns/{tid}/orders/commands":
+			return orderHandler.GetAllCommands(ctx, event)
 		case "GET /games/{gid}/turns/{tid}/orders/{oid}":
 			return orderHandler.GetByID(ctx, event)
+		case "GET /games/{gid}/turns/{tid}/orders/{oid}/commands":
+			return orderHandler.GetCommands(ctx, event)
 		case "POST /games/{gid}/turns/{tid}/orders":
 			return orderHandler.Create(ctx, event)
 		default:

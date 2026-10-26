@@ -40,6 +40,46 @@ func (h *Handler) GetAll(ctx context.Context, event events.APIGatewayV2HTTPReque
 	return http.OK(turn.Orders), nil
 }
 
+func (h *Handler) GetCommands(ctx context.Context, event events.APIGatewayV2HTTPRequest) (events.APIGatewayV2HTTPResponse, error) {
+	gameID := event.PathParameters["gid"]
+	turnID := event.PathParameters["tid"]
+	orderID := event.PathParameters["oid"]
+
+	g, err := h.gameRepo.Get(ctx, gameID)
+	if err != nil {
+		return http.InternalServerError(err), err
+	}
+
+	turn, ok := g.FindTurn(turnID)
+	if !ok {
+		return invalidTurnID(turnID)
+	}
+
+	order, ok := turn.FindOrder(orderID)
+	if !ok {
+		return invalidOrderID(orderID)
+	}
+
+	return http.OK(ListCommands([]models.Order{*order})), nil
+}
+
+func (h *Handler) GetAllCommands(ctx context.Context, event events.APIGatewayV2HTTPRequest) (events.APIGatewayV2HTTPResponse, error) {
+	gameID := event.PathParameters["gid"]
+	turnID := event.PathParameters["tid"]
+
+	g, err := h.gameRepo.Get(ctx, gameID)
+	if err != nil {
+		return http.InternalServerError(err), err
+	}
+
+	turn, ok := g.FindTurn(turnID)
+	if !ok {
+		return invalidTurnID(turnID)
+	}
+
+	return http.OK(ListCommands(turn.Orders)), nil
+}
+
 func (h *Handler) GetByID(ctx context.Context, event events.APIGatewayV2HTTPRequest) (events.APIGatewayV2HTTPResponse, error) {
 	gameID := event.PathParameters["gid"]
 	turnID := event.PathParameters["tid"]

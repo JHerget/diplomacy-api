@@ -204,7 +204,37 @@
                 }
             }
         },
+        "/games/{gid}/turns/{tid}/orders/commands": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                },
+                "x-amazon-apigateway-integration": {
+                    "type": "AWS_PROXY",
+                    "httpMethod": "POST",
+                    "payloadFormatVersion": "2.0",
+                    "uri": "${orders_arn}"
+                }
+            }
+        },
         "/games/{gid}/turns/{tid}/orders/{oid}": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                },
+                "x-amazon-apigateway-integration": {
+                    "type": "AWS_PROXY",
+                    "httpMethod": "POST",
+                    "payloadFormatVersion": "2.0",
+                    "uri": "${orders_arn}"
+                }
+            }
+        },
+        "/games/{gid}/turns/{tid}/orders/{oid}/commands": {
             "get": {
                 "responses": {
                     "200": {

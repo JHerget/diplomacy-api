@@ -7,6 +7,6 @@ type Order struct {
 	Value       string `json:"value" bson:"value"`
 }
 
-func (t *Order) Valid() error {
+func (o *Order) Valid() error {
 	return nil
 }

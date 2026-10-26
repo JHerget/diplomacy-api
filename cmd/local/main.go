@@ -75,7 +75,9 @@ func main() {
 	mux.HandleFunc("PUT /v1/games/{gid}/turns/{tid}", adapt(turnHandler.Update))
 	mux.HandleFunc("DELETE /v1/games/{gid}/turns/{tid}", adapt(turnHandler.Delete))
 	mux.HandleFunc("GET /v1/games/{gid}/turns/{tid}/orders", adapt(orderHandler.GetAll))
+	mux.HandleFunc("GET /v1/games/{gid}/turns/{tid}/orders/commands", adapt(orderHandler.GetAllCommands))
 	mux.HandleFunc("GET /v1/games/{gid}/turns/{tid}/orders/{oid}", adapt(orderHandler.GetByID))
+	mux.HandleFunc("GET /v1/games/{gid}/turns/{tid}/orders/{oid}/commands", adapt(orderHandler.GetCommands))
 	mux.HandleFunc("POST /v1/games/{gid}/turns/{tid}/orders", adapt(orderHandler.Create))
 
 	log.Println("local API listening on http://localhost:8080")

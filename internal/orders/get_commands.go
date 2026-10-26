@@ -6,8 +6,9 @@ import (
 )
 
 type rawCommand struct {
-	PlayerName string
-	Value      string
+	PlayerName string `json:"playerName"`
+	Value      string `json:"value"`
+	Valid      bool   `json:"valid"`
 }
 
 func GetCommands(orders []models.Order) models.Commands {
@@ -118,6 +119,26 @@ func GetCommands(orders []models.Order) models.Commands {
 	}
 
 	return commands
+}
+
+func ListCommands(orders []models.Order) []rawCommand {
+	allCommands := make([]rawCommand, 0)
+	rawCommands := process(orders)
+
+	for _, raw := range rawCommands {
+		valid := (models.CommandsRegex.Hold.FindStringSubmatch(raw.Value) != nil ||
+			models.CommandsRegex.Move.FindStringSubmatch(raw.Value) != nil ||
+			models.CommandsRegex.Retreat.FindStringSubmatch(raw.Value) != nil ||
+			models.CommandsRegex.Support.FindStringSubmatch(raw.Value) != nil ||
+			models.CommandsRegex.Convoy.FindStringSubmatch(raw.Value) != nil ||
+			models.CommandsRegex.Reinforce.FindStringSubmatch(raw.Value) != nil ||
+			models.CommandsRegex.Disband.FindStringSubmatch(raw.Value) != nil)
+
+		raw.Valid = valid
+		allCommands = append(allCommands, raw)
+	}
+
+	return allCommands
 }
 
 func process(orders []models.Order) []rawCommand {
