@@ -25,6 +25,7 @@ type MoveCommand struct {
 	UnitType    UnitType          `json:"unitType" bson:"unitType"`
 	Location    LocationReference `json:"location" bson:"location"`
 	Destination LocationReference `json:"destination" bson:"destination"`
+	Value       string            `json:"value" bson:"value"`
 }
 
 type SupportCommand struct {
@@ -32,12 +33,14 @@ type SupportCommand struct {
 	UnitType   UnitType          `json:"unitType" bson:"unitType"`
 	Location   LocationReference `json:"location" bson:"location"`
 	Move       MoveCommand       `json:"move" bson:"move"`
+	Value      string            `json:"value" bson:"value"`
 }
 
 type AdjustCommand struct {
 	PlayerName string            `json:"playerName" bson:"playerName"`
 	UnitType   UnitType          `json:"unitType" bson:"unitType"`
 	Location   LocationReference `json:"location" bson:"location"`
+	Value      string            `json:"value" bson:"value"`
 }
 
 type Commands struct {
@@ -48,4 +51,11 @@ type Commands struct {
 	Convoy    []SupportCommand `json:"convoy" bson:"convoy"`
 	Reinforce []AdjustCommand  `json:"reinforce" bson:"reinforce"`
 	Disband   []AdjustCommand  `json:"disband" bson:"disband"`
+}
+
+type CommandValidationResult struct {
+	PlayerName string `json:"playerName"`
+	Value      string `json:"value"`
+	Valid      bool   `json:"valid"`
+	Error      string `json:"error"`
 }

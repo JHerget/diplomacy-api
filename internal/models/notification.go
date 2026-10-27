@@ -1,7 +1,8 @@
 package models
 
 type NotificationMessage struct {
-	ChannelID string `json:"channelId"`
-	GameID    string `json:"gameId"`
-	TurnID    string `json:"turnID"`
+	ChannelID          string                    `json:"channelId"`
+	GameID             string                    `json:"gameId"`
+	TurnID             string                    `json:"turnID"`
+	PreviousTurnOrders []CommandValidationResult `json:"previousTurnOrders"`
 }

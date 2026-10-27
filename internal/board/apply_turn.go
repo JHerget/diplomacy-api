@@ -22,9 +22,9 @@ type attack struct {
 	Support    []string
 }
 
-func ApplyTurn(board []models.Providence, turn *models.Turn) ([]models.Providence, error) {
+func ApplyTurn(board []models.Providence, turn *models.Turn) ([]models.Providence, []models.CommandValidationResult, error) {
 	allCommands := orders.GetCommands(turn.Orders)
-	validCommands := orders.ValidateCommands(allCommands, board)
+	validCommands, validationResults := orders.ValidateCommands(allCommands, board)
 
 	a := applicator{
 		BoardMap: make(map[string]*node),
@@ -48,7 +48,7 @@ func ApplyTurn(board []models.Providence, turn *models.Turn) ([]models.Providenc
 		utils.ForEach(validCommands.Reinforce, a.ApplyReinforce)
 	}
 
-	return a.FinalizeState(isFallTurn), nil
+	return a.FinalizeState(isFallTurn), validationResults, nil
 }
 
 func (a applicator) ApplyMove(move models.MoveCommand) {

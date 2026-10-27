@@ -33,6 +33,7 @@ func GetCommands(orders []models.Order) models.Commands {
 				UnitType:    parseUnit(result[1]),
 				Location:    parseLocationReference(result[2]),
 				Destination: parseLocationReference(result[2]),
+				Value:       raw.Value,
 			})
 			continue
 		}
@@ -44,6 +45,7 @@ func GetCommands(orders []models.Order) models.Commands {
 				UnitType:    parseUnit(result[1]),
 				Location:    parseLocationReference(result[2]),
 				Destination: parseLocationReference(result[3]),
+				Value:       raw.Value,
 			})
 			continue
 		}
@@ -55,6 +57,7 @@ func GetCommands(orders []models.Order) models.Commands {
 				UnitType:    parseUnit(result[1]),
 				Location:    parseLocationReference(result[2]),
 				Destination: parseLocationReference(result[3]),
+				Value:       raw.Value,
 			})
 			continue
 		}
@@ -77,6 +80,7 @@ func GetCommands(orders []models.Order) models.Commands {
 					Location:    parseLocationReference(result[4]),
 					Destination: moveDest,
 				},
+				Value: raw.Value,
 			})
 			continue
 		}
@@ -93,6 +97,7 @@ func GetCommands(orders []models.Order) models.Commands {
 					Location:    parseLocationReference(result[4]),
 					Destination: parseLocationReference(result[5]),
 				},
+				Value: raw.Value,
 			})
 			continue
 		}
@@ -103,6 +108,7 @@ func GetCommands(orders []models.Order) models.Commands {
 				PlayerName: raw.PlayerName,
 				UnitType:   parseUnit(result[1]),
 				Location:   parseLocationReference(result[2]),
+				Value:      raw.Value,
 			})
 			continue
 		}
@@ -113,6 +119,7 @@ func GetCommands(orders []models.Order) models.Commands {
 				PlayerName: raw.PlayerName,
 				UnitType:   parseUnit(result[1]),
 				Location:   parseLocationReference(result[2]),
+				Value:      raw.Value,
 			})
 			continue
 		}

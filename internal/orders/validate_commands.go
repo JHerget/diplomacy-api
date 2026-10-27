@@ -8,8 +8,9 @@ import (
 )
 
 var unitTypeMismatchError = fmt.Errorf("Unit type mismatch.")
+
 func locationError(locationID string) error {
-	return fmt.Errorf("Providence not found: %s", locationID)
+	return fmt.Errorf("Providence not found: %s.", locationID)
 }
 func noUnitError(locationID string) error {
 	return fmt.Errorf("No unit at providence '%s'.", locationID)
@@ -22,35 +23,94 @@ type validator struct {
 	BoardMap map[string]models.Providence
 }
 
-func ValidateCommands(commands models.Commands, board []models.Providence) models.Commands {
+func ValidateCommands(commands models.Commands, board []models.Providence) (models.Commands, []models.CommandValidationResult) {
 	v := validator{
 		BoardMap: make(map[string]models.Providence),
 	}
 	for _, p := range board {
 		v.BoardMap[p.ID] = p
 	}
+	results := make([]models.CommandValidationResult, 0)
 
 	return models.Commands{
 		Hold: utils.Filter(commands.Hold, func(c *models.MoveCommand) bool {
-			ok, _ := v.IsValidHold(c)
+			ok, err := v.IsValidHold(c)
+			results = append(results, models.CommandValidationResult{
+				PlayerName: c.PlayerName,
+				Value:      c.Value,
+				Valid:      ok,
+				Error:      err.Error(),
+			})
+
 			return ok
 		}),
 		Move: utils.Filter(commands.Move, func(c *models.MoveCommand) bool {
-			ok, _ := v.IsValidMove(c, true)
+			ok, err := v.IsValidMove(c, true)
+			results = append(results, models.CommandValidationResult{
+				PlayerName: c.PlayerName,
+				Value:      c.Value,
+				Valid:      ok,
+				Error:      err.Error(),
+			})
+
 			return ok
 		}),
-		Retreat:   utils.Filter(commands.Retreat, func(c *models.MoveCommand) bool {
-			ok, _ := v.IsValidRetreat(c)
+		Retreat: utils.Filter(commands.Retreat, func(c *models.MoveCommand) bool {
+			ok, err := v.IsValidRetreat(c)
+			results = append(results, models.CommandValidationResult{
+				PlayerName: c.PlayerName,
+				Value:      c.Value,
+				Valid:      ok,
+				Error:      err.Error(),
+			})
+
 			return ok
 		}),
-		Support:   utils.Filter(commands.Support, func(c *models.SupportCommand) bool {
-			ok, _ := v.IsValidSupport(c)
+		Support: utils.Filter(commands.Support, func(c *models.SupportCommand) bool {
+			ok, err := v.IsValidSupport(c)
+			results = append(results, models.CommandValidationResult{
+				PlayerName: c.PlayerName,
+				Value:      c.Value,
+				Valid:      ok,
+				Error:      err.Error(),
+			})
+
 			return ok
 		}),
-		Convoy:    utils.Filter(commands.Convoy, v.IsValidConvoy),
-		Reinforce: utils.Filter(commands.Reinforce, v.IsValidReinforce),
-		Disband:   utils.Filter(commands.Disband, v.IsValidDisband),
-	}
+		Convoy: utils.Filter(commands.Convoy, func(c *models.SupportCommand) bool {
+			ok, err := v.IsValidConvoy(c)
+			results = append(results, models.CommandValidationResult{
+				PlayerName: c.PlayerName,
+				Value:      c.Value,
+				Valid:      ok,
+				Error:      err.Error(),
+			})
+
+			return ok
+		}),
+		Reinforce: utils.Filter(commands.Reinforce, func(c *models.AdjustCommand) bool {
+			ok, err := v.IsValidReinforce(c)
+			results = append(results, models.CommandValidationResult{
+				PlayerName: c.PlayerName,
+				Value:      c.Value,
+				Valid:      ok,
+				Error:      err.Error(),
+			})
+
+			return ok
+		}),
+		Disband: utils.Filter(commands.Disband, func(c *models.AdjustCommand) bool {
+			ok, err := v.IsValidDisband(c)
+			results = append(results, models.CommandValidationResult{
+				PlayerName: c.PlayerName,
+				Value:      c.Value,
+				Valid:      ok,
+				Error:      err.Error(),
+			})
+
+			return ok
+		}),
+	}, results
 }
 
 func (v validator) IsValidHold(hold *models.MoveCommand) (bool, error) {
@@ -155,135 +215,126 @@ func (v validator) IsValidRetreat(retreat *models.MoveCommand) (bool, error) {
 func (v validator) IsValidSupport(support *models.SupportCommand) (bool, error) {
 	loc, ok := v.BoardMap[support.Location.ID]
 	if !ok {
-		return false
+		return false, locationError(support.Location.ID)
 	}
 
 	dest, ok := v.BoardMap[support.Move.Destination.ID]
 	if !ok {
-		return false
+		return false, locationError(support.Move.Destination.ID)
 	}
 
-	if !v.IsValidMove(&support.Move, false) {
-		return false
+	if ok, err := v.IsValidMove(&support.Move, false); !ok {
+		return false, err
 	}
-	if !v.IsValidLocation(support.Location) {
-		return false
+	if ok, err := v.IsValidLocation(support.Location); !ok {
+		return false, err
 	}
 
 	if loc.Unit == nil {
-		return false
+		return false, noUnitError(loc.ID)
 	}
 	if loc.Unit.Type != support.UnitType {
-		return false
+		return false, unitTypeMismatchError
 	}
 	if loc.Unit.ControlledBy != support.PlayerName {
-		return false
+		return false, wrongUnit(support.PlayerName)
 	}
 
-	if !v.IsValidRoute(loc, dest, support.Move.Destination) {
-		return false
+	if ok, err := v.IsValidRoute(loc, dest, support.Move.Destination); !ok {
+		return false, err
 	}
 
-	return true
+	return true, nil
 }
 
-func (v validator) IsValidConvoy(convoy *models.SupportCommand) bool {
+func (v validator) IsValidConvoy(convoy *models.SupportCommand) (bool, error) {
 	loc, ok := v.BoardMap[convoy.Location.ID]
 	if !ok {
-		return false
+		return false, locationError(convoy.Location.ID)
 	}
 
 	dest, ok := v.BoardMap[convoy.Move.Destination.ID]
 	if !ok {
-		return false
+		return false, locationError(convoy.Move.Destination.ID)
 	}
 
-	if !v.IsValidMove(&convoy.Move, false) {
-		return false
+	if ok, err := v.IsValidMove(&convoy.Move, false); !ok {
+		return false, err
 	}
-	if !v.IsValidLocation(convoy.Location) {
-		return false
+	if ok, err := v.IsValidLocation(convoy.Location); !ok {
+		return false, err
 	}
 
 	if loc.Unit == nil {
-		return false
+		return false, noUnitError(loc.ID)
 	}
 	if loc.Unit.Type != convoy.UnitType {
-		return false
+		return false, unitTypeMismatchError
 	}
 	if loc.Unit.ControlledBy != convoy.PlayerName {
-		return false
+		return false, wrongUnit(convoy.PlayerName)
 	}
 
-	if !v.IsValidRoute(loc, dest, convoy.Move.Destination) {
-		return false
+	if ok, err := v.IsValidRoute(loc, dest, convoy.Move.Destination); !ok {
+		return false, err
 	}
 
-	return true
+	return true, nil
 }
 
-func (v validator) IsValidReinforce(reinforce *models.AdjustCommand) bool {
+func (v validator) IsValidReinforce(reinforce *models.AdjustCommand) (bool, error) {
 	loc, ok := v.BoardMap[reinforce.Location.ID]
 	if !ok {
-		return false
+		return false, locationError(loc.ID)
 	}
 
-	if !v.IsValidLocation(reinforce.Location) {
-		return false
+	if ok, err := v.IsValidLocation(reinforce.Location); !ok {
+		return false, err
 	}
 
 	if loc.Unit != nil {
-		return false
+		return false, noUnitError(loc.ID)
 	}
 	if loc.SupplyCenter == nil {
-		return false
+		return false, fmt.Errorf("This providence does not have a supply center: %s.", loc.ID)
 	}
 	if loc.SupplyCenter.ControlledBy == nil {
-		return false
+		return false, fmt.Errorf("You do not control the supply center.")
 	}
 	if *loc.SupplyCenter.ControlledBy != reinforce.PlayerName {
-		return false
+		return false, fmt.Errorf("The supply center is not controlled by '%s'.", reinforce.PlayerName)
 	}
 	if reinforce.UnitType == models.UnitArmy && loc.Type == models.ProvidenceOcean {
-		return false
+		return false, fmt.Errorf("You cannot reinforce armies to ocean providences.")
 	}
 	if reinforce.UnitType == models.UnitFleet && loc.Type == models.ProvidenceInland {
-		return false
+		return false, fmt.Errorf("You cannot reinforce fleets to inland providences.")
 	}
 
-	return true
+	return true, nil
 }
 
-func (v validator) IsValidDisband(disband *models.AdjustCommand) bool {
+func (v validator) IsValidDisband(disband *models.AdjustCommand) (bool, error) {
 	loc, ok := v.BoardMap[disband.Location.ID]
 	if !ok {
-		return false
+		return false, locationError(disband.Location.ID)
 	}
 
-	if !v.IsValidLocation(disband.Location) {
-		return false
+	if ok, err := v.IsValidLocation(disband.Location); !ok {
+		return false, err
 	}
 
 	if loc.Unit == nil {
-		return false
+		return false, noUnitError(loc.ID)
 	}
 	if loc.Unit.Type != disband.UnitType {
-		return false
+		return false, unitTypeMismatchError
 	}
 	if loc.Unit.ControlledBy != disband.PlayerName {
-		return false
-	}
-	if loc.SupplyCenter == nil {
-		return false
-	}
-	if loc.SupplyCenter.ControlledBy == nil {
-		return false
-	}
-	if *loc.SupplyCenter.ControlledBy != disband.PlayerName {
-		return false
+		return false, wrongUnit(disband.PlayerName)
 	}
 
-	return true
+	return true, nil
 }
 
 func (v validator) IsValidLocation(ref models.LocationReference) (bool, error) {

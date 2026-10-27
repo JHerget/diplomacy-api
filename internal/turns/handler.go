@@ -62,6 +62,8 @@ func (h *Handler) Create(ctx context.Context, event events.APIGatewayV2HTTPReque
 	}
 
 	currentTurn := g.CurrentTurn()
+	var validationResults []models.CommandValidationResult
+
 	if currentTurn != nil {
 		if !currentTurn.IsFinished(g.Players) {
 			err := fmt.Errorf("current turn is not finished")
@@ -70,13 +72,14 @@ func (h *Handler) Create(ctx context.Context, event events.APIGatewayV2HTTPReque
 			}), err
 		}
 
-		newBoard, err := board.ApplyTurn(g.Board, currentTurn)
+		newBoard, results, err := board.ApplyTurn(g.Board, currentTurn)
 		if err != nil {
 			return http.BadRequest(&http.Error{
 				Message: err.Error(),
 			}), err
 		}
 		g.Board = newBoard
+		validationResults = results
 		g.UpdatePlayerStatuses()
 	}
 
@@ -104,6 +107,7 @@ func (h *Handler) Create(ctx context.Context, event events.APIGatewayV2HTTPReque
 				ChannelID: *g.ExternalID,
 				GameID:    gameID,
 				TurnID:    turn.ID,
+				PreviousTurnOrders: validationResults,
 			})
 			if err != nil {
 				return http.InternalServerError(err), err
