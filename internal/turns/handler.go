@@ -104,9 +104,9 @@ func (h *Handler) Create(ctx context.Context, event events.APIGatewayV2HTTPReque
 	if g.InProgress || gameJustFinished {
 		if g.ExternalID != nil && *g.ExternalID != "" {
 			err := h.notifier.Send(ctx, models.NotificationMessage{
-				ChannelID: *g.ExternalID,
-				GameID:    gameID,
-				TurnID:    turn.ID,
+				ChannelID:          *g.ExternalID,
+				GameID:             gameID,
+				TurnID:             turn.ID,
 				PreviousTurnOrders: validationResults,
 			})
 			if err != nil {

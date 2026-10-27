@@ -114,9 +114,9 @@ func ValidateCommands(commands models.Commands, board []models.Providence) (mode
 }
 
 func (v validator) IsValidHold(hold *models.MoveCommand) (bool, error) {
-	loc, ok := v.BoardMap[hold.Location.ID]
+	loc, ok := v.BoardMap[hold.Location.ProperID()]
 	if !ok {
-		return false, locationError(hold.Location.ID)
+		return false, locationError(hold.Location.ProperID())
 	}
 
 	if ok, err := v.IsValidLocation(hold.Location); !ok {
@@ -143,14 +143,14 @@ func (v validator) IsValidHold(hold *models.MoveCommand) (bool, error) {
 }
 
 func (v validator) IsValidMove(move *models.MoveCommand, validatePlayer bool) (bool, error) {
-	loc, ok := v.BoardMap[move.Location.ID]
+	loc, ok := v.BoardMap[move.Location.ProperID()]
 	if !ok {
-		return false, locationError(move.Location.ID)
+		return false, locationError(move.Location.ProperID())
 	}
 
-	dest, ok := v.BoardMap[move.Destination.ID]
+	dest, ok := v.BoardMap[move.Destination.ProperID()]
 	if !ok {
-		return false, locationError(move.Destination.ID)
+		return false, locationError(move.Destination.ProperID())
 	}
 
 	if ok, err := v.IsValidLocation(move.Location); !ok {
@@ -178,14 +178,14 @@ func (v validator) IsValidMove(move *models.MoveCommand, validatePlayer bool) (b
 }
 
 func (v validator) IsValidRetreat(retreat *models.MoveCommand) (bool, error) {
-	loc, ok := v.BoardMap[retreat.Location.ID]
+	loc, ok := v.BoardMap[retreat.Location.ProperID()]
 	if !ok {
-		return false, locationError(retreat.Location.ID)
+		return false, locationError(retreat.Location.ProperID())
 	}
 
-	dest, ok := v.BoardMap[retreat.Destination.ID]
+	dest, ok := v.BoardMap[retreat.Destination.ProperID()]
 	if !ok {
-		return false, locationError(retreat.Destination.ID)
+		return false, locationError(retreat.Destination.ProperID())
 	}
 
 	if ok, err := v.IsValidLocation(retreat.Location); !ok {
@@ -213,14 +213,14 @@ func (v validator) IsValidRetreat(retreat *models.MoveCommand) (bool, error) {
 }
 
 func (v validator) IsValidSupport(support *models.SupportCommand) (bool, error) {
-	loc, ok := v.BoardMap[support.Location.ID]
+	loc, ok := v.BoardMap[support.Location.ProperID()]
 	if !ok {
-		return false, locationError(support.Location.ID)
+		return false, locationError(support.Location.ProperID())
 	}
 
-	dest, ok := v.BoardMap[support.Move.Destination.ID]
+	dest, ok := v.BoardMap[support.Move.Destination.ProperID()]
 	if !ok {
-		return false, locationError(support.Move.Destination.ID)
+		return false, locationError(support.Move.Destination.ProperID())
 	}
 
 	if ok, err := v.IsValidMove(&support.Move, false); !ok {
@@ -248,14 +248,14 @@ func (v validator) IsValidSupport(support *models.SupportCommand) (bool, error) 
 }
 
 func (v validator) IsValidConvoy(convoy *models.SupportCommand) (bool, error) {
-	loc, ok := v.BoardMap[convoy.Location.ID]
+	loc, ok := v.BoardMap[convoy.Location.ProperID()]
 	if !ok {
-		return false, locationError(convoy.Location.ID)
+		return false, locationError(convoy.Location.ProperID())
 	}
 
-	dest, ok := v.BoardMap[convoy.Move.Destination.ID]
+	dest, ok := v.BoardMap[convoy.Move.Destination.ProperID()]
 	if !ok {
-		return false, locationError(convoy.Move.Destination.ID)
+		return false, locationError(convoy.Move.Destination.ProperID())
 	}
 
 	if ok, err := v.IsValidMove(&convoy.Move, false); !ok {
@@ -283,9 +283,9 @@ func (v validator) IsValidConvoy(convoy *models.SupportCommand) (bool, error) {
 }
 
 func (v validator) IsValidReinforce(reinforce *models.AdjustCommand) (bool, error) {
-	loc, ok := v.BoardMap[reinforce.Location.ID]
+	loc, ok := v.BoardMap[reinforce.Location.ProperID()]
 	if !ok {
-		return false, locationError(loc.ID)
+		return false, locationError(reinforce.Location.ProperID())
 	}
 
 	if ok, err := v.IsValidLocation(reinforce.Location); !ok {
@@ -315,9 +315,9 @@ func (v validator) IsValidReinforce(reinforce *models.AdjustCommand) (bool, erro
 }
 
 func (v validator) IsValidDisband(disband *models.AdjustCommand) (bool, error) {
-	loc, ok := v.BoardMap[disband.Location.ID]
+	loc, ok := v.BoardMap[disband.Location.ProperID()]
 	if !ok {
-		return false, locationError(disband.Location.ID)
+		return false, locationError(disband.Location.ProperID())
 	}
 
 	if ok, err := v.IsValidLocation(disband.Location); !ok {
@@ -338,9 +338,9 @@ func (v validator) IsValidDisband(disband *models.AdjustCommand) (bool, error) {
 }
 
 func (v validator) IsValidLocation(ref models.LocationReference) (bool, error) {
-	loc, ok := v.BoardMap[ref.ID]
+	loc, ok := v.BoardMap[ref.ProperID()]
 	if !ok {
-		return false, fmt.Errorf("Providence not found: %s", ref.ID)
+		return false, fmt.Errorf("Providence not found: %s", ref.ProperID())
 	}
 
 	coastProvided := ref.Coast != nil
