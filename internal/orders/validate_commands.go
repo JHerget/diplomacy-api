@@ -39,7 +39,7 @@ func ValidateCommands(commands models.Commands, board []models.Providence) (mode
 				PlayerName: c.PlayerName,
 				Value:      c.Value,
 				Valid:      ok,
-				Error:      err.Error(),
+				Error:      errorMessage(err),
 			})
 
 			return ok
@@ -50,7 +50,7 @@ func ValidateCommands(commands models.Commands, board []models.Providence) (mode
 				PlayerName: c.PlayerName,
 				Value:      c.Value,
 				Valid:      ok,
-				Error:      err.Error(),
+				Error:      errorMessage(err),
 			})
 
 			return ok
@@ -61,7 +61,7 @@ func ValidateCommands(commands models.Commands, board []models.Providence) (mode
 				PlayerName: c.PlayerName,
 				Value:      c.Value,
 				Valid:      ok,
-				Error:      err.Error(),
+				Error:      errorMessage(err),
 			})
 
 			return ok
@@ -72,7 +72,7 @@ func ValidateCommands(commands models.Commands, board []models.Providence) (mode
 				PlayerName: c.PlayerName,
 				Value:      c.Value,
 				Valid:      ok,
-				Error:      err.Error(),
+				Error:      errorMessage(err),
 			})
 
 			return ok
@@ -83,7 +83,7 @@ func ValidateCommands(commands models.Commands, board []models.Providence) (mode
 				PlayerName: c.PlayerName,
 				Value:      c.Value,
 				Valid:      ok,
-				Error:      err.Error(),
+				Error:      errorMessage(err),
 			})
 
 			return ok
@@ -94,7 +94,7 @@ func ValidateCommands(commands models.Commands, board []models.Providence) (mode
 				PlayerName: c.PlayerName,
 				Value:      c.Value,
 				Valid:      ok,
-				Error:      err.Error(),
+				Error:      errorMessage(err),
 			})
 
 			return ok
@@ -105,7 +105,7 @@ func ValidateCommands(commands models.Commands, board []models.Providence) (mode
 				PlayerName: c.PlayerName,
 				Value:      c.Value,
 				Valid:      ok,
-				Error:      err.Error(),
+				Error:      errorMessage(err),
 			})
 
 			return ok
@@ -402,4 +402,12 @@ func (v validator) IsValidRoute(location models.Providence, destination models.P
 	}
 
 	return slices.Contains(destination.Routes, location.ID), nil
+}
+
+func errorMessage(err error) string {
+	if err != nil {
+		return err.Error()
+	}
+
+	return ""
 }
