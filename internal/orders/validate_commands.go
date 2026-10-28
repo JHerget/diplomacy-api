@@ -346,13 +346,9 @@ func (v validator) IsValidLocation(ref models.LocationReference) (bool, error) {
 	coastProvided := ref.Coast != nil
 	hasCoastalRoutes := len(loc.CoastalRoutes) > 0
 
-	if !coastProvided && hasCoastalRoutes {
-		return false, fmt.Errorf("Expecting a coast.")
-	}
 	if coastProvided && !hasCoastalRoutes {
 		return false, fmt.Errorf("A coast was provided when not expected.")
 	}
-
 	if !coastProvided {
 		return true, nil
 	}
