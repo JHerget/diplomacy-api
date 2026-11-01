@@ -146,11 +146,9 @@ func (h *Handler) Create(ctx context.Context, event events.APIGatewayV2HTTPReque
 		Value:       order.Value,
 	}
 
-	statusCreated := false
 	existing, ok := turn.FindPlayerOrder(savedOrder.PlayerName)
 	if !ok {
 		turn.Orders = append(turn.Orders, savedOrder)
-		statusCreated = true
 	} else {
 		savedOrder.ID = existing.ID
 		savedOrder.CreatedDate = existing.CreatedDate
@@ -167,11 +165,16 @@ func (h *Handler) Create(ctx context.Context, event events.APIGatewayV2HTTPReque
 		return http.InternalServerError(err), err
 	}
 
-	if statusCreated {
-		return http.Created(savedOrder), nil
+	validFormatCommands := GetCommands([]models.Order{savedOrder})
+	allCommands := ListCommands([]models.Order{savedOrder})
+	_, results := ValidateCommands(validFormatCommands, g.Board)
+	for _, command := range allCommands {
+		if !command.Valid {
+			results = append(results, command)
+		}
 	}
 
-	return http.OK(savedOrder), nil
+	return http.OK(results), nil
 }
 
 type orderRequest struct {

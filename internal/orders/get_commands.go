@@ -6,9 +6,8 @@ import (
 )
 
 type rawCommand struct {
-	PlayerName string `json:"playerName"`
-	Value      string `json:"value"`
-	Valid      bool   `json:"valid"`
+	PlayerName string
+	Value      string
 }
 
 func GetCommands(orders []models.Order) models.Commands {
@@ -128,8 +127,8 @@ func GetCommands(orders []models.Order) models.Commands {
 	return commands
 }
 
-func ListCommands(orders []models.Order) []rawCommand {
-	allCommands := make([]rawCommand, 0)
+func ListCommands(orders []models.Order) []models.CommandValidationResult {
+	allCommands := make([]models.CommandValidationResult, 0)
 	rawCommands := process(orders)
 
 	for _, raw := range rawCommands {
@@ -141,8 +140,17 @@ func ListCommands(orders []models.Order) []rawCommand {
 			models.CommandsRegex.Reinforce.FindStringSubmatch(raw.Value) != nil ||
 			models.CommandsRegex.Disband.FindStringSubmatch(raw.Value) != nil)
 
-		raw.Valid = valid
-		allCommands = append(allCommands, raw)
+		err := ""
+		if !valid {
+			err = "Command format not recognized."
+		}
+
+		allCommands = append(allCommands, models.CommandValidationResult{
+			PlayerName: raw.PlayerName,
+			Value:      raw.Value,
+			Valid:      valid,
+			Error:      err,
+		})
 	}
 
 	return allCommands
