@@ -11,7 +11,7 @@ type applicator struct {
 }
 
 type node struct {
-	Providence        models.Providence
+	Province          models.Province
 	Attacks           []attack
 	UnresolvedCommand *models.MoveCommand
 }
@@ -22,7 +22,7 @@ type attack struct {
 	Support    []string
 }
 
-func ApplyTurn(board []models.Providence, turn *models.Turn) ([]models.Providence, []models.CommandValidationResult, error) {
+func ApplyTurn(board []models.Province, turn *models.Turn) ([]models.Province, []models.CommandValidationResult, error) {
 	allCommands := orders.GetCommands(turn.Orders)
 	validCommands, validationResults := orders.ValidateCommands(allCommands, board)
 
@@ -31,7 +31,7 @@ func ApplyTurn(board []models.Providence, turn *models.Turn) ([]models.Providenc
 	}
 	for _, p := range board {
 		a.BoardMap[p.ID] = &node{
-			Providence:        p,
+			Province:          p,
 			Attacks:           []attack{},
 			UnresolvedCommand: nil,
 		}
@@ -92,8 +92,8 @@ func (a applicator) ApplyConvoy(convoy models.SupportCommand)      {}
 func (a applicator) ApplyReinforce(reinforce models.AdjustCommand) {}
 func (a applicator) ApplyDisband(disband models.AdjustCommand)     {}
 
-func (a applicator) FinalizeState(fallTurn bool) []models.Providence {
-	board := make([]models.Providence, 0)
+func (a applicator) FinalizeState(fallTurn bool) []models.Province {
+	board := make([]models.Province, 0)
 
 	for _, n := range a.BoardMap {
 		if n.UnresolvedCommand == nil {
@@ -132,9 +132,9 @@ func (a applicator) FinalizeState(fallTurn bool) []models.Providence {
 	return board
 }
 
-func (a applicator) resolve(n *node) models.Providence {
+func (a applicator) resolve(n *node) models.Province {
 	minStrength := 0
-	if n.Providence.Unit != nil {
+	if n.Province.Unit != nil {
 		minStrength = 1
 	}
 
@@ -158,11 +158,11 @@ func (a applicator) resolve(n *node) models.Providence {
 		att := strongestAttacks[0]
 		loc := a.BoardMap[att.LocationID]
 
-		if n.Providence.ID != loc.Providence.ID {
-			n.Providence.Unit = loc.Providence.Unit
-			loc.Providence.Unit = nil
+		if n.Province.ID != loc.Province.ID {
+			n.Province.Unit = loc.Province.Unit
+			loc.Province.Unit = nil
 		}
 	}
 
-	return n.Providence
+	return n.Province
 }

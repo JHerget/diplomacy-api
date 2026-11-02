@@ -10,22 +10,22 @@ import (
 var unitTypeMismatchError = fmt.Errorf("Unit type mismatch.")
 
 func locationError(locationID string) error {
-	return fmt.Errorf("Providence not found: %s.", locationID)
+	return fmt.Errorf("Province not found: %s.", locationID)
 }
 func noUnitError(locationID string) error {
-	return fmt.Errorf("No unit at providence '%s'.", locationID)
+	return fmt.Errorf("No unit at province '%s'.", locationID)
 }
 func wrongUnit(playerName string) error {
 	return fmt.Errorf("The unit is not controlled by '%s'.", playerName)
 }
 
 type validator struct {
-	BoardMap map[string]models.Providence
+	BoardMap map[string]models.Province
 }
 
-func ValidateCommands(commands models.Commands, board []models.Providence) (models.Commands, []models.CommandValidationResult) {
+func ValidateCommands(commands models.Commands, board []models.Province) (models.Commands, []models.CommandValidationResult) {
 	v := validator{
-		BoardMap: make(map[string]models.Providence),
+		BoardMap: make(map[string]models.Province),
 	}
 	for _, p := range board {
 		v.BoardMap[p.ID] = p
@@ -296,7 +296,7 @@ func (v validator) IsValidReinforce(reinforce *models.AdjustCommand) (bool, erro
 		return false, noUnitError(loc.ID)
 	}
 	if loc.SupplyCenter == nil {
-		return false, fmt.Errorf("This providence does not have a supply center: %s.", loc.ID)
+		return false, fmt.Errorf("This province does not have a supply center: %s.", loc.ID)
 	}
 	if loc.SupplyCenter.ControlledBy == nil {
 		return false, fmt.Errorf("You do not control the supply center.")
@@ -304,11 +304,11 @@ func (v validator) IsValidReinforce(reinforce *models.AdjustCommand) (bool, erro
 	if *loc.SupplyCenter.ControlledBy != reinforce.PlayerName {
 		return false, fmt.Errorf("The supply center is not controlled by '%s'.", reinforce.PlayerName)
 	}
-	if reinforce.UnitType == models.UnitArmy && loc.Type == models.ProvidenceOcean {
-		return false, fmt.Errorf("You cannot reinforce armies to ocean providences.")
+	if reinforce.UnitType == models.UnitArmy && loc.Type == models.ProvinceOcean {
+		return false, fmt.Errorf("You cannot reinforce armies to ocean provinces.")
 	}
-	if reinforce.UnitType == models.UnitFleet && loc.Type == models.ProvidenceInland {
-		return false, fmt.Errorf("You cannot reinforce fleets to inland providences.")
+	if reinforce.UnitType == models.UnitFleet && loc.Type == models.ProvinceInland {
+		return false, fmt.Errorf("You cannot reinforce fleets to inland provinces.")
 	}
 
 	return true, nil
@@ -340,7 +340,7 @@ func (v validator) IsValidDisband(disband *models.AdjustCommand) (bool, error) {
 func (v validator) IsValidLocation(ref models.LocationReference) (bool, error) {
 	loc, ok := v.BoardMap[ref.ProperID()]
 	if !ok {
-		return false, fmt.Errorf("Providence not found: %s", ref.ProperID())
+		return false, fmt.Errorf("Province not found: %s", ref.ProperID())
 	}
 
 	coastProvided := ref.Coast != nil
@@ -361,29 +361,29 @@ func (v validator) IsValidLocation(ref models.LocationReference) (bool, error) {
 	return true, nil
 }
 
-func (v validator) IsValidRoute(location models.Providence, destination models.Providence, destRef models.LocationReference) (bool, error) {
+func (v validator) IsValidRoute(location models.Province, destination models.Province, destRef models.LocationReference) (bool, error) {
 	if location.Unit == nil {
 		return false, noUnitError(location.ID)
 	}
 
-	if location.Type == models.ProvidenceOcean && destination.Type == models.ProvidenceInland {
+	if location.Type == models.ProvinceOcean && destination.Type == models.ProvinceInland {
 		return false, fmt.Errorf("Units cannot move from ocean to inland.")
 	}
-	if location.Type == models.ProvidenceInland && destination.Type == models.ProvidenceOcean {
+	if location.Type == models.ProvinceInland && destination.Type == models.ProvinceOcean {
 		return false, fmt.Errorf("Units cannot move from inland to ocean.")
 	}
-	if location.Type == models.ProvidenceInland && location.Unit.Type == models.UnitFleet {
+	if location.Type == models.ProvinceInland && location.Unit.Type == models.UnitFleet {
 		return false, fmt.Errorf("Fleets cannot be inland.")
 	}
-	if location.Type == models.ProvidenceOcean && location.Unit.Type == models.UnitArmy {
+	if location.Type == models.ProvinceOcean && location.Unit.Type == models.UnitArmy {
 		return false, fmt.Errorf("Armies cannot be in the ocean.")
 	}
 
-	hasCoastalRoutes := len(destination.CoastalRoutes) > 0
+	requireCoast := len(destination.CoastalRoutes) > 1
 
 	if destRef.Coast != nil {
-		if !hasCoastalRoutes {
-			return slices.Contains(destination.Routes, location.ID), nil
+		if !requireCoast {
+			return false, fmt.Errorf("Coast provided when not expected.")
 		}
 
 		routes, ok := destination.CoastalRoutes[*destRef.Coast]
@@ -393,8 +393,18 @@ func (v validator) IsValidRoute(location models.Providence, destination models.P
 
 		return slices.Contains(routes, location.ID), nil
 	}
-	if hasCoastalRoutes {
+	if destRef.Coast == nil && requireCoast {
 		return false, fmt.Errorf("Expecting a coast, none specified.")
+	}
+
+	if location.Unit.Type == models.UnitFleet && destination.Type == models.ProvinceCoastal {
+		routeName := models.Coast(fmt.Sprintf("%s-default", destination.ID))
+		routes, ok := destination.CoastalRoutes[routeName]
+		if !ok {
+			return false, fmt.Errorf("No default coastal routes found for '%s'.", destination.ID)
+		}
+
+		return slices.Contains(routes, location.ID), nil
 	}
 
 	return slices.Contains(destination.Routes, location.ID), nil

@@ -75,16 +75,18 @@ func (h *Handler) Create(ctx context.Context, event events.APIGatewayV2HTTPReque
 	}
 
 	g := models.Game{
-		OwnerID:       "1",
-		ExternalID:    req.ExternalID,
-		Map:           m.Summary(),
-		Board:         m.Providences,
-		Players:       m.Players,
-		DaysPerTurn:   req.DaysPerTurn,
-		Timezone:      req.Timezone,
-		TurnStartHour: req.TurnStartHour,
-		StartDate:     req.StartDate,
-		InProgress:    true,
+		OwnerID:           "1",
+		ExternalID:        req.ExternalID,
+		Map:               m.Summary(),
+		Board:             m.Provinces,
+		Players:           m.Players,
+		DaysPerTurn:       req.DaysPerTurn,
+		Timezone:          req.Timezone,
+		TurnStartHour:     req.TurnStartHour,
+		StartDate:         req.StartDate,
+		InProgress:        true,
+		RandomAssignments: req.RandomAssignments,
+		PlayerCount:       req.PlayerCount,
 	}
 
 	if err := g.Valid(); err != nil {
@@ -142,10 +144,12 @@ func (h *Handler) Delete(ctx context.Context, event events.APIGatewayV2HTTPReque
 }
 
 type createGameRequest struct {
-	ExternalID    *string `json:"externalId"`
-	MapID         string  `json:"mapId"`
-	DaysPerTurn   int     `json:"daysPerTurn"`
-	TurnStartHour int     `json:"turnStartHour"`
-	Timezone      int     `json:"timezone"`
-	StartDate     int     `json:"startDate"`
+	ExternalID        *string `json:"externalId"`
+	MapID             string  `json:"mapId"`
+	DaysPerTurn       int     `json:"daysPerTurn"`
+	TurnStartHour     int     `json:"turnStartHour"`
+	Timezone          int     `json:"timezone"`
+	StartDate         int     `json:"startDate"`
+	RandomAssignments bool    `json:"randomAssignments"`
+	PlayerCount       int     `json:"playerCount"`
 }

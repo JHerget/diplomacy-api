@@ -4,7 +4,7 @@ import (
 	"context"
 	"diplomacy-api/internal/models"
 	"encoding/json"
-	"errors"
+	"fmt"
 	"os"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
@@ -33,7 +33,7 @@ func NewSQS(ctx context.Context) (*SQS, error) {
 
 func (s *SQS) Send(ctx context.Context, message models.NotificationMessage) error {
 	if s.queueURL == "" {
-		return errors.New("missing EVENTS_QUEUE_URL")
+		return fmt.Errorf("missing EVENTS_QUEUE_URL")
 	}
 
 	body, err := json.Marshal(message)

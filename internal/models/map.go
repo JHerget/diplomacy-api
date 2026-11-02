@@ -1,16 +1,16 @@
 package models
 
 import (
-	"errors"
+	"fmt"
 	"strings"
 )
 
 type Map struct {
-	ID          string       `json:"id" bson:"_id,omitempty"`
-	Name        string       `json:"name" bson:"name"`
-	Players     []Player     `json:"players" bson:"players"`
-	Providences []Providence `json:"providences" bson:"providences"`
-	IsDeleted   bool         `json:"isDeleted" bson:"isDeleted"`
+	ID        string     `json:"id" bson:"_id,omitempty"`
+	Name      string     `json:"name" bson:"name"`
+	Players   []Player   `json:"players" bson:"players"`
+	Provinces []Province `json:"provinces" bson:"provinces"`
+	IsDeleted bool       `json:"isDeleted" bson:"isDeleted"`
 }
 
 type MapSummary struct {
@@ -27,10 +27,10 @@ func (m *Map) Summary() MapSummary {
 
 func (m *Map) Valid() error {
 	if strings.TrimSpace(m.Name) == "" {
-		return errors.New("Name is required.")
+		return fmt.Errorf("Name is required.")
 	}
 
-	for _, p := range m.Providences {
+	for _, p := range m.Provinces {
 		if err := p.Valid(); err != nil {
 			return err
 		}

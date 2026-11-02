@@ -3,7 +3,6 @@ package models
 import (
 	"crypto/rand"
 	"diplomacy-api/internal/utils"
-	"errors"
 	"fmt"
 	"math/big"
 	"strings"
@@ -11,45 +10,50 @@ import (
 )
 
 type Game struct {
-	ID            string       `json:"id" bson:"_id,omitempty"`
-	ExternalID    *string      `json:"externalId" bson:"externalId"`
-	OwnerID       string       `json:"ownerID" bson:"ownerID"`
-	Map           MapSummary   `json:"map" bson:"map"`
-	Board         []Providence `json:"board" bson:"board"`
-	Players       []Player     `json:"players" bson:"players"`
-	Turns         []Turn       `json:"turns" bson:"turns"`
-	DaysPerTurn   int          `json:"daysPerTurn" bson:"daysPerTurn"`
-	TurnStartHour int          `json:"turnStartHour" bson:"turnStartHour"`
-	Timezone      int          `json:"timezone" bson:"timezone"`
-	StartDate     int          `json:"startDate" bson:"startDate"`
-	EndDate       int          `json:"endDate" bson:"endDate"`
-	InProgress    bool         `json:"inProgress" bson:"inProgress"`
-	IsDeleted     bool         `json:"isDeleted" bson:"isDeleted"`
+	ID                string     `json:"id" bson:"_id,omitempty"`
+	ExternalID        *string    `json:"externalId" bson:"externalId"`
+	OwnerID           string     `json:"ownerID" bson:"ownerID"`
+	Map               MapSummary `json:"map" bson:"map"`
+	Board             []Province `json:"board" bson:"board"`
+	Players           []Player   `json:"players" bson:"players"`
+	Turns             []Turn     `json:"turns" bson:"turns"`
+	DaysPerTurn       int        `json:"daysPerTurn" bson:"daysPerTurn"`
+	TurnStartHour     int        `json:"turnStartHour" bson:"turnStartHour"`
+	Timezone          int        `json:"timezone" bson:"timezone"`
+	StartDate         int        `json:"startDate" bson:"startDate"`
+	EndDate           int        `json:"endDate" bson:"endDate"`
+	InProgress        bool       `json:"inProgress" bson:"inProgress"`
+	IsDeleted         bool       `json:"isDeleted" bson:"isDeleted"`
+	RandomAssignments bool       `json:"randomAssignments" bson:"randomAssignments"`
+	PlayerCount       int        `json:"playerCount" bson:"playerCount"`
 }
 
 func (g *Game) Valid() error {
 	if strings.TrimSpace(g.OwnerID) == "" {
-		return errors.New("Missing owner id.")
+		return fmt.Errorf("Missing owner id.")
 	}
 	if strings.TrimSpace(g.Map.ID) == "" {
-		return errors.New("Missing map id.")
+		return fmt.Errorf("Missing map id.")
+	}
+
+	if g.PlayerCount < 2 || g.PlayerCount > 7 {
+		return fmt.Errorf("player count must be greater than or equal to 2 and less than or equal to 7")
 	}
 
 	if g.DaysPerTurn <= 0 {
-		return errors.New("Days per turn must be greater than 0.")
+		return fmt.Errorf("Days per turn must be greater than 0.")
 	}
 
 	if g.TurnStartHour < 0 || g.TurnStartHour > 23 {
-		return errors.New("Turn start hour must be greater than or equal to 0 and less than or equal to 23.")
+		return fmt.Errorf("Turn start hour must be greater than or equal to 0 and less than or equal to 23.")
 	}
 
 	if g.StartDate < 0 {
-		return errors.New("Start date must be an epoch timestamp.")
+		return fmt.Errorf("Start date must be an epoch timestamp.")
 	}
 	if g.EndDate < 0 {
-		return errors.New("End date must be an epoch timestamp.")
+		return fmt.Errorf("End date must be an epoch timestamp.")
 	}
-
 	for _, p := range g.Board {
 		if err := p.Valid(); err != nil {
 			return err

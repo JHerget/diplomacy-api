@@ -8,7 +8,7 @@ import (
 	"diplomacy-api/internal/platform/mongo"
 	"diplomacy-api/internal/turns"
 	"encoding/json"
-	"errors"
+	"fmt"
 	"log"
 
 	"github.com/aws/aws-lambda-go/events"
@@ -31,7 +31,7 @@ func decodeTurnEvent(input json.RawMessage) (events.APIGatewayV2HTTPRequest, err
 		return event, nil
 	}
 	if envelope.GameID == "" {
-		return events.APIGatewayV2HTTPRequest{}, errors.New("missing gameId")
+		return events.APIGatewayV2HTTPRequest{}, fmt.Errorf("missing gameId")
 	}
 	return events.APIGatewayV2HTTPRequest{
 		RouteKey:       "POST /games/{gid}/turns",

@@ -3,6 +3,7 @@ package aws
 import (
 	"context"
 	"errors"
+	"fmt"
 	"os"
 	"time"
 
@@ -32,11 +33,11 @@ func NewScheduler(ctx context.Context) (*Scheduler, error) {
 	}
 	roleARN := os.Getenv("TURN_SCHEDULE_ROLE_ARN")
 	if roleARN == "" {
-		return nil, errors.New("missing TURN_SCHEDULE_ROLE_ARN")
+		return nil, fmt.Errorf("missing TURN_SCHEDULE_ROLE_ARN")
 	}
 	lambdaARN := os.Getenv("TURN_SCHEDULE_LAMBDA_ARN")
 	if lambdaARN == "" {
-		return nil, errors.New("missing TURN_SCHEDULE_LAMBDA_ARN")
+		return nil, fmt.Errorf("missing TURN_SCHEDULE_LAMBDA_ARN")
 	}
 
 	return &Scheduler{
@@ -65,7 +66,7 @@ func (s *Scheduler) Create(ctx context.Context, schedule Schedule) error {
 
 func (s *Scheduler) Delete(ctx context.Context, name string) error {
 	if s.client == nil {
-		return errors.New("missing scheduler client")
+		return fmt.Errorf("missing scheduler client")
 	}
 
 	_, err := s.client.DeleteSchedule(ctx, &awsscheduler.DeleteScheduleInput{

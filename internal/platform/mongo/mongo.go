@@ -3,7 +3,7 @@ package mongo
 import (
 	"context"
 	"diplomacy-api/internal/platform/aws"
-	"errors"
+	"fmt"
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -21,7 +21,7 @@ func NewMongoDB(ctx context.Context) (*mongo.Client, error) {
 	}
 
 	if secrets.MongoDBConnectionString == "" {
-		return nil, errors.New("missing mongodb:connection-string")
+		return nil, fmt.Errorf("missing mongodb:connection-string")
 	}
 
 	opts := options.Client().ApplyURI(secrets.MongoDBConnectionString)

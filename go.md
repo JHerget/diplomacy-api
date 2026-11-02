@@ -53,7 +53,7 @@ Feature-oriented organization means:
 - Order parsing and validation go in `internal/orders`.
 - Game persistence and the shared game document shape go in `internal/games`.
 - AWS clients, Mongo connection management, and generic HTTP/Lambda error handling go in `internal/platform`.
-- Avoid a broad `model` package unless a type is truly shared by most features. Prefer `board.Providence`, `orders.MoveCommand`, and `games.Game` over one large catch-all model namespace.
+- Avoid a broad `model` package unless a type is truly shared by most features. Prefer `board.Province`, `orders.MoveCommand`, and `games.Game` over one large catch-all model namespace.
 
 ## 2. Convert TypeScript interfaces to Go structs
 
@@ -62,10 +62,10 @@ Move the files under `src/interfaces/` into the feature package that owns the be
 Suggested ownership:
 
 - `Game`, `Player`, `Turn`, and map metadata: `internal/games/model.go`
-- `Providence`, `SupplyCenter`, `Unit`, and `Coordinates`: `internal/board/model.go`
+- `Province`, `SupplyCenter`, `Unit`, and `Coordinates`: `internal/board/model.go`
 - `LocationReference`, command structs, and command regex helpers: `internal/orders/model.go`
 
-If a type is needed across features, import it from its owning feature package. For example, `games.Game` can include `[]board.Providence`, `[]games.Player`, and `[]games.Turn`. This keeps ownership clear without flattening everything into a generic model package.
+If a type is needed across features, import it from its owning feature package. For example, `games.Game` can include `[]board.Province`, `[]games.Player`, and `[]games.Turn`. This keeps ownership clear without flattening everything into a generic model package.
 
 Important model conversions:
 
@@ -91,7 +91,7 @@ type Coordinates struct {
     Y float64 `json:"y" bson:"y"`
 }
 
-type Providence struct {
+type Province struct {
     ID            string              `json:"id" bson:"id"`
     Name          string              `json:"name" bson:"name"`
     SupplyCenter  *SupplyCenter       `json:"supplyCenter" bson:"supplyCenter"`
@@ -201,8 +201,8 @@ The current TypeScript implementation uses a package-level `boardMap`. In Go, pr
 Suggested shape:
 
 ```go
-func ApplyTurn(providences []Providence, turn games.Turn) []Providence {
-    boardMap := make(map[string]*node, len(providences))
+func ApplyTurn(provinces []Province, turn games.Turn) []Province {
+    boardMap := make(map[string]*node, len(provinces))
     // populate boardMap, apply commands, finalize state
 }
 ```
@@ -224,7 +224,7 @@ The current file does four things:
 In Go, implement this in `internal/board/draw_board.go` with standard image packages. The function signature should be:
 
 ```go
-func DrawBoard(board []Providence, players []games.Player, mapPNG []byte) ([]byte, error)
+func DrawBoard(board []Province, players []games.Player, mapPNG []byte) ([]byte, error)
 ```
 
 Use `png.Decode` to read the input image:
@@ -433,7 +433,7 @@ func abs(n int) int {
 The translated `DrawBoard` function should look like this at a high level:
 
 ```go
-func DrawBoard(board []Providence, players []games.Player, mapPNG []byte) ([]byte, error) {
+func DrawBoard(board []Province, players []games.Player, mapPNG []byte) ([]byte, error) {
     src, err := png.Decode(bytes.NewReader(mapPNG))
     if err != nil {
         return nil, err

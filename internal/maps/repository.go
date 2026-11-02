@@ -79,10 +79,10 @@ func (r *Repository) Update(ctx context.Context, m *models.Map) error {
 		bson.M{"_id": objectID},
 		bson.M{
 			"$set": bson.M{
-				"name":        m.Name,
-				"players":     m.Players,
-				"providences": m.Providences,
-				"isDeleted":   m.IsDeleted,
+				"name":      m.Name,
+				"players":   m.Players,
+				"provinces": m.Provinces,
+				"isDeleted": m.IsDeleted,
 			},
 		},
 	)

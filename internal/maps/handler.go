@@ -51,10 +51,10 @@ func (h *Handler) Create(ctx context.Context, event events.APIGatewayV2HTTPReque
 	}
 
 	m := models.Map{
-		Name:        req.Name,
-		Players:     req.Players,
-		Providences: req.Providences,
-		IsDeleted:   false,
+		Name:      req.Name,
+		Players:   req.Players,
+		Provinces: req.Provinces,
+		IsDeleted: false,
 	}
 
 	if err := m.Valid(); err != nil {
@@ -139,7 +139,7 @@ func (h *Handler) SetImage(ctx context.Context, event events.APIGatewayV2HTTPReq
 }
 
 type createMapRequest struct {
-	Name        string              `json:"name"`
-	Players     []models.Player     `json:"players"`
-	Providences []models.Providence `json:"providences"`
+	Name      string            `json:"name"`
+	Players   []models.Player   `json:"players"`
+	Provinces []models.Province `json:"provinces"`
 }
