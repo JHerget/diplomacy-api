@@ -161,6 +161,10 @@ func (g *Game) IsFinished() bool {
 	winningScore := 18
 	playerScores := make(map[string]int)
 
+	if g.PlayerCount == 2 {
+		winningScore = 24
+	}
+
 	for _, p := range g.Board {
 		if p.SupplyCenter == nil {
 			continue
@@ -200,31 +204,81 @@ func (g *Game) UpdatePlayerStatuses() {
 	}
 }
 
-func (g *Game) AssignPlayer(userID string) (*Player, error) {
-	for i := range g.Players {
-		if g.Players[i].UserID != nil && *g.Players[i].UserID == userID {
+func (g *Game) AssignSpecificPlayers(userID string, playerNames []string) ([]*Player, error) {
+	players := make(map[string]int)
+	for i, player := range g.Players {
+		if player.UserID != nil && *player.UserID == userID {
 			return nil, fmt.Errorf("User is already assigned to a player.")
 		}
+
+		players[player.Name] = i
 	}
 
-	unassignedPlayers := []int{}
-	for i := range g.Players {
-		if g.Players[i].UserID == nil {
-			unassignedPlayers = append(unassignedPlayers, i)
+	results := make([]*Player, 0)
+	for _, name := range playerNames {
+		index := players[name]
+		player := &g.Players[index]
+
+		if player.UserID != nil {
+			return nil, fmt.Errorf("%s is already assigned.", name)
+		}
+		player.UserID = &userID
+		player.IsPlaying = true
+
+		results = append(results, player)
+	}
+
+	return results, nil
+}
+
+func (g *Game) AssignRandomPlayers(userID string) ([]*Player, error) {
+	unassignedPlayers := make(map[string]int)
+	for i, player := range g.Players {
+		if player.UserID != nil && *player.UserID == userID {
+			return nil, fmt.Errorf("User is already assigned to a player.")
+		}
+		if player.UserID == nil {
+			unassignedPlayers[player.Name] = i + 1
+			continue
 		}
 	}
 	if len(unassignedPlayers) == 0 {
 		return nil, fmt.Errorf("The game is full.")
 	}
 
-	selected, err := rand.Int(rand.Reader, big.NewInt(int64(len(unassignedPlayers))))
+	playerCombo := PlayerCombos[g.PlayerCount]
+	unassignedCombos := make([][]string, 0)
+	for _, c := range playerCombo {
+		names := strings.Split(c, "/")
+		skipCombo := false
+
+		for _, name := range names {
+			if unassignedPlayers[name] < 1 {
+				skipCombo = true
+				break
+			}
+		}
+
+		if skipCombo {
+			continue
+		}
+
+		unassignedCombos = append(unassignedCombos, names)
+	}
+
+	selected, err := rand.Int(rand.Reader, big.NewInt(int64(len(unassignedCombos))))
 	if err != nil {
 		return nil, err
 	}
 
-	player := &g.Players[unassignedPlayers[selected.Int64()]]
-	player.UserID = &userID
-	player.IsPlaying = true
+	results := make([]*Player, 0)
+	for _, name := range unassignedCombos[selected.Int64()] {
+		player := &g.Players[unassignedPlayers[name]-1]
+		player.UserID = &userID
+		player.IsPlaying = true
 
-	return player, nil
+		results = append(results, player)
+	}
+
+	return results, nil
 }

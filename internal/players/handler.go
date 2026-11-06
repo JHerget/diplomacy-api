@@ -56,7 +56,7 @@ func (h *Handler) Create(ctx context.Context, event events.APIGatewayV2HTTPReque
 	if err := json.Unmarshal([]byte(event.Body), &req); err != nil {
 		return http.InternalServerError(err), err
 	}
-	if req.UserID == nil {
+	if req.UserID == "" {
 		err := fmt.Errorf("Missing user id.")
 		return http.BadRequest(&http.Error{
 			Message: err.Error(),
@@ -68,7 +68,12 @@ func (h *Handler) Create(ctx context.Context, event events.APIGatewayV2HTTPReque
 		return http.InternalServerError(err), err
 	}
 
-	player, err := g.AssignPlayer(*req.UserID)
+	players := make([]*models.Player, 0)
+	if len(req.PlayerNames) > 0 {
+		players, err = g.AssignSpecificPlayers(req.UserID, req.PlayerNames)
+	} else {
+		players, err = g.AssignRandomPlayers(req.UserID)
+	}
 	if err != nil {
 		return http.BadRequest(&http.Error{
 			Message: err.Error(),
@@ -85,7 +90,7 @@ func (h *Handler) Create(ctx context.Context, event events.APIGatewayV2HTTPReque
 		return http.InternalServerError(err), err
 	}
 
-	return http.Created(*player), nil
+	return http.Created(players), nil
 }
 
 func (h *Handler) Update(ctx context.Context, event events.APIGatewayV2HTTPRequest) (events.APIGatewayV2HTTPResponse, error) {
@@ -153,7 +158,8 @@ func (h *Handler) Delete(ctx context.Context, event events.APIGatewayV2HTTPReque
 }
 
 type createPlayerRequest struct {
-	UserID *string `json:"userID"`
+	UserID      string   `json:"userID"`
+	PlayerNames []string `json:"playerNames"`
 }
 
 func invalidPlayerID(playerID string) (events.APIGatewayV2HTTPResponse, error) {
