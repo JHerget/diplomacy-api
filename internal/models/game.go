@@ -186,6 +186,10 @@ func (g *Game) IsFinished() bool {
 }
 
 func (g *Game) UpdatePlayerStatuses() {
+	if len(g.Turns)%2 == 1 {
+		return
+	}
+
 	playerUnits := make(map[string]int)
 
 	for _, p := range g.Board {
