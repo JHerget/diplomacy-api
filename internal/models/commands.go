@@ -27,6 +27,8 @@ type MoveCommand struct {
 	Destination LocationReference `json:"destination" bson:"destination"`
 	Value       string            `json:"value" bson:"value"`
 }
+type HoldCommand MoveCommand
+type RetreatCommand MoveCommand
 
 type SupportCommand struct {
 	PlayerName string            `json:"playerName" bson:"playerName"`
@@ -35,6 +37,7 @@ type SupportCommand struct {
 	Move       MoveCommand       `json:"move" bson:"move"`
 	Value      string            `json:"value" bson:"value"`
 }
+type ConvoyCommand SupportCommand
 
 type AdjustCommand struct {
 	PlayerName string            `json:"playerName" bson:"playerName"`
@@ -42,15 +45,17 @@ type AdjustCommand struct {
 	Location   LocationReference `json:"location" bson:"location"`
 	Value      string            `json:"value" bson:"value"`
 }
+type ReinforceCommand AdjustCommand
+type DisbandCommand AdjustCommand
 
 type Commands struct {
-	Hold      []MoveCommand    `json:"hold" bson:"hold"`
-	Move      []MoveCommand    `json:"move" bson:"move"`
-	Retreat   []MoveCommand    `json:"retreat" bson:"retreat"`
-	Support   []SupportCommand `json:"support" bson:"support"`
-	Convoy    []SupportCommand `json:"convoy" bson:"convoy"`
-	Reinforce []AdjustCommand  `json:"reinforce" bson:"reinforce"`
-	Disband   []AdjustCommand  `json:"disband" bson:"disband"`
+	Hold      []HoldCommand      `json:"hold" bson:"hold"`
+	Move      []MoveCommand      `json:"move" bson:"move"`
+	Retreat   []RetreatCommand   `json:"retreat" bson:"retreat"`
+	Support   []SupportCommand   `json:"support" bson:"support"`
+	Convoy    []ConvoyCommand    `json:"convoy" bson:"convoy"`
+	Reinforce []ReinforceCommand `json:"reinforce" bson:"reinforce"`
+	Disband   []DisbandCommand   `json:"disband" bson:"disband"`
 }
 
 type CommandValidationResult struct {

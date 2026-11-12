@@ -14,6 +14,7 @@ type node struct {
 	Province          models.Province
 	Attacks           []attack
 	UnresolvedCommand *models.MoveCommand
+	Convoy            *models.ConvoyCommand
 }
 
 type attack struct {
@@ -70,7 +71,7 @@ func (a applicator) ApplyMove(move models.MoveCommand) {
 	})
 }
 
-func (a applicator) ApplyRetreat(retreat models.MoveCommand) {}
+func (a applicator) ApplyRetreat(retreat models.RetreatCommand) {}
 
 func (a applicator) ApplySupport(support models.SupportCommand) {
 	dest, ok := a.BoardMap[support.Move.Destination.ID]
@@ -88,9 +89,9 @@ func (a applicator) ApplySupport(support models.SupportCommand) {
 	att.Support = append(att.Support, support.Location.ID)
 }
 
-func (a applicator) ApplyConvoy(convoy models.SupportCommand)      {}
-func (a applicator) ApplyReinforce(reinforce models.AdjustCommand) {}
-func (a applicator) ApplyDisband(disband models.AdjustCommand)     {}
+func (a applicator) ApplyConvoy(convoy models.ConvoyCommand)          {}
+func (a applicator) ApplyReinforce(reinforce models.ReinforceCommand) {}
+func (a applicator) ApplyDisband(disband models.DisbandCommand)       {}
 
 func (a applicator) FinalizeState(fallTurn bool) []models.Province {
 	board := make([]models.Province, 0)
@@ -132,6 +133,7 @@ func (a applicator) FinalizeState(fallTurn bool) []models.Province {
 	return board
 }
 
+// TODO: Make sure the unit's location coast is set if needed.
 func (a applicator) resolve(n *node) models.Province {
 	minStrength := 0
 	if n.Province.Unit != nil {

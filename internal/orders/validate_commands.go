@@ -18,6 +18,9 @@ func noUnitError(locationID string) error {
 func wrongUnit(playerName string) error {
 	return fmt.Errorf("The unit is not controlled by '%s'.", playerName)
 }
+func noRoute(locationID string, destinationID string) error {
+	return fmt.Errorf("No route from '%s' to '%s'.", locationID, destinationID)
+}
 
 type validator struct {
 	BoardMap map[string]models.Province
@@ -33,7 +36,7 @@ func ValidateCommands(commands models.Commands, board []models.Province) (models
 	results := make([]models.CommandValidationResult, 0)
 
 	return models.Commands{
-		Hold: utils.Filter(commands.Hold, func(c *models.MoveCommand) bool {
+		Hold: utils.Filter(commands.Hold, func(c *models.HoldCommand) bool {
 			ok, err := v.IsValidHold(c)
 			results = append(results, models.CommandValidationResult{
 				PlayerName: c.PlayerName,
@@ -55,7 +58,7 @@ func ValidateCommands(commands models.Commands, board []models.Province) (models
 
 			return ok
 		}),
-		Retreat: utils.Filter(commands.Retreat, func(c *models.MoveCommand) bool {
+		Retreat: utils.Filter(commands.Retreat, func(c *models.RetreatCommand) bool {
 			ok, err := v.IsValidRetreat(c)
 			results = append(results, models.CommandValidationResult{
 				PlayerName: c.PlayerName,
@@ -77,7 +80,7 @@ func ValidateCommands(commands models.Commands, board []models.Province) (models
 
 			return ok
 		}),
-		Convoy: utils.Filter(commands.Convoy, func(c *models.SupportCommand) bool {
+		Convoy: utils.Filter(commands.Convoy, func(c *models.ConvoyCommand) bool {
 			ok, err := v.IsValidConvoy(c)
 			results = append(results, models.CommandValidationResult{
 				PlayerName: c.PlayerName,
@@ -88,7 +91,7 @@ func ValidateCommands(commands models.Commands, board []models.Province) (models
 
 			return ok
 		}),
-		Reinforce: utils.Filter(commands.Reinforce, func(c *models.AdjustCommand) bool {
+		Reinforce: utils.Filter(commands.Reinforce, func(c *models.ReinforceCommand) bool {
 			ok, err := v.IsValidReinforce(c)
 			results = append(results, models.CommandValidationResult{
 				PlayerName: c.PlayerName,
@@ -99,7 +102,7 @@ func ValidateCommands(commands models.Commands, board []models.Province) (models
 
 			return ok
 		}),
-		Disband: utils.Filter(commands.Disband, func(c *models.AdjustCommand) bool {
+		Disband: utils.Filter(commands.Disband, func(c *models.DisbandCommand) bool {
 			ok, err := v.IsValidDisband(c)
 			results = append(results, models.CommandValidationResult{
 				PlayerName: c.PlayerName,
@@ -113,13 +116,13 @@ func ValidateCommands(commands models.Commands, board []models.Province) (models
 	}, results
 }
 
-func (v validator) IsValidHold(hold *models.MoveCommand) (bool, error) {
+func (v *validator) IsValidHold(hold *models.HoldCommand) (bool, error) {
 	loc, ok := v.BoardMap[hold.Location.ID]
 	if !ok {
 		return false, locationError(hold.Location.ID)
 	}
 
-	if ok, err := v.IsValidLocation(hold.Location); !ok {
+	if ok, err := v.isValidLocation(hold.Location); !ok {
 		return false, err
 	}
 
@@ -142,7 +145,7 @@ func (v validator) IsValidHold(hold *models.MoveCommand) (bool, error) {
 	return true, nil
 }
 
-func (v validator) IsValidMove(move *models.MoveCommand, validatePlayer bool) (bool, error) {
+func (v *validator) IsValidMove(move *models.MoveCommand, validatePlayer bool) (bool, error) {
 	loc, ok := v.BoardMap[move.Location.ID]
 	if !ok {
 		return false, locationError(move.Location.ID)
@@ -153,10 +156,10 @@ func (v validator) IsValidMove(move *models.MoveCommand, validatePlayer bool) (b
 		return false, locationError(move.Destination.ID)
 	}
 
-	if ok, err := v.IsValidLocation(move.Location); !ok {
+	if ok, err := v.isValidLocation(move.Location); !ok {
 		return false, err
 	}
-	if ok, err := v.IsValidLocation(move.Destination); !ok {
+	if ok, err := v.isValidLocation(move.Destination); !ok {
 		return false, err
 	}
 
@@ -170,14 +173,15 @@ func (v validator) IsValidMove(move *models.MoveCommand, validatePlayer bool) (b
 		return false, wrongUnit(move.PlayerName)
 	}
 
-	if ok, err := v.IsValidRoute(loc, dest, move.Destination); !ok {
-		return false, err
+	validRoute, routeErr := v.isValidRoute(loc, dest, move.Destination)
+	if !validRoute && !v.hasConvoyRoute(loc, dest) {
+		return false, routeErr
 	}
 
 	return true, nil
 }
 
-func (v validator) IsValidRetreat(retreat *models.MoveCommand) (bool, error) {
+func (v *validator) IsValidRetreat(retreat *models.RetreatCommand) (bool, error) {
 	loc, ok := v.BoardMap[retreat.Location.ID]
 	if !ok {
 		return false, locationError(retreat.Location.ID)
@@ -188,10 +192,10 @@ func (v validator) IsValidRetreat(retreat *models.MoveCommand) (bool, error) {
 		return false, locationError(retreat.Destination.ID)
 	}
 
-	if ok, err := v.IsValidLocation(retreat.Location); !ok {
+	if ok, err := v.isValidLocation(retreat.Location); !ok {
 		return false, err
 	}
-	if ok, err := v.IsValidLocation(retreat.Destination); !ok {
+	if ok, err := v.isValidLocation(retreat.Destination); !ok {
 		return false, err
 	}
 
@@ -205,14 +209,14 @@ func (v validator) IsValidRetreat(retreat *models.MoveCommand) (bool, error) {
 		return false, wrongUnit(retreat.PlayerName)
 	}
 
-	if ok, err := v.IsValidRoute(loc, dest, retreat.Destination); !ok {
+	if ok, err := v.isValidRoute(loc, dest, retreat.Destination); !ok {
 		return false, err
 	}
 
 	return true, nil
 }
 
-func (v validator) IsValidSupport(support *models.SupportCommand) (bool, error) {
+func (v *validator) IsValidSupport(support *models.SupportCommand) (bool, error) {
 	loc, ok := v.BoardMap[support.Location.ID]
 	if !ok {
 		return false, locationError(support.Location.ID)
@@ -226,7 +230,7 @@ func (v validator) IsValidSupport(support *models.SupportCommand) (bool, error) 
 	if ok, err := v.IsValidMove(&support.Move, false); !ok {
 		return false, err
 	}
-	if ok, err := v.IsValidLocation(support.Location); !ok {
+	if ok, err := v.isValidLocation(support.Location); !ok {
 		return false, err
 	}
 
@@ -240,14 +244,14 @@ func (v validator) IsValidSupport(support *models.SupportCommand) (bool, error) 
 		return false, wrongUnit(support.PlayerName)
 	}
 
-	if ok, err := v.IsValidRoute(loc, dest, support.Move.Destination); !ok {
+	if ok, err := v.isValidRoute(loc, dest, support.Move.Destination); !ok {
 		return false, err
 	}
 
 	return true, nil
 }
 
-func (v validator) IsValidConvoy(convoy *models.SupportCommand) (bool, error) {
+func (v *validator) IsValidConvoy(convoy *models.ConvoyCommand) (bool, error) {
 	loc, ok := v.BoardMap[convoy.Location.ID]
 	if !ok {
 		return false, locationError(convoy.Location.ID)
@@ -261,7 +265,7 @@ func (v validator) IsValidConvoy(convoy *models.SupportCommand) (bool, error) {
 	if ok, err := v.IsValidMove(&convoy.Move, false); !ok {
 		return false, err
 	}
-	if ok, err := v.IsValidLocation(convoy.Location); !ok {
+	if ok, err := v.isValidLocation(convoy.Location); !ok {
 		return false, err
 	}
 
@@ -275,20 +279,20 @@ func (v validator) IsValidConvoy(convoy *models.SupportCommand) (bool, error) {
 		return false, wrongUnit(convoy.PlayerName)
 	}
 
-	if ok, err := v.IsValidRoute(loc, dest, convoy.Move.Destination); !ok {
+	if ok, err := v.isValidRoute(loc, dest, convoy.Move.Destination); !ok {
 		return false, err
 	}
 
 	return true, nil
 }
 
-func (v validator) IsValidReinforce(reinforce *models.AdjustCommand) (bool, error) {
+func (v *validator) IsValidReinforce(reinforce *models.ReinforceCommand) (bool, error) {
 	loc, ok := v.BoardMap[reinforce.Location.ID]
 	if !ok {
 		return false, locationError(reinforce.Location.ID)
 	}
 
-	if ok, err := v.IsValidLocation(reinforce.Location); !ok {
+	if ok, err := v.isValidLocation(reinforce.Location); !ok {
 		return false, err
 	}
 
@@ -314,13 +318,13 @@ func (v validator) IsValidReinforce(reinforce *models.AdjustCommand) (bool, erro
 	return true, nil
 }
 
-func (v validator) IsValidDisband(disband *models.AdjustCommand) (bool, error) {
+func (v *validator) IsValidDisband(disband *models.DisbandCommand) (bool, error) {
 	loc, ok := v.BoardMap[disband.Location.ID]
 	if !ok {
 		return false, locationError(disband.Location.ID)
 	}
 
-	if ok, err := v.IsValidLocation(disband.Location); !ok {
+	if ok, err := v.isValidLocation(disband.Location); !ok {
 		return false, err
 	}
 
@@ -337,7 +341,7 @@ func (v validator) IsValidDisband(disband *models.AdjustCommand) (bool, error) {
 	return true, nil
 }
 
-func (v validator) IsValidLocation(ref models.LocationReference) (bool, error) {
+func (v *validator) isValidLocation(ref models.LocationReference) (bool, error) {
 	loc, ok := v.BoardMap[ref.ID]
 	if !ok {
 		return false, fmt.Errorf("Province not found: %s", ref.ID)
@@ -361,7 +365,7 @@ func (v validator) IsValidLocation(ref models.LocationReference) (bool, error) {
 	return true, nil
 }
 
-func (v validator) IsValidRoute(location models.Province, destination models.Province, destRef models.LocationReference) (bool, error) {
+func (v *validator) isValidRoute(location models.Province, destination models.Province, destRef models.LocationReference) (bool, error) {
 	if location.Unit == nil {
 		return false, noUnitError(location.ID)
 	}
@@ -391,23 +395,68 @@ func (v validator) IsValidRoute(location models.Province, destination models.Pro
 			return false, fmt.Errorf("No routes exist for coast '%s'.", *destRef.Coast)
 		}
 
-		return slices.Contains(routes, location.ID), nil
+		return hasRoute(routes, location.ID, destination.ID)
 	}
 	if destRef.Coast == nil && requireCoast {
 		return false, fmt.Errorf("Expecting a coast, none specified.")
 	}
 
 	if location.Unit.Type == models.UnitFleet && destination.Type == models.ProvinceCoastal {
+		// TODO: Return an error if the unit does not have a coast when it should.
+		unitCoast := location.Unit.Location.Coast
+		if unitCoast != nil && location.Type == models.ProvinceCoastal {
+			routes := location.CoastalRoutes[*unitCoast]
+			return hasRoute(routes, location.ID, destination.ID)
+		}
+
 		routeName := models.Coast(fmt.Sprintf("%s-default", destination.ID))
 		routes, ok := destination.CoastalRoutes[routeName]
 		if !ok {
 			return false, fmt.Errorf("No default coastal routes found for '%s'.", destination.ID)
 		}
 
-		return slices.Contains(routes, location.ID), nil
+		return hasRoute(routes, location.ID, destination.ID)
 	}
 
-	return slices.Contains(destination.Routes, location.ID), nil
+	return hasRoute(destination.Routes, location.ID, destination.ID)
+}
+
+func (v *validator) hasConvoyRoute(location models.Province, destination models.Province) bool {
+	if location.Type != models.ProvinceCoastal || destination.Type != models.ProvinceCoastal {
+		return false
+	}
+
+	return v.hasConvoyRouteRecursiveHelper(location, destination, make([]string, 0))
+}
+
+// TODO: Check if a coast is required for the destination.
+func (v *validator) hasConvoyRouteRecursiveHelper(location models.Province, destination models.Province, visited []string) bool {
+	if slices.Contains(visited, location.ID) {
+		return false
+	}
+	if location.ID == destination.ID {
+		return false
+	}
+
+	for _, province := range location.Routes {
+		if province == destination.ID {
+			return true
+		}
+
+		newLocation, ok := v.BoardMap[province]
+		if !ok {
+			continue
+		}
+
+		if newLocation.Type != models.ProvinceOcean {
+			continue
+		}
+		if v.hasConvoyRouteRecursiveHelper(newLocation, destination, append(visited, location.ID)) {
+			return true
+		}
+	}
+
+	return false
 }
 
 func errorMessage(err error) string {
@@ -416,4 +465,12 @@ func errorMessage(err error) string {
 	}
 
 	return ""
+}
+
+func hasRoute(routes []string, locationID string, destinationID string) (bool, error) {
+	if slices.Contains(routes, locationID) {
+		return true, nil
+	}
+
+	return false, noRoute(locationID, destinationID)
 }

@@ -13,13 +13,13 @@ type rawCommand struct {
 func GetCommands(orders []models.Order) models.Commands {
 	rawCommands := process(orders)
 	commands := models.Commands{
-		Hold:      []models.MoveCommand{},
+		Hold:      []models.HoldCommand{},
 		Move:      []models.MoveCommand{},
-		Retreat:   []models.MoveCommand{},
+		Retreat:   []models.RetreatCommand{},
 		Support:   []models.SupportCommand{},
-		Convoy:    []models.SupportCommand{},
-		Reinforce: []models.AdjustCommand{},
-		Disband:   []models.AdjustCommand{},
+		Convoy:    []models.ConvoyCommand{},
+		Reinforce: []models.ReinforceCommand{},
+		Disband:   []models.DisbandCommand{},
 	}
 
 	for _, raw := range rawCommands {
@@ -27,13 +27,13 @@ func GetCommands(orders []models.Order) models.Commands {
 
 		result = models.CommandsRegex.Hold.FindStringSubmatch(raw.Value)
 		if result != nil {
-			commands.Hold = append(commands.Hold, models.MoveCommand{
+			commands.Hold = append(commands.Hold, models.HoldCommand(models.MoveCommand{
 				PlayerName:  raw.PlayerName,
 				UnitType:    parseUnit(result[1]),
 				Location:    parseLocationReference(result[2]),
 				Destination: parseLocationReference(result[2]),
 				Value:       raw.Value,
-			})
+			}))
 			continue
 		}
 
@@ -51,13 +51,13 @@ func GetCommands(orders []models.Order) models.Commands {
 
 		result = models.CommandsRegex.Retreat.FindStringSubmatch(raw.Value)
 		if result != nil {
-			commands.Retreat = append(commands.Retreat, models.MoveCommand{
+			commands.Retreat = append(commands.Retreat, models.RetreatCommand(models.MoveCommand{
 				PlayerName:  raw.PlayerName,
 				UnitType:    parseUnit(result[1]),
 				Location:    parseLocationReference(result[2]),
 				Destination: parseLocationReference(result[3]),
 				Value:       raw.Value,
-			})
+			}))
 			continue
 		}
 
@@ -86,7 +86,7 @@ func GetCommands(orders []models.Order) models.Commands {
 
 		result = models.CommandsRegex.Convoy.FindStringSubmatch(raw.Value)
 		if result != nil {
-			commands.Convoy = append(commands.Convoy, models.SupportCommand{
+			commands.Convoy = append(commands.Convoy, models.ConvoyCommand(models.SupportCommand{
 				PlayerName: raw.PlayerName,
 				UnitType:   parseUnit(result[1]),
 				Location:   parseLocationReference(result[2]),
@@ -97,29 +97,29 @@ func GetCommands(orders []models.Order) models.Commands {
 					Destination: parseLocationReference(result[5]),
 				},
 				Value: raw.Value,
-			})
+			}))
 			continue
 		}
 
 		result = models.CommandsRegex.Reinforce.FindStringSubmatch(raw.Value)
 		if result != nil {
-			commands.Reinforce = append(commands.Reinforce, models.AdjustCommand{
+			commands.Reinforce = append(commands.Reinforce, models.ReinforceCommand(models.AdjustCommand{
 				PlayerName: raw.PlayerName,
 				UnitType:   parseUnit(result[1]),
 				Location:   parseLocationReference(result[2]),
 				Value:      raw.Value,
-			})
+			}))
 			continue
 		}
 
 		result = models.CommandsRegex.Disband.FindStringSubmatch(raw.Value)
 		if result != nil {
-			commands.Disband = append(commands.Disband, models.AdjustCommand{
+			commands.Disband = append(commands.Disband, models.DisbandCommand(models.AdjustCommand{
 				PlayerName: raw.PlayerName,
 				UnitType:   parseUnit(result[1]),
 				Location:   parseLocationReference(result[2]),
 				Value:      raw.Value,
-			})
+			}))
 			continue
 		}
 	}
