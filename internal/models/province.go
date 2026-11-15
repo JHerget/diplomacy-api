@@ -14,3 +14,15 @@ type Province struct {
 func (p *Province) Valid() error {
 	return nil
 }
+
+func (p *Province) IsCoastal() bool {
+	return p.Type == ProvinceCoastal
+}
+
+func (p *Province) IsInland() bool {
+	return p.Type == ProvinceInland
+}
+
+func (p *Province) IsOcean() bool {
+	return p.Type == ProvinceOcean
+}

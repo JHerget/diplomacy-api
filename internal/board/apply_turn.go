@@ -133,7 +133,6 @@ func (a applicator) FinalizeState(fallTurn bool) []models.Province {
 	return board
 }
 
-// TODO: Make sure the unit's location coast is set if needed.
 func (a applicator) resolve(n *node) models.Province {
 	minStrength := 0
 	if n.Province.Unit != nil {
@@ -153,18 +152,21 @@ func (a applicator) resolve(n *node) models.Province {
 		return len(a.Support)+1 >= maxStrength
 	})
 
-	n.UnresolvedCommand = nil
-	n.Attacks = nil
-
 	if len(strongestAttacks) == 1 && maxStrength > minStrength {
 		att := strongestAttacks[0]
 		loc := a.BoardMap[att.LocationID]
 
 		if n.Province.ID != loc.Province.ID {
-			n.Province.Unit = loc.Province.Unit
+			unit := loc.Province.Unit
+			unit.Location = n.UnresolvedCommand.Destination
+
+			n.Province.Unit = unit
 			loc.Province.Unit = nil
 		}
 	}
+
+	n.UnresolvedCommand = nil
+	n.Attacks = nil
 
 	return n.Province
 }

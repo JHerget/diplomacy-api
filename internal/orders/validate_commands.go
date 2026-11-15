@@ -174,7 +174,8 @@ func (v *validator) IsValidMove(move *models.MoveCommand, validatePlayer bool) (
 	}
 
 	validRoute, routeErr := v.isValidRoute(loc, dest, move.Destination)
-	if !validRoute && !v.hasConvoyRoute(loc, dest) {
+	possibleConvoy := loc.Unit.IsArmy() && v.hasConvoyRoute(loc, dest)
+	if !validRoute && !possibleConvoy {
 		return false, routeErr
 	}
 
@@ -308,10 +309,10 @@ func (v *validator) IsValidReinforce(reinforce *models.ReinforceCommand) (bool, 
 	if *loc.SupplyCenter.ControlledBy != reinforce.PlayerName {
 		return false, fmt.Errorf("The supply center is not controlled by '%s'.", reinforce.PlayerName)
 	}
-	if reinforce.UnitType == models.UnitArmy && loc.Type == models.ProvinceOcean {
+	if reinforce.UnitType == models.UnitArmy && loc.IsOcean() {
 		return false, fmt.Errorf("You cannot reinforce armies to ocean provinces.")
 	}
-	if reinforce.UnitType == models.UnitFleet && loc.Type == models.ProvinceInland {
+	if reinforce.UnitType == models.UnitFleet && loc.IsInland() {
 		return false, fmt.Errorf("You cannot reinforce fleets to inland provinces.")
 	}
 
@@ -370,23 +371,24 @@ func (v *validator) isValidRoute(location models.Province, destination models.Pr
 		return false, noUnitError(location.ID)
 	}
 
-	if location.Type == models.ProvinceOcean && destination.Type == models.ProvinceInland {
+	if location.IsOcean() && destination.IsInland() {
 		return false, fmt.Errorf("Units cannot move from ocean to inland.")
 	}
-	if location.Type == models.ProvinceInland && destination.Type == models.ProvinceOcean {
+	if location.IsInland() && destination.IsOcean() {
 		return false, fmt.Errorf("Units cannot move from inland to ocean.")
 	}
-	if location.Type == models.ProvinceInland && location.Unit.Type == models.UnitFleet {
+	if location.IsInland() && location.Unit.IsFleet() {
 		return false, fmt.Errorf("Fleets cannot be inland.")
 	}
-	if location.Type == models.ProvinceOcean && location.Unit.Type == models.UnitArmy {
+	if location.IsOcean() && location.Unit.IsArmy() {
 		return false, fmt.Errorf("Armies cannot be in the ocean.")
 	}
 
-	requireCoast := len(destination.CoastalRoutes) > 1
+	requireLocCost := location.Unit != nil && location.Unit.IsFleet() && len(location.CoastalRoutes) > 1
+	requireDestCoast := len(destination.CoastalRoutes) > 1
 
 	if destRef.Coast != nil {
-		if !requireCoast {
+		if !requireDestCoast {
 			return false, fmt.Errorf("Coast provided when not expected.")
 		}
 
@@ -397,14 +399,19 @@ func (v *validator) isValidRoute(location models.Province, destination models.Pr
 
 		return hasRoute(routes, location.ID, destination.ID)
 	}
-	if destRef.Coast == nil && requireCoast {
+	if destRef.Coast == nil && requireDestCoast {
 		return false, fmt.Errorf("Expecting a coast, none specified.")
 	}
 
-	if location.Unit.Type == models.UnitFleet && destination.Type == models.ProvinceCoastal {
-		// TODO: Return an error if the unit does not have a coast when it should.
+	isCoastalRoute := location.Unit.IsFleet() && location.IsCoastal() && destination.IsCoastal()
+	if isCoastalRoute {
 		unitCoast := location.Unit.Location.Coast
-		if unitCoast != nil && location.Type == models.ProvinceCoastal {
+
+		if unitCoast == nil && requireLocCost {
+			return false, fmt.Errorf("The unit at '%s' does not have a coast specified.", location.ID)
+		}
+
+		if unitCoast != nil && location.IsCoastal() {
 			routes := location.CoastalRoutes[*unitCoast]
 			return hasRoute(routes, location.ID, destination.ID)
 		}
@@ -421,15 +428,14 @@ func (v *validator) isValidRoute(location models.Province, destination models.Pr
 	return hasRoute(destination.Routes, location.ID, destination.ID)
 }
 
-func (v *validator) hasConvoyRoute(location models.Province, destination models.Province) bool {
-	if location.Type != models.ProvinceCoastal || destination.Type != models.ProvinceCoastal {
+func (v *validator) hasConvoyRoute(location, destination models.Province) bool {
+	if !location.IsCoastal() || !destination.IsCoastal() {
 		return false
 	}
 
 	return v.hasConvoyRouteRecursiveHelper(location, destination, make([]string, 0))
 }
 
-// TODO: Check if a coast is required for the destination.
 func (v *validator) hasConvoyRouteRecursiveHelper(location models.Province, destination models.Province, visited []string) bool {
 	if slices.Contains(visited, location.ID) {
 		return false
