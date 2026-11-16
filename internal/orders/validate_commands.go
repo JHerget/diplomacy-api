@@ -258,11 +258,6 @@ func (v *validator) IsValidConvoy(convoy *models.ConvoyCommand) (bool, error) {
 		return false, locationError(convoy.Location.ID)
 	}
 
-	dest, ok := v.BoardMap[convoy.Move.Destination.ID]
-	if !ok {
-		return false, locationError(convoy.Move.Destination.ID)
-	}
-
 	if ok, err := v.IsValidMove(&convoy.Move, false); !ok {
 		return false, err
 	}
@@ -270,6 +265,9 @@ func (v *validator) IsValidConvoy(convoy *models.ConvoyCommand) (bool, error) {
 		return false, err
 	}
 
+	if !loc.IsOcean() {
+		return false, fmt.Errorf("Only fleets in ocean provinces can convoy.")
+	}
 	if loc.Unit == nil {
 		return false, noUnitError(loc.ID)
 	}
@@ -278,10 +276,6 @@ func (v *validator) IsValidConvoy(convoy *models.ConvoyCommand) (bool, error) {
 	}
 	if loc.Unit.ControlledBy != convoy.PlayerName {
 		return false, wrongUnit(convoy.PlayerName)
-	}
-
-	if ok, err := v.isValidRoute(loc, dest, convoy.Move.Destination); !ok {
-		return false, err
 	}
 
 	return true, nil
@@ -436,7 +430,7 @@ func (v *validator) hasConvoyRoute(location, destination models.Province) bool {
 	return v.hasConvoyRouteRecursiveHelper(location, destination, make([]string, 0))
 }
 
-func (v *validator) hasConvoyRouteRecursiveHelper(location models.Province, destination models.Province, visited []string) bool {
+func (v *validator) hasConvoyRouteRecursiveHelper(location, destination models.Province, visited []string) bool {
 	if slices.Contains(visited, location.ID) {
 		return false
 	}
@@ -454,7 +448,7 @@ func (v *validator) hasConvoyRouteRecursiveHelper(location models.Province, dest
 			continue
 		}
 
-		if newLocation.Type != models.ProvinceOcean {
+		if !newLocation.IsOcean() {
 			continue
 		}
 		if v.hasConvoyRouteRecursiveHelper(newLocation, destination, append(visited, location.ID)) {

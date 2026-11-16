@@ -30,6 +30,14 @@ type MoveCommand struct {
 type HoldCommand MoveCommand
 type RetreatCommand MoveCommand
 
+func (c *MoveCommand) Equals(move MoveCommand) bool {
+	return move.UnitType == c.UnitType &&
+		move.Location.ID == c.Location.ID &&
+		move.Location.Coast == c.Location.Coast &&
+		move.Destination.ID == c.Destination.ID &&
+		move.Destination.Coast == c.Destination.Coast
+}
+
 type SupportCommand struct {
 	PlayerName string            `json:"playerName" bson:"playerName"`
 	UnitType   UnitType          `json:"unitType" bson:"unitType"`

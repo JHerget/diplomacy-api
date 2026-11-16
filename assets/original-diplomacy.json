@@ -289,7 +289,10 @@
             "routes": [
                 "por",
                 "mar",
-                "gas"
+                "gas",
+                "gol",
+                "mid",
+                "wes"
             ],
             "coastalRoutes": {
                 "nc": [
@@ -804,7 +807,9 @@
                 "ser",
                 "rum",
                 "con",
-                "gre"
+                "gre",
+                "aeg",
+                "bla"
             ],
             "coastalRoutes": {
                 "ec": [
@@ -1112,7 +1117,9 @@
                 "fin",
                 "mos",
                 "lvn",
-                "nor"
+                "nor",
+                "bar",
+                "bot"
             ],
             "coastalRoutes": {
                 "nc": [

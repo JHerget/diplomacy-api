@@ -74,7 +74,6 @@ func GetCommands(orders []models.Order) models.Commands {
 				UnitType:   parseUnit(result[1]),
 				Location:   parseLocationReference(result[2]),
 				Move: models.MoveCommand{
-					PlayerName:  raw.PlayerName,
 					UnitType:    parseUnit(result[3]),
 					Location:    parseLocationReference(result[4]),
 					Destination: moveDest,
@@ -88,13 +87,12 @@ func GetCommands(orders []models.Order) models.Commands {
 		if result != nil {
 			commands.Convoy = append(commands.Convoy, models.ConvoyCommand(models.SupportCommand{
 				PlayerName: raw.PlayerName,
-				UnitType:   parseUnit(result[1]),
-				Location:   parseLocationReference(result[2]),
+				UnitType:   models.UnitFleet,
+				Location:   parseLocationReference(result[1]),
 				Move: models.MoveCommand{
-					PlayerName:  raw.PlayerName,
-					UnitType:    parseUnit(result[3]),
-					Location:    parseLocationReference(result[4]),
-					Destination: parseLocationReference(result[5]),
+					UnitType:    models.UnitArmy,
+					Location:    parseLocationReference(result[2]),
+					Destination: parseLocationReference(result[3]),
 				},
 				Value: raw.Value,
 			}))

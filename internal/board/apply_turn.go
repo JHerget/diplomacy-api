@@ -4,6 +4,8 @@ import (
 	"diplomacy-api/internal/models"
 	"diplomacy-api/internal/orders"
 	"diplomacy-api/internal/utils"
+	"fmt"
+	"slices"
 )
 
 type applicator struct {
@@ -37,13 +39,14 @@ func ApplyTurn(board []models.Province, turn *models.Turn) ([]models.Province, [
 			UnresolvedCommand: nil,
 		}
 	}
+	slices.SortFunc(validCommands.Move, a.compareMove)
 
 	isFallTurn := turn.TurnNumber%2 == 0
 
+	utils.ForEach(validCommands.Convoy, a.ApplyConvoy)
 	utils.ForEach(validCommands.Move, a.ApplyMove)
 	utils.ForEach(validCommands.Retreat, a.ApplyRetreat)
 	utils.ForEach(validCommands.Support, a.ApplySupport)
-	utils.ForEach(validCommands.Convoy, a.ApplyConvoy)
 	utils.ForEach(validCommands.Disband, a.ApplyDisband)
 	if isFallTurn {
 		utils.ForEach(validCommands.Reinforce, a.ApplyReinforce)
@@ -52,7 +55,16 @@ func ApplyTurn(board []models.Province, turn *models.Turn) ([]models.Province, [
 	return a.FinalizeState(isFallTurn), validationResults, nil
 }
 
-func (a applicator) ApplyMove(move models.MoveCommand) {
+func (a *applicator) ApplyConvoy(convoy models.ConvoyCommand) {
+	loc, ok := a.BoardMap[convoy.Location.ID]
+	if !ok {
+		return
+	}
+
+	loc.Convoy = &convoy
+}
+
+func (a *applicator) ApplyMove(move models.MoveCommand) {
 	loc, ok := a.BoardMap[move.Location.ID]
 	if !ok {
 		return
@@ -63,20 +75,45 @@ func (a applicator) ApplyMove(move models.MoveCommand) {
 		return
 	}
 
+	needsConvoy := !slices.Contains(dest.Province.Routes, loc.Province.ID)
+	if needsConvoy && !a.hasConvoyRoute(loc, dest, move) {
+		return
+	}
+
 	loc.UnresolvedCommand = &move
 	dest.Attacks = append(dest.Attacks, attack{
 		UnitType:   move.UnitType,
 		LocationID: move.Location.ID,
 		Support:    nil,
 	})
+
+	if dest.Convoy != nil {
+		dest.Convoy = nil
+	}
 }
 
-func (a applicator) ApplyRetreat(retreat models.RetreatCommand) {}
+func (a *applicator) ApplyRetreat(retreat models.RetreatCommand) {}
 
-func (a applicator) ApplySupport(support models.SupportCommand) {
+func (a *applicator) ApplySupport(support models.SupportCommand) {
+	loc, ok := a.BoardMap[support.Location.ID]
+	if !ok {
+		return
+	}
+
 	dest, ok := a.BoardMap[support.Move.Destination.ID]
 	if !ok {
 		return
+	}
+
+	for _, att := range loc.Attacks {
+		attLoc, ok := a.BoardMap[att.LocationID]
+		if !ok {
+			return
+		}
+
+		if attLoc.Province.Unit != nil && attLoc.Province.Unit.ControlledBy != support.PlayerName {
+			return
+		}
 	}
 
 	att, ok := utils.Find(dest.Attacks, func(a *attack) bool {
@@ -89,11 +126,10 @@ func (a applicator) ApplySupport(support models.SupportCommand) {
 	att.Support = append(att.Support, support.Location.ID)
 }
 
-func (a applicator) ApplyConvoy(convoy models.ConvoyCommand)          {}
-func (a applicator) ApplyReinforce(reinforce models.ReinforceCommand) {}
-func (a applicator) ApplyDisband(disband models.DisbandCommand)       {}
+func (a *applicator) ApplyReinforce(reinforce models.ReinforceCommand) {}
+func (a *applicator) ApplyDisband(disband models.DisbandCommand)       {}
 
-func (a applicator) FinalizeState(fallTurn bool) []models.Province {
+func (a *applicator) FinalizeState(fallTurn bool) []models.Province {
 	board := make([]models.Province, 0)
 
 	for _, n := range a.BoardMap {
@@ -133,7 +169,7 @@ func (a applicator) FinalizeState(fallTurn bool) []models.Province {
 	return board
 }
 
-func (a applicator) resolve(n *node) models.Province {
+func (a *applicator) resolve(n *node) models.Province {
 	minStrength := 0
 	if n.Province.Unit != nil {
 		minStrength = 1
@@ -158,7 +194,7 @@ func (a applicator) resolve(n *node) models.Province {
 
 		if n.Province.ID != loc.Province.ID {
 			unit := loc.Province.Unit
-			unit.Location = n.UnresolvedCommand.Destination
+			unit.Location = loc.UnresolvedCommand.Destination
 
 			n.Province.Unit = unit
 			loc.Province.Unit = nil
@@ -169,4 +205,58 @@ func (a applicator) resolve(n *node) models.Province {
 	n.Attacks = nil
 
 	return n.Province
+}
+
+func (a *applicator) compareMove(lhs, rhs models.MoveCommand) int {
+	lhsDest := a.BoardMap[lhs.Destination.ID]
+	lhsNeighbors := slices.Contains(lhsDest.Province.Routes, lhs.Location.ID)
+
+	rhsDest := a.BoardMap[rhs.Destination.ID]
+	rhsNeighbors := slices.Contains(rhsDest.Province.Routes, rhs.Location.ID)
+
+	if lhsNeighbors && !rhsNeighbors {
+		return -1
+	}
+	if !lhsNeighbors && rhsNeighbors {
+		return 1
+	}
+
+	return 0
+}
+
+func (a *applicator) hasConvoyRoute(location, destination *node, move models.MoveCommand) bool {
+	if !location.Province.IsCoastal() || !destination.Province.IsCoastal() {
+		return false
+	}
+
+	return a.hasConvoyRouteRecursiveHelper(location, destination, move, make([]string, 0))
+}
+
+func (a *applicator) hasConvoyRouteRecursiveHelper(location, destination *node, move models.MoveCommand, visited []string) bool {
+	if slices.Contains(visited, location.Province.ID) {
+		return false
+	}
+	if location.Province.ID == destination.Province.ID {
+		return false
+	}
+
+	for _, province := range location.Province.Routes {
+		if province == destination.Province.ID {
+			return true
+		}
+
+		newLocation, ok := a.BoardMap[province]
+		if !ok {
+			continue
+		}
+
+		if newLocation.Convoy == nil || !newLocation.Convoy.Move.Equals(move) {
+			continue
+		}
+		if a.hasConvoyRouteRecursiveHelper(newLocation, destination, move, append(visited, location.Province.ID)) {
+			return true
+		}
+	}
+
+	return false
 }
