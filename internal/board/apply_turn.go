@@ -4,7 +4,6 @@ import (
 	"diplomacy-api/internal/models"
 	"diplomacy-api/internal/orders"
 	"diplomacy-api/internal/utils"
-	"fmt"
 	"slices"
 )
 
