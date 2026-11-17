@@ -39,13 +39,17 @@ func Draw(mapBuf []byte, g *models.Game) ([]byte, error) {
 	}
 
 	for _, p := range g.Board {
-		if p.SupplyCenter != nil && p.SupplyCenter.ControlledBy != nil {
-			c, ok := colors[*p.SupplyCenter.ControlledBy]
-			if !ok {
-				return nil, fmt.Errorf("missing color for player %q", *p.SupplyCenter.ControlledBy)
-			}
+		if p.SupplyCenter != nil {
+			if p.SupplyCenter.ControlledBy == nil {
+				drawFilledCircle(canvas, p.SupplyCenter.Coordinates, supplyCenterRadius, black)
+			} else {
+				c, ok := colors[*p.SupplyCenter.ControlledBy]
+				if !ok {
+					return nil, fmt.Errorf("missing color for player %q", *p.SupplyCenter.ControlledBy)
+				}
 
-			drawCircle(canvas, p.SupplyCenter.Coordinates, supplyCenterRadius, c)
+				drawCircle(canvas, p.SupplyCenter.Coordinates, supplyCenterRadius, c)
+			}
 		}
 
 		if p.Unit != nil {
@@ -56,9 +60,9 @@ func Draw(mapBuf []byte, g *models.Game) ([]byte, error) {
 
 			switch p.Unit.Type {
 			case models.UnitArmy:
-				drawCircle(canvas, p.Coordinates, armyRadius, c)
+				drawCircle(canvas, p.GetCoordinates(), armyRadius, c)
 			case models.UnitFleet:
-				drawTriangle(canvas, p.Coordinates, c)
+				drawTriangle(canvas, p.GetCoordinates(), c)
 			default:
 				return nil, fmt.Errorf("unknown unit type %q", p.Unit.Type)
 			}
@@ -106,6 +110,19 @@ func drawCircle(img *image.RGBA, coords models.Coordinates, radius int, fill col
 			if d2 >= inner {
 				img.Set(x, y, black)
 			} else {
+				img.Set(x, y, fill)
+			}
+		}
+	}
+}
+
+func drawFilledCircle(img *image.RGBA, coords models.Coordinates, radius int, fill color.RGBA) {
+	cx := int(math.Round(coords.X))
+	cy := int(math.Round(coords.Y))
+	for y := cy - radius; y <= cy+radius; y++ {
+		for x := cx - radius; x <= cx+radius; x++ {
+			dx, dy := x-cx, y-cy
+			if dx*dx+dy*dy <= radius*radius {
 				img.Set(x, y, fill)
 			}
 		}

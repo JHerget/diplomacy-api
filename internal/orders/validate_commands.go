@@ -343,16 +343,16 @@ func (v *validator) isValidLocation(ref models.LocationReference) (bool, error) 
 	}
 
 	coastProvided := ref.Coast != nil
-	hasCoastalRoutes := len(loc.CoastalRoutes) > 0
+	hasCoasts := len(loc.Coasts) > 0
 
-	if coastProvided && !hasCoastalRoutes {
+	if coastProvided && !hasCoasts {
 		return false, fmt.Errorf("A coast was provided when not expected.")
 	}
 	if !coastProvided {
 		return true, nil
 	}
 
-	_, routesExist := loc.CoastalRoutes[*ref.Coast]
+	_, routesExist := loc.Coasts[*ref.Coast]
 	if !routesExist {
 		return false, fmt.Errorf("The coast provided does not exist.")
 	}
@@ -378,20 +378,20 @@ func (v *validator) isValidRoute(location models.Province, destination models.Pr
 		return false, fmt.Errorf("Armies cannot be in the ocean.")
 	}
 
-	requireLocCost := location.Unit != nil && location.Unit.IsFleet() && len(location.CoastalRoutes) > 1
-	requireDestCoast := len(destination.CoastalRoutes) > 1
+	requireLocCost := location.Unit != nil && location.Unit.IsFleet() && len(location.Coasts) > 1
+	requireDestCoast := len(destination.Coasts) > 1
 
 	if destRef.Coast != nil {
 		if !requireDestCoast {
 			return false, fmt.Errorf("Coast provided when not expected.")
 		}
 
-		routes, ok := destination.CoastalRoutes[*destRef.Coast]
+		coast, ok := destination.Coasts[*destRef.Coast]
 		if !ok {
 			return false, fmt.Errorf("No routes exist for coast '%s'.", *destRef.Coast)
 		}
 
-		return hasRoute(routes, location.ID, destination.ID)
+		return hasRoute(coast.Routes, location.ID, destination.ID)
 	}
 	if destRef.Coast == nil && requireDestCoast {
 		return false, fmt.Errorf("Expecting a coast, none specified.")
@@ -406,17 +406,16 @@ func (v *validator) isValidRoute(location models.Province, destination models.Pr
 		}
 
 		if unitCoast != nil && location.IsCoastal() {
-			routes := location.CoastalRoutes[*unitCoast]
-			return hasRoute(routes, location.ID, destination.ID)
+			coast := location.Coasts[*unitCoast]
+			return hasRoute(coast.Routes, location.ID, destination.ID)
 		}
 
-		routeName := models.Coast(fmt.Sprintf("%s-default", destination.ID))
-		routes, ok := destination.CoastalRoutes[routeName]
+		coast, ok := destination.Coasts[models.DefaultCoast]
 		if !ok {
 			return false, fmt.Errorf("No default coastal routes found for '%s'.", destination.ID)
 		}
 
-		return hasRoute(routes, location.ID, destination.ID)
+		return hasRoute(coast.Routes, location.ID, destination.ID)
 	}
 
 	return hasRoute(destination.Routes, location.ID, destination.ID)

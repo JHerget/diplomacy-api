@@ -69,7 +69,11 @@
             "unit": {
                 "id": "f4710e6f-9ad1-4a0b-8c68-9983215e5c41",
                 "controlledBy": "England",
-                "type": "fleet"
+                "type": "fleet",
+                "location": {
+                    "id": "edi",
+                    "coast": null
+                }
             },
             "coordinates": {
                 "x": 295,
@@ -83,13 +87,19 @@
                 "yor",
                 "lvp"
             ],
-            "coastalRoutes": {
-                "edi-default": [
-                    "cly",
-                    "nrg",
-                    "nth",
-                    "yor"
-                ]
+            "coasts": {
+                "default": {
+                    "routes": [
+                        "cly",
+                        "nrg",
+                        "nth",
+                        "yor"
+                    ],
+                    "coordinates": {
+                        "x": 295,
+                        "y": 300
+                    }
+                }
             }
         },
         {
@@ -106,7 +116,11 @@
             "unit": {
                 "id": "32eb54bd-a536-430b-8cb2-57c11d2ef9f1",
                 "controlledBy": "England",
-                "type": "army"
+                "type": "army",
+                "location": {
+                    "id": "lvp",
+                    "coast": null
+                }
             },
             "coordinates": {
                 "x": 281,
@@ -121,13 +135,19 @@
                 "iri",
                 "nat"
             ],
-            "coastalRoutes": {
-                "lvp-default": [
-                    "cly",
-                    "wal",
-                    "iri",
-                    "nat"
-                ]
+            "coasts": {
+                "default": {
+                    "routes": [
+                        "cly",
+                        "wal",
+                        "iri",
+                        "nat"
+                    ],
+                    "coordinates": {
+                        "x": 281,
+                        "y": 339
+                    }
+                }
             }
         },
         {
@@ -144,7 +164,11 @@
             "unit": {
                 "id": "fbe7fa49-6782-4709-ad9f-943d91dc433d",
                 "controlledBy": "England",
-                "type": "fleet"
+                "type": "fleet",
+                "location": {
+                    "id": "lon",
+                    "coast": null
+                }
             },
             "coordinates": {
                 "x": 279,
@@ -157,13 +181,19 @@
                 "nth",
                 "eng"
             ],
-            "coastalRoutes": {
-                "lon-default": [
-                    "wal",
-                    "yor",
-                    "nth",
-                    "eng"
-                ]
+            "coasts": {
+                "default": {
+                    "routes": [
+                        "wal",
+                        "yor",
+                        "nth",
+                        "eng"
+                    ],
+                    "coordinates": {
+                        "x": 279,
+                        "y": 399
+                    }
+                }
             }
         },
         {
@@ -180,7 +210,11 @@
             "unit": {
                 "id": "fda17ae9-2deb-4bde-bc50-c986e735083a",
                 "controlledBy": "France",
-                "type": "fleet"
+                "type": "fleet",
+                "location": {
+                    "id": "bre",
+                    "coast": null
+                }
             },
             "coordinates": {
                 "x": 250,
@@ -194,13 +228,19 @@
                 "par",
                 "gas"
             ],
-            "coastalRoutes": {
-                "bre-default": [
-                    "mid",
-                    "eng",
-                    "pic",
-                    "gas"
-                ]
+            "coasts": {
+                "default": {
+                    "routes": [
+                        "mid",
+                        "eng",
+                        "pic",
+                        "gas"
+                    ],
+                    "coordinates": {
+                        "x": 250,
+                        "y": 490
+                    }
+                }
             }
         },
         {
@@ -217,7 +257,11 @@
             "unit": {
                 "id": "47a5b2d1-2f95-46ce-9865-a44b49d6d5c3",
                 "controlledBy": "France",
-                "type": "army"
+                "type": "army",
+                "location": {
+                    "id": "par",
+                    "coast": null
+                }
             },
             "coordinates": {
                 "x": 304,
@@ -231,7 +275,7 @@
                 "mar",
                 "gas"
             ],
-            "coastalRoutes": null
+            "coasts": null
         },
         {
             "id": "mar",
@@ -247,7 +291,11 @@
             "unit": {
                 "id": "771da699-2edf-4f4d-86ef-b26c98662d7f",
                 "controlledBy": "France",
-                "type": "army"
+                "type": "army",
+                "location": {
+                    "id": "mar",
+                    "coast": null
+                }
             },
             "coordinates": {
                 "x": 333,
@@ -261,12 +309,18 @@
                 "bur",
                 "pie"
             ],
-            "coastalRoutes": {
-                "mar-default": [
-                    "gol",
-                    "spa",
-                    "pie"
-                ]
+            "coasts": {
+                "default": {
+                    "routes": [
+                        "gol",
+                        "spa",
+                        "pie"
+                    ],
+                    "coordinates": {
+                        "x": 333,
+                        "y": 597
+                    }
+                }
             }
         },
         {
@@ -294,19 +348,31 @@
                 "mid",
                 "wes"
             ],
-            "coastalRoutes": {
-                "nc": [
-                    "por",
-                    "mid",
-                    "gas"
-                ],
-                "sc": [
-                    "por",
-                    "mid",
-                    "wes",
-                    "gol",
-                    "mar"
-                ]
+            "coasts": {
+                "nc": {
+                    "routes": [
+                        "por",
+                        "mid",
+                        "gas"
+                    ],
+                    "coordinates": {
+                        "x": 156,
+                        "y": 584
+                    }
+                },
+                "sc": {
+                    "routes": [
+                        "por",
+                        "mid",
+                        "wes",
+                        "gol",
+                        "mar"
+                    ],
+                    "coordinates": {
+                        "x": 197,
+                        "y": 713
+                    }
+                }
             }
         },
         {
@@ -330,11 +396,17 @@
                 "mid",
                 "spa"
             ],
-            "coastalRoutes": {
-                "por-default": [
-                    "mid",
-                    "spa"
-                ]
+            "coasts": {
+                "default": {
+                    "routes": [
+                        "mid",
+                        "spa"
+                    ],
+                    "coordinates": {
+                        "x": 91,
+                        "y": 641
+                    }
+                }
             }
         },
         {
@@ -360,13 +432,19 @@
                 "tyn",
                 "ion"
             ],
-            "coastalRoutes": {
-                "tun-default": [
-                    "naf",
-                    "wes",
-                    "tyn",
-                    "ion"
-                ]
+            "coasts": {
+                "default": {
+                    "routes": [
+                        "naf",
+                        "wes",
+                        "tyn",
+                        "ion"
+                    ],
+                    "coordinates": {
+                        "x": 401,
+                        "y": 805
+                    }
+                }
             }
         },
         {
@@ -383,7 +461,11 @@
             "unit": {
                 "id": "31d39361-1a2e-471b-be0f-9456a7922589",
                 "controlledBy": "Italy",
-                "type": "army"
+                "type": "army",
+                "location": {
+                    "id": "rom",
+                    "coast": null
+                }
             },
             "coordinates": {
                 "x": 497,
@@ -397,12 +479,18 @@
                 "nap",
                 "tyn"
             ],
-            "coastalRoutes": {
-                "rom-default": [
-                    "tus",
-                    "nap",
-                    "tyn"
-                ]
+            "coasts": {
+                "default": {
+                    "routes": [
+                        "tus",
+                        "nap",
+                        "tyn"
+                    ],
+                    "coordinates": {
+                        "x": 497,
+                        "y": 680
+                    }
+                }
             }
         },
         {
@@ -419,7 +507,11 @@
             "unit": {
                 "id": "0488f1e3-8a30-41fd-8965-5f9b008524e9",
                 "controlledBy": "Italy",
-                "type": "fleet"
+                "type": "fleet",
+                "location": {
+                    "id": "nap",
+                    "coast": null
+                }
             },
             "coordinates": {
                 "x": 554,
@@ -432,13 +524,19 @@
                 "apu",
                 "ion"
             ],
-            "coastalRoutes": {
-                "nap-default": [
-                    "tyn",
-                    "rom",
-                    "apu",
-                    "ion"
-                ]
+            "coasts": {
+                "default": {
+                    "routes": [
+                        "tyn",
+                        "rom",
+                        "apu",
+                        "ion"
+                    ],
+                    "coordinates": {
+                        "x": 554,
+                        "y": 739
+                    }
+                }
             }
         },
         {
@@ -455,7 +553,11 @@
             "unit": {
                 "id": "ae499592-290c-4790-8f89-4819e8237012",
                 "controlledBy": "Italy",
-                "type": "army"
+                "type": "army",
+                "location": {
+                    "id": "ven",
+                    "coast": null
+                }
             },
             "coordinates": {
                 "x": 467,
@@ -471,12 +573,18 @@
                 "rom",
                 "tus"
             ],
-            "coastalRoutes": {
-                "ven-default": [
-                    "tri",
-                    "adr",
-                    "apu"
-                ]
+            "coasts": {
+                "default": {
+                    "routes": [
+                        "tri",
+                        "adr",
+                        "apu"
+                    ],
+                    "coordinates": {
+                        "x": 467,
+                        "y": 604
+                    }
+                }
             }
         },
         {
@@ -493,7 +601,11 @@
             "unit": {
                 "id": "a8896b03-062a-4bbb-b4ee-b7cd5df2f8e9",
                 "controlledBy": "Germany",
-                "type": "army"
+                "type": "army",
+                "location": {
+                    "id": "mun",
+                    "coast": null
+                }
             },
             "coordinates": {
                 "x": 467,
@@ -509,7 +621,7 @@
                 "tyr",
                 "bur"
             ],
-            "coastalRoutes": null
+            "coasts": null
         },
         {
             "id": "ber",
@@ -525,7 +637,11 @@
             "unit": {
                 "id": "c6b39b72-46fd-4fad-b67c-12d40846613a",
                 "controlledBy": "Germany",
-                "type": "army"
+                "type": "army",
+                "location": {
+                    "id": "ber",
+                    "coast": null
+                }
             },
             "coordinates": {
                 "x": 510,
@@ -539,12 +655,18 @@
                 "sil",
                 "mun"
             ],
-            "coastalRoutes": {
-                "ber-default": [
-                    "kie",
-                    "bal",
-                    "pru"
-                ]
+            "coasts": {
+                "default": {
+                    "routes": [
+                        "kie",
+                        "bal",
+                        "pru"
+                    ],
+                    "coordinates": {
+                        "x": 510,
+                        "y": 429
+                    }
+                }
             }
         },
         {
@@ -561,7 +683,11 @@
             "unit": {
                 "id": "0a24d641-fe01-4406-bacc-60e8d3f9940b",
                 "controlledBy": "Germany",
-                "type": "fleet"
+                "type": "fleet",
+                "location": {
+                    "id": "kie",
+                    "coast": null
+                }
             },
             "coordinates": {
                 "x": 468,
@@ -577,14 +703,20 @@
                 "ber",
                 "mun"
             ],
-            "coastalRoutes": {
-                "kie-default": [
-                    "hol",
-                    "hel",
-                    "den",
-                    "bal",
-                    "ber"
-                ]
+            "coasts": {
+                "default": {
+                    "routes": [
+                        "hol",
+                        "hel",
+                        "den",
+                        "bal",
+                        "ber"
+                    ],
+                    "coordinates": {
+                        "x": 468,
+                        "y": 407
+                    }
+                }
             }
         },
         {
@@ -611,13 +743,19 @@
                 "ruh",
                 "bel"
             ],
-            "coastalRoutes": {
-                "hol-default": [
-                    "nth",
-                    "hel",
-                    "kie",
-                    "bel"
-                ]
+            "coasts": {
+                "default": {
+                    "routes": [
+                        "nth",
+                        "hel",
+                        "kie",
+                        "bel"
+                    ],
+                    "coordinates": {
+                        "x": 411,
+                        "y": 393
+                    }
+                }
             }
         },
         {
@@ -645,13 +783,19 @@
                 "ruh",
                 "bur"
             ],
-            "coastalRoutes": {
-                "bel-default": [
-                    "pic",
-                    "eng",
-                    "nth",
-                    "hol"
-                ]
+            "coasts": {
+                "default": {
+                    "routes": [
+                        "pic",
+                        "eng",
+                        "nth",
+                        "hol"
+                    ],
+                    "coordinates": {
+                        "x": 375,
+                        "y": 451
+                    }
+                }
             }
         },
         {
@@ -668,7 +812,11 @@
             "unit": {
                 "id": "dfaae230-685d-4dec-9114-862fa1330769",
                 "controlledBy": "Austria-Hungary",
-                "type": "army"
+                "type": "army",
+                "location": {
+                    "id": "vie",
+                    "coast": null
+                }
             },
             "coordinates": {
                 "x": 593,
@@ -682,7 +830,7 @@
                 "tri",
                 "tyr"
             ],
-            "coastalRoutes": null
+            "coasts": null
         },
         {
             "id": "bud",
@@ -698,7 +846,11 @@
             "unit": {
                 "id": "3a9e2bd9-8a09-43fe-9db1-b20f45885a49",
                 "controlledBy": "Austria-Hungary",
-                "type": "army"
+                "type": "army",
+                "location": {
+                    "id": "bud",
+                    "coast": null
+                }
             },
             "coordinates": {
                 "x": 666,
@@ -712,7 +864,7 @@
                 "ser",
                 "tri"
             ],
-            "coastalRoutes": null
+            "coasts": null
         },
         {
             "id": "tri",
@@ -728,7 +880,11 @@
             "unit": {
                 "id": "44c6cbec-54c4-4bc0-b05c-219dc12d45ea",
                 "controlledBy": "Austria-Hungary",
-                "type": "fleet"
+                "type": "fleet",
+                "location": {
+                    "id": "tri",
+                    "coast": null
+                }
             },
             "coordinates": {
                 "x": 561,
@@ -744,12 +900,18 @@
                 "ser",
                 "alb"
             ],
-            "coastalRoutes": {
-                "tri-default": [
-                    "adr",
-                    "ven",
-                    "alb"
-                ]
+            "coasts": {
+                "default": {
+                    "routes": [
+                        "adr",
+                        "ven",
+                        "alb"
+                    ],
+                    "coordinates": {
+                        "x": 561,
+                        "y": 621
+                    }
+                }
             }
         },
         {
@@ -778,12 +940,18 @@
                 "bul",
                 "ser"
             ],
-            "coastalRoutes": {
-                "rum-default": [
-                    "sev",
-                    "bla",
-                    "bul"
-                ]
+            "coasts": {
+                "default": {
+                    "routes": [
+                        "sev",
+                        "bla",
+                        "bul"
+                    ],
+                    "coordinates": {
+                        "x": 764,
+                        "y": 599
+                    }
+                }
             }
         },
         {
@@ -811,17 +979,29 @@
                 "aeg",
                 "bla"
             ],
-            "coastalRoutes": {
-                "ec": [
-                    "rum",
-                    "bla",
-                    "con"
-                ],
-                "sc": [
-                    "con",
-                    "aeg",
-                    "gre"
-                ]
+            "coasts": {
+                "ec": {
+                    "routes": [
+                        "rum",
+                        "bla",
+                        "con"
+                    ],
+                    "coordinates": {
+                        "x": 768,
+                        "y": 637
+                    }
+                },
+                "sc": {
+                    "routes": [
+                        "con",
+                        "aeg",
+                        "gre"
+                    ],
+                    "coordinates": {
+                        "x": 729,
+                        "y": 682
+                    }
+                }
             }
         },
         {
@@ -848,13 +1028,19 @@
                 "bul",
                 "aeg"
             ],
-            "coastalRoutes": {
-                "gre-default": [
-                    "ion",
-                    "alb",
-                    "bul",
-                    "aeg"
-                ]
+            "coasts": {
+                "default": {
+                    "routes": [
+                        "ion",
+                        "alb",
+                        "bul",
+                        "aeg"
+                    ],
+                    "coordinates": {
+                        "x": 662,
+                        "y": 732
+                    }
+                }
             }
         },
         {
@@ -882,7 +1068,7 @@
                 "bul",
                 "gre"
             ],
-            "coastalRoutes": null
+            "coasts": null
         },
         {
             "id": "con",
@@ -898,7 +1084,11 @@
             "unit": {
                 "id": "42318637-b36a-40de-a5de-0b409e5e9d58",
                 "controlledBy": "Turkey",
-                "type": "army"
+                "type": "army",
+                "location": {
+                    "id": "con",
+                    "coast": null
+                }
             },
             "coordinates": {
                 "x": 802,
@@ -912,14 +1102,20 @@
                 "ank",
                 "smy"
             ],
-            "coastalRoutes": {
-                "con-default": [
-                    "aeg",
-                    "bul",
-                    "bla",
-                    "ank",
-                    "smy"
-                ]
+            "coasts": {
+                "default": {
+                    "routes": [
+                        "aeg",
+                        "bul",
+                        "bla",
+                        "ank",
+                        "smy"
+                    ],
+                    "coordinates": {
+                        "x": 802,
+                        "y": 702
+                    }
+                }
             }
         },
         {
@@ -936,7 +1132,11 @@
             "unit": {
                 "id": "9ec4e4bf-8966-444e-9074-e7c404fd776c",
                 "controlledBy": "Turkey",
-                "type": "army"
+                "type": "army",
+                "location": {
+                    "id": "smy",
+                    "coast": null
+                }
             },
             "coordinates": {
                 "x": 860,
@@ -951,13 +1151,19 @@
                 "eas",
                 "aeg"
             ],
-            "coastalRoutes": {
-                "smy-default": [
-                    "con",
-                    "syr",
-                    "eas",
-                    "aeg"
-                ]
+            "coasts": {
+                "default": {
+                    "routes": [
+                        "con",
+                        "syr",
+                        "eas",
+                        "aeg"
+                    ],
+                    "coordinates": {
+                        "x": 860,
+                        "y": 737
+                    }
+                }
             }
         },
         {
@@ -974,7 +1180,11 @@
             "unit": {
                 "id": "250de842-5981-41c0-9bb6-ab3783f64b80",
                 "controlledBy": "Turkey",
-                "type": "fleet"
+                "type": "fleet",
+                "location": {
+                    "id": "ank",
+                    "coast": null
+                }
             },
             "coordinates": {
                 "x": 899,
@@ -987,12 +1197,18 @@
                 "smy",
                 "con"
             ],
-            "coastalRoutes": {
-                "ank-default": [
-                    "bla",
-                    "arm",
-                    "con"
-                ]
+            "coasts": {
+                "default": {
+                    "routes": [
+                        "bla",
+                        "arm",
+                        "con"
+                    ],
+                    "coordinates": {
+                        "x": 899,
+                        "y": 674
+                    }
+                }
             }
         },
         {
@@ -1009,7 +1225,11 @@
             "unit": {
                 "id": "a80951a8-43ef-4fe5-bbd8-2d541a642a69",
                 "controlledBy": "Russia",
-                "type": "fleet"
+                "type": "fleet",
+                "location": {
+                    "id": "sev",
+                    "coast": null
+                }
             },
             "coordinates": {
                 "x": 960,
@@ -1023,12 +1243,18 @@
                 "bla",
                 "rum"
             ],
-            "coastalRoutes": {
-                "sev-default": [
-                    "arm",
-                    "bla",
-                    "rum"
-                ]
+            "coasts": {
+                "default": {
+                    "routes": [
+                        "arm",
+                        "bla",
+                        "rum"
+                    ],
+                    "coordinates": {
+                        "x": 960,
+                        "y": 494
+                    }
+                }
             }
         },
         {
@@ -1045,7 +1271,11 @@
             "unit": {
                 "id": "8add7c60-becc-47a3-9409-847cb6d8501a",
                 "controlledBy": "Russia",
-                "type": "army"
+                "type": "army",
+                "location": {
+                    "id": "mos",
+                    "coast": null
+                }
             },
             "coordinates": {
                 "x": 943,
@@ -1059,7 +1289,7 @@
                 "ukr",
                 "war"
             ],
-            "coastalRoutes": null
+            "coasts": null
         },
         {
             "id": "war",
@@ -1075,7 +1305,11 @@
             "unit": {
                 "id": "0b968723-f877-489f-a8ee-f5f7bfcc9ca4",
                 "controlledBy": "Russia",
-                "type": "army"
+                "type": "army",
+                "location": {
+                    "id": "war",
+                    "coast": null
+                }
             },
             "coordinates": {
                 "x": 718,
@@ -1090,7 +1324,7 @@
                 "gal",
                 "sil"
             ],
-            "coastalRoutes": null
+            "coasts": null
         },
         {
             "id": "stp",
@@ -1106,7 +1340,11 @@
             "unit": {
                 "id": "cfc4fbd9-b721-41a4-9ae5-f4196efb143d",
                 "controlledBy": "Russia",
-                "type": "fleet"
+                "type": "fleet",
+                "location": {
+                    "id": "stp",
+                    "coast": "sc"
+                }
             },
             "coordinates": {
                 "x": 910,
@@ -1121,16 +1359,28 @@
                 "bar",
                 "bot"
             ],
-            "coastalRoutes": {
-                "nc": [
-                    "bar",
-                    "nor"
-                ],
-                "sc": [
-                    "bot",
-                    "fin",
-                    "lvn"
-                ]
+            "coasts": {
+                "nc": {
+                    "routes": [
+                        "bar",
+                        "nor"
+                    ],
+                    "coordinates": {
+                        "x": 911,
+                        "y": 155
+                    }
+                },
+                "sc": {
+                    "routes": [
+                        "bot",
+                        "fin",
+                        "lvn"
+                    ],
+                    "coordinates": {
+                        "x": 782,
+                        "y": 275
+                    }
+                }
             }
         },
         {
@@ -1158,15 +1408,21 @@
                 "bal",
                 "swe"
             ],
-            "coastalRoutes": {
-                "den-default": [
-                    "kie",
-                    "hel",
-                    "nth",
-                    "ska",
-                    "bal",
-                    "swe"
-                ]
+            "coasts": {
+                "default": {
+                    "routes": [
+                        "kie",
+                        "hel",
+                        "nth",
+                        "ska",
+                        "bal",
+                        "swe"
+                    ],
+                    "coordinates": {
+                        "x": 479,
+                        "y": 321
+                    }
+                }
             }
         },
         {
@@ -1193,14 +1449,20 @@
                 "ska",
                 "nth"
             ],
-            "coastalRoutes": {
-                "nor-default": [
-                    "nrg",
-                    "bar",
-                    "swe",
-                    "ska",
-                    "nth"
-                ]
+            "coasts": {
+                "default": {
+                    "routes": [
+                        "nrg",
+                        "bar",
+                        "swe",
+                        "ska",
+                        "nth"
+                    ],
+                    "coordinates": {
+                        "x": 521,
+                        "y": 196
+                    }
+                }
             }
         },
         {
@@ -1228,15 +1490,21 @@
                 "ska",
                 "den"
             ],
-            "coastalRoutes": {
-                "swe-default": [
-                    "nor",
-                    "fin",
-                    "bot",
-                    "bal",
-                    "ska",
-                    "den"
-                ]
+            "coasts": {
+                "default": {
+                    "routes": [
+                        "nor",
+                        "fin",
+                        "bot",
+                        "bal",
+                        "ska",
+                        "den"
+                    ],
+                    "coordinates": {
+                        "x": 598,
+                        "y": 215
+                    }
+                }
             }
         },
         {
@@ -1255,13 +1523,19 @@
                 "edi",
                 "lvp"
             ],
-            "coastalRoutes": {
-                "cly-default": [
-                    "nat",
-                    "nrg",
-                    "edi",
-                    "lvp"
-                ]
+            "coasts": {
+                "default": {
+                    "routes": [
+                        "nat",
+                        "nrg",
+                        "edi",
+                        "lvp"
+                    ],
+                    "coordinates": {
+                        "x": 273,
+                        "y": 247
+                    }
+                }
             }
         },
         {
@@ -1281,12 +1555,18 @@
                 "edi",
                 "nth"
             ],
-            "coastalRoutes": {
-                "yor-default": [
-                    "lon",
-                    "edi",
-                    "nth"
-                ]
+            "coasts": {
+                "default": {
+                    "routes": [
+                        "lon",
+                        "edi",
+                        "nth"
+                    ],
+                    "coordinates": {
+                        "x": 297,
+                        "y": 366
+                    }
+                }
             }
         },
         {
@@ -1306,13 +1586,19 @@
                 "lon",
                 "eng"
             ],
-            "coastalRoutes": {
-                "wal-default": [
-                    "iri",
-                    "lvp",
-                    "lon",
-                    "eng"
-                ]
+            "coasts": {
+                "default": {
+                    "routes": [
+                        "iri",
+                        "lvp",
+                        "lon",
+                        "eng"
+                    ],
+                    "coordinates": {
+                        "x": 253,
+                        "y": 373
+                    }
+                }
             }
         },
         {
@@ -1332,12 +1618,18 @@
                 "bur",
                 "par"
             ],
-            "coastalRoutes": {
-                "pic-default": [
-                    "bre",
-                    "eng",
-                    "bel"
-                ]
+            "coasts": {
+                "default": {
+                    "routes": [
+                        "bre",
+                        "eng",
+                        "bel"
+                    ],
+                    "coordinates": {
+                        "x": 324,
+                        "y": 457
+                    }
+                }
             }
         },
         {
@@ -1358,12 +1650,18 @@
                 "bur",
                 "mar"
             ],
-            "coastalRoutes": {
-                "gas-default": [
-                    "spa",
-                    "mid",
-                    "bre"
-                ]
+            "coasts": {
+                "default": {
+                    "routes": [
+                        "spa",
+                        "mid",
+                        "bre"
+                    ],
+                    "coordinates": {
+                        "x": 265,
+                        "y": 574
+                    }
+                }
             }
         },
         {
@@ -1385,7 +1683,7 @@
                 "mar",
                 "gas"
             ],
-            "coastalRoutes": null
+            "coasts": null
         },
         {
             "id": "naf",
@@ -1402,12 +1700,18 @@
                 "wes",
                 "tun"
             ],
-            "coastalRoutes": {
-                "naf-default": [
-                    "mid",
-                    "wes",
-                    "tun"
-                ]
+            "coasts": {
+                "default": {
+                    "routes": [
+                        "mid",
+                        "wes",
+                        "tun"
+                    ],
+                    "coordinates": {
+                        "x": 207,
+                        "y": 805
+                    }
+                }
             }
         },
         {
@@ -1427,7 +1731,7 @@
                 "mun",
                 "bur"
             ],
-            "coastalRoutes": null
+            "coasts": null
         },
         {
             "id": "pru",
@@ -1446,12 +1750,18 @@
                 "war",
                 "sil"
             ],
-            "coastalRoutes": {
-                "pru-default": [
-                    "ber",
-                    "bal",
-                    "lvn"
-                ]
+            "coasts": {
+                "default": {
+                    "routes": [
+                        "ber",
+                        "bal",
+                        "lvn"
+                    ],
+                    "coordinates": {
+                        "x": 629,
+                        "y": 402
+                    }
+                }
             }
         },
         {
@@ -1472,7 +1782,7 @@
                 "boh",
                 "mun"
             ],
-            "coastalRoutes": null
+            "coasts": null
         },
         {
             "id": "boh",
@@ -1491,7 +1801,7 @@
                 "vie",
                 "tyr"
             ],
-            "coastalRoutes": null
+            "coasts": null
         },
         {
             "id": "tyr",
@@ -1511,7 +1821,7 @@
                 "tri",
                 "ven"
             ],
-            "coastalRoutes": null
+            "coasts": null
         },
         {
             "id": "gal",
@@ -1532,7 +1842,7 @@
                 "vie",
                 "boh"
             ],
-            "coastalRoutes": null
+            "coasts": null
         },
         {
             "id": "pie",
@@ -1551,12 +1861,18 @@
                 "tus",
                 "gol"
             ],
-            "coastalRoutes": {
-                "pie-default": [
-                    "mar",
-                    "tus",
-                    "gol"
-                ]
+            "coasts": {
+                "default": {
+                    "routes": [
+                        "mar",
+                        "tus",
+                        "gol"
+                    ],
+                    "coordinates": {
+                        "x": 416,
+                        "y": 592
+                    }
+                }
             }
         },
         {
@@ -1576,13 +1892,19 @@
                 "gol",
                 "tyn"
             ],
-            "coastalRoutes": {
-                "tus-default": [
-                    "pie",
-                    "rom",
-                    "gol",
-                    "tyn"
-                ]
+            "coasts": {
+                "default": {
+                    "routes": [
+                        "pie",
+                        "rom",
+                        "gol",
+                        "tyn"
+                    ],
+                    "coordinates": {
+                        "x": 453,
+                        "y": 634
+                    }
+                }
             }
         },
         {
@@ -1602,13 +1924,19 @@
                 "rom",
                 "ven"
             ],
-            "coastalRoutes": {
-                "apu-default": [
-                    "adr",
-                    "ion",
-                    "nap",
-                    "ven"
-                ]
+            "coasts": {
+                "default": {
+                    "routes": [
+                        "adr",
+                        "ion",
+                        "nap",
+                        "ven"
+                    ],
+                    "coordinates": {
+                        "x": 551,
+                        "y": 700
+                    }
+                }
             }
         },
         {
@@ -1628,13 +1956,19 @@
                 "gre",
                 "ion"
             ],
-            "coastalRoutes": {
-                "alb-default": [
-                    "adr",
-                    "tri",
-                    "gre",
-                    "ion"
-                ]
+            "coasts": {
+                "default": {
+                    "routes": [
+                        "adr",
+                        "tri",
+                        "gre",
+                        "ion"
+                    ],
+                    "coordinates": {
+                        "x": 628,
+                        "y": 688
+                    }
+                }
             }
         },
         {
@@ -1654,12 +1988,18 @@
                 "smy",
                 "ank"
             ],
-            "coastalRoutes": {
-                "arm-default": [
-                    "bla",
-                    "sev",
-                    "ank"
-                ]
+            "coasts": {
+                "default": {
+                    "routes": [
+                        "bla",
+                        "sev",
+                        "ank"
+                    ],
+                    "coordinates": {
+                        "x": 1003,
+                        "y": 686
+                    }
+                }
             }
         },
         {
@@ -1677,11 +2017,17 @@
                 "smy",
                 "arm"
             ],
-            "coastalRoutes": {
-                "syr-default": [
-                    "eas",
-                    "smy"
-                ]
+            "coasts": {
+                "default": {
+                    "routes": [
+                        "eas",
+                        "smy"
+                    ],
+                    "coordinates": {
+                        "x": 980,
+                        "y": 783
+                    }
+                }
             }
         },
         {
@@ -1701,7 +2047,7 @@
                 "sev",
                 "rum"
             ],
-            "coastalRoutes": null
+            "coasts": null
         },
         {
             "id": "fin",
@@ -1718,12 +2064,18 @@
                 "stp",
                 "bot"
             ],
-            "coastalRoutes": {
-                "fin-default": [
-                    "swe",
-                    "stp",
-                    "bot"
-                ]
+            "coasts": {
+                "default": {
+                    "routes": [
+                        "swe",
+                        "stp",
+                        "bot"
+                    ],
+                    "coordinates": {
+                        "x": 747,
+                        "y": 201
+                    }
+                }
             }
         },
         {
@@ -1744,13 +2096,19 @@
                 "pru",
                 "bal"
             ],
-            "coastalRoutes": {
-                "lvn-default": [
-                    "bot",
-                    "stp",
-                    "pru",
-                    "bal"
-                ]
+            "coasts": {
+                "default": {
+                    "routes": [
+                        "bot",
+                        "stp",
+                        "pru",
+                        "bal"
+                    ],
+                    "coordinates": {
+                        "x": 731,
+                        "y": 339
+                    }
+                }
             }
         },
         {
@@ -1768,7 +2126,7 @@
                 "nrg",
                 "stp"
             ],
-            "coastalRoutes": null
+            "coasts": null
         },
         {
             "id": "nrg",
@@ -1788,7 +2146,7 @@
                 "cly",
                 "edi"
             ],
-            "coastalRoutes": null
+            "coasts": null
         },
         {
             "id": "nth",
@@ -1812,7 +2170,7 @@
                 "hol",
                 "bel"
             ],
-            "coastalRoutes": null
+            "coasts": null
         },
         {
             "id": "hel",
@@ -1830,7 +2188,7 @@
                 "den",
                 "kie"
             ],
-            "coastalRoutes": null
+            "coasts": null
         },
         {
             "id": "ska",
@@ -1848,7 +2206,7 @@
                 "swe",
                 "den"
             ],
-            "coastalRoutes": null
+            "coasts": null
         },
         {
             "id": "bal",
@@ -1869,7 +2227,7 @@
                 "ber",
                 "kie"
             ],
-            "coastalRoutes": null
+            "coasts": null
         },
         {
             "id": "bot",
@@ -1888,7 +2246,7 @@
                 "lvn",
                 "bal"
             ],
-            "coastalRoutes": null
+            "coasts": null
         },
         {
             "id": "nat",
@@ -1907,7 +2265,7 @@
                 "iri",
                 "mid"
             ],
-            "coastalRoutes": null
+            "coasts": null
         },
         {
             "id": "iri",
@@ -1926,7 +2284,7 @@
                 "eng",
                 "mid"
             ],
-            "coastalRoutes": null
+            "coasts": null
         },
         {
             "id": "eng",
@@ -1947,7 +2305,7 @@
                 "bre",
                 "mid"
             ],
-            "coastalRoutes": null
+            "coasts": null
         },
         {
             "id": "mid",
@@ -1969,7 +2327,7 @@
                 "por",
                 "wes"
             ],
-            "coastalRoutes": null
+            "coasts": null
         },
         {
             "id": "wes",
@@ -1989,7 +2347,7 @@
                 "tyn",
                 "tun"
             ],
-            "coastalRoutes": null
+            "coasts": null
         },
         {
             "id": "gol",
@@ -2009,7 +2367,7 @@
                 "tyn",
                 "wes"
             ],
-            "coastalRoutes": null
+            "coasts": null
         },
         {
             "id": "tyn",
@@ -2029,7 +2387,7 @@
                 "tun",
                 "wes"
             ],
-            "coastalRoutes": null
+            "coasts": null
         },
         {
             "id": "ion",
@@ -2052,7 +2410,7 @@
                 "aeg",
                 "eas"
             ],
-            "coastalRoutes": null
+            "coasts": null
         },
         {
             "id": "adr",
@@ -2071,7 +2429,7 @@
                 "ion",
                 "apu"
             ],
-            "coastalRoutes": null
+            "coasts": null
         },
         {
             "id": "aeg",
@@ -2091,7 +2449,7 @@
                 "eas",
                 "ion"
             ],
-            "coastalRoutes": null
+            "coasts": null
         },
         {
             "id": "eas",
@@ -2109,7 +2467,7 @@
                 "smy",
                 "syr"
             ],
-            "coastalRoutes": null
+            "coasts": null
         },
         {
             "id": "bla",
@@ -2129,7 +2487,7 @@
                 "bul",
                 "rum"
             ],
-            "coastalRoutes": null
+            "coasts": null
         }
     ]
 }
