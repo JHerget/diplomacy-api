@@ -104,13 +104,24 @@ func (g *Game) CurrentTurn() *Turn {
 	}
 
 	latestTurn := len(g.Turns)
-	for _, turn := range g.Turns {
-		if turn.TurnNumber == latestTurn {
-			return &turn
+	for i := range g.Turns {
+		if g.Turns[i].TurnNumber == latestTurn {
+			return &g.Turns[i]
 		}
 	}
 
 	return nil
+}
+
+func (g *Game) EndTurnEarly(turn *Turn) {
+	now := time.Now()
+	if now.Unix() >= int64(turn.EndDate) {
+		return
+	}
+
+	location := time.FixedZone("game", g.Timezone*60*60)
+	day := now.In(location)
+	turn.EndDate = int(time.Date(day.Year(), day.Month(), day.Day(), g.TurnStartHour, 0, 0, 0, location).Unix())
 }
 
 func (g *Game) NewTurn() (*Turn, error) {

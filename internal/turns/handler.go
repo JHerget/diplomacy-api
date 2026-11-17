@@ -81,6 +81,7 @@ func (h *Handler) Create(ctx context.Context, event events.APIGatewayV2HTTPReque
 		g.Board = newBoard
 		validationResults = results
 		g.UpdatePlayerStatuses()
+		g.EndTurnEarly(currentTurn)
 	}
 
 	var turn *models.Turn
