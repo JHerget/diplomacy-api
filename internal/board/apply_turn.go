@@ -8,20 +8,35 @@ import (
 )
 
 type applicator struct {
-	BoardMap map[string]*node
+	BoardMap         map[string]*node
+	ReceivedCommands map[string]bool
+	PlayerCensus     map[string]*census
+}
+
+type census struct {
+	SupplyCenterCount int
+	UnitCount         int
 }
 
 type node struct {
 	Province          models.Province
 	Attacks           []attack
+	AttackResult      attackResult
 	UnresolvedCommand *models.MoveCommand
 	Convoy            *models.ConvoyCommand
+	RetreatUnit       *models.Unit
 }
 
 type attack struct {
 	UnitType   models.UnitType
 	LocationID string
 	Support    []string
+}
+
+type attackResult struct {
+	DislodgedUnit *models.Unit
+	LocationID    *string
+	Standoff      bool
 }
 
 func ApplyTurn(board []models.Province, turn *models.Turn) ([]models.Province, []models.CommandValidationResult, error) {
@@ -40,18 +55,21 @@ func ApplyTurn(board []models.Province, turn *models.Turn) ([]models.Province, [
 	}
 	slices.SortFunc(validCommands.Move, a.compareMove)
 
-	isFallTurn := turn.TurnNumber%2 == 0
-
 	utils.ForEach(validCommands.Convoy, a.ApplyConvoy)
 	utils.ForEach(validCommands.Move, a.ApplyMove)
-	utils.ForEach(validCommands.Retreat, a.ApplyRetreat)
 	utils.ForEach(validCommands.Support, a.ApplySupport)
-	utils.ForEach(validCommands.Disband, a.ApplyDisband)
+	a.ResolveAttacks()
+	utils.ForEach(validCommands.Retreat, a.ApplyRetreat)
+
+	isFallTurn := turn.TurnNumber%2 == 0
+	a.ResolveRetreats(isFallTurn)
+
 	if isFallTurn {
+		utils.ForEach(validCommands.Disband, a.ApplyDisband)
 		utils.ForEach(validCommands.Reinforce, a.ApplyReinforce)
 	}
 
-	return a.FinalizeState(isFallTurn), validationResults, nil
+	return a.FinalizeState(), validationResults, nil
 }
 
 func (a *applicator) ApplyConvoy(convoy models.ConvoyCommand) {
@@ -59,6 +77,11 @@ func (a *applicator) ApplyConvoy(convoy models.ConvoyCommand) {
 	if !ok {
 		return
 	}
+
+	if a.ReceivedCommands[loc.Province.ID] {
+		return
+	}
+	a.ReceivedCommands[loc.Province.ID] = true
 
 	loc.Convoy = &convoy
 }
@@ -73,6 +96,11 @@ func (a *applicator) ApplyMove(move models.MoveCommand) {
 	if !ok {
 		return
 	}
+
+	if a.ReceivedCommands[loc.Province.ID] {
+		return
+	}
+	a.ReceivedCommands[loc.Province.ID] = true
 
 	needsConvoy := !slices.Contains(dest.Province.Routes, loc.Province.ID)
 	if needsConvoy && !a.hasConvoyRoute(loc, dest, move) {
@@ -91,7 +119,39 @@ func (a *applicator) ApplyMove(move models.MoveCommand) {
 	}
 }
 
-func (a *applicator) ApplyRetreat(retreat models.RetreatCommand) {}
+func (a *applicator) ApplyRetreat(retreat models.RetreatCommand) {
+	loc, ok := a.BoardMap[retreat.Location.ID]
+	if !ok {
+		return
+	}
+
+	dest, ok := a.BoardMap[retreat.Destination.ID]
+	if !ok {
+		return
+	}
+
+	if a.ReceivedCommands[loc.Province.ID] {
+		return
+	}
+	if dest.Province.Unit != nil {
+		return
+	}
+	if loc.AttackResult.LocationID != nil && *loc.AttackResult.LocationID == retreat.Destination.ID {
+		return
+	}
+	if dest.AttackResult.Standoff {
+		return
+	}
+	if dest.RetreatUnit != nil {
+		dest.RetreatUnit = nil
+		return
+	}
+
+	dest.RetreatUnit = loc.AttackResult.DislodgedUnit
+	loc.AttackResult.DislodgedUnit = nil
+
+	a.ReceivedCommands[loc.Province.ID] = true
+}
 
 func (a *applicator) ApplySupport(support models.SupportCommand) {
 	loc, ok := a.BoardMap[support.Location.ID]
@@ -103,6 +163,11 @@ func (a *applicator) ApplySupport(support models.SupportCommand) {
 	if !ok {
 		return
 	}
+
+	if a.ReceivedCommands[loc.Province.ID] {
+		return
+	}
+	a.ReceivedCommands[loc.Province.ID] = true
 
 	for _, att := range loc.Attacks {
 		attLoc, ok := a.BoardMap[att.LocationID]
@@ -125,15 +190,71 @@ func (a *applicator) ApplySupport(support models.SupportCommand) {
 	att.Support = append(att.Support, support.Location.ID)
 }
 
-func (a *applicator) ApplyReinforce(reinforce models.ReinforceCommand) {}
-func (a *applicator) ApplyDisband(disband models.DisbandCommand)       {}
+func (a *applicator) ApplyReinforce(reinforce models.ReinforceCommand) {
+	loc, ok := a.BoardMap[reinforce.Location.ID]
+	if !ok {
+		return
+	}
 
-func (a *applicator) FinalizeState(fallTurn bool) []models.Province {
-	board := make([]models.Province, 0)
+	if a.ReceivedCommands[loc.Province.ID] {
+		return
+	}
 
+	c := a.PlayerCensus[reinforce.PlayerName]
+	if c == nil {
+		return
+	}
+	if c.UnitCount >= c.SupplyCenterCount {
+		return
+	}
+
+	if loc.Province.Unit != nil {
+		return
+	}
+	if loc.Province.SupplyCenter == nil {
+		return
+	}
+
+	homeFor := loc.Province.SupplyCenter.HomeFor
+	if homeFor == nil || *homeFor != reinforce.PlayerName {
+		return
+	}
+
+	controlledBy := loc.Province.SupplyCenter.ControlledBy
+	if controlledBy == nil || controlledBy != &reinforce.PlayerName {
+		return
+	}
+
+	id, err := utils.RandomID()
+	if err != nil {
+		return
+	}
+
+	loc.Province.Unit = &models.Unit{
+		ID: id,
+		ControlledBy: reinforce.PlayerName,
+		Type: reinforce.UnitType,
+		Location: reinforce.Location,
+	}
+	a.ReceivedCommands[loc.Province.ID] = true
+}
+
+func (a *applicator) ApplyDisband(disband models.DisbandCommand) {
+	loc, ok := a.BoardMap[disband.Location.ID]
+	if !ok {
+		return
+	}
+
+	if a.ReceivedCommands[loc.Province.ID] {
+		return
+	}
+	a.ReceivedCommands[loc.Province.ID] = true
+}
+
+func (a *applicator) ResolveAttacks() {
 	for _, n := range a.BoardMap {
 		if n.UnresolvedCommand == nil {
-			board = append(board, a.resolve(n))
+			a.resolveAttack(n)
 			continue
 		}
 
@@ -148,27 +269,58 @@ func (a *applicator) FinalizeState(fallTurn bool) []models.Province {
 				continue
 			}
 
-			_ = a.resolve(dest)
-			board = append(board, a.resolve(top))
+			a.resolveAttack(dest)
+			a.resolveAttack(top)
 			stack = stack[:len(stack)-1]
 		}
 	}
 
-	if fallTurn {
-		for index, p := range board {
-			if p.SupplyCenter == nil || p.Unit == nil {
-				continue
-			}
+	a.ReceivedCommands = nil
+}
 
-			p.SupplyCenter.ControlledBy = &p.Unit.ControlledBy
-			board[index] = p
+func (a *applicator) ResolveRetreats(fallTurn bool) {
+	for _, n := range a.BoardMap {
+		if n.RetreatUnit != nil && n.Province.Unit == nil {
+			n.Province.Unit = n.RetreatUnit
 		}
+		n.AttackResult.DislodgedUnit = nil
+
+		hasSupplyCenter := n.Province.SupplyCenter != nil
+		hasUnit := n.Province.Unit != nil
+		if fallTurn && hasSupplyCenter && hasUnit {
+			n.Province.SupplyCenter.ControlledBy = &n.Province.Unit.ControlledBy
+		}
+
+		if hasSupplyCenter {
+			playerName := *n.Province.SupplyCenter.ControlledBy
+
+			if a.PlayerCensus[playerName] == nil {
+				a.PlayerCensus[playerName] = &census{}
+			}
+			a.PlayerCensus[playerName].SupplyCenterCount++
+		}
+		if hasUnit {
+			playerName := n.Province.Unit.ControlledBy
+
+			if a.PlayerCensus[playerName] == nil {
+				a.PlayerCensus[playerName] = &census{}
+			}
+			a.PlayerCensus[playerName].UnitCount++
+		}
+	}
+}
+
+func (a *applicator) FinalizeState() []models.Province {
+	board := make([]models.Province, 0)
+
+	for _, n := range a.BoardMap {
+		board = append(board, n.Province)
 	}
 
 	return board
 }
 
-func (a *applicator) resolve(n *node) models.Province {
+func (a *applicator) resolveAttack(n *node) {
 	minStrength := 0
 	if n.Province.Unit != nil {
 		minStrength = 1
@@ -189,21 +341,25 @@ func (a *applicator) resolve(n *node) models.Province {
 
 	if len(strongestAttacks) == 1 && maxStrength > minStrength {
 		att := strongestAttacks[0]
-		loc := a.BoardMap[att.LocationID]
+		attLoc := a.BoardMap[att.LocationID]
 
-		if n.Province.ID != loc.Province.ID {
-			unit := loc.Province.Unit
-			unit.Location = loc.UnresolvedCommand.Destination
+		if n.Province.ID != attLoc.Province.ID {
+			unit := attLoc.Province.Unit
+			unit.Location = attLoc.UnresolvedCommand.Destination
+
+			n.AttackResult.DislodgedUnit = n.Province.Unit
+			n.AttackResult.LocationID = &att.LocationID
 
 			n.Province.Unit = unit
-			loc.Province.Unit = nil
+			attLoc.Province.Unit = nil
 		}
+	} else {
+		n.AttackResult.Standoff = len(strongestAttacks) > 0
 	}
 
-	n.UnresolvedCommand = nil
 	n.Attacks = nil
-
-	return n.Province
+	n.UnresolvedCommand = nil
+	n.Convoy = nil
 }
 
 func (a *applicator) compareMove(lhs, rhs models.MoveCommand) int {

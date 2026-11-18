@@ -336,25 +336,27 @@ func (v *validator) IsValidDisband(disband *models.DisbandCommand) (bool, error)
 	return true, nil
 }
 
-func (v *validator) isValidLocation(ref models.LocationReference) (bool, error) {
+func (v *validator) isValidLocation(ref models.LocationReference, unitType models.UnitType) (bool, error) {
 	loc, ok := v.BoardMap[ref.ID]
 	if !ok {
 		return false, fmt.Errorf("Province not found: %s", ref.ID)
 	}
 
 	coastProvided := ref.Coast != nil
-	hasCoasts := len(loc.Coasts) > 0
+	hasCoasts := len(loc.Coasts) > 1
 
-	if coastProvided && !hasCoasts {
+	if coastProvided && (!hasCoasts || unitType == models.UnitArmy) {
 		return false, fmt.Errorf("A coast was provided when not expected.")
 	}
-	if !coastProvided {
-		return true, nil
+	if !coastProvided && hasCoasts && unitType == models.UnitFleet {
+		return false, fmt.Errorf("A coast was not provided when expected.")
 	}
 
-	_, routesExist := loc.Coasts[*ref.Coast]
-	if !routesExist {
-		return false, fmt.Errorf("The coast provided does not exist.")
+	if hasCoasts && unitType == models.UnitFleet {
+		_, routesExist := loc.Coasts[*ref.Coast]
+		if !routesExist {
+			return false, fmt.Errorf("The coast provided does not exist.")
+		}
 	}
 
 	return true, nil
