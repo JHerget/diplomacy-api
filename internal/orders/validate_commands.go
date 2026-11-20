@@ -122,7 +122,7 @@ func (v *validator) IsValidHold(hold *models.HoldCommand) (bool, error) {
 		return false, locationError(hold.Location.ID)
 	}
 
-	if ok, err := v.isValidLocation(hold.Location); !ok {
+	if ok, err := v.isValidLocation(hold.Location, hold.UnitType); !ok {
 		return false, err
 	}
 
@@ -156,10 +156,10 @@ func (v *validator) IsValidMove(move *models.MoveCommand, validatePlayer bool) (
 		return false, locationError(move.Destination.ID)
 	}
 
-	if ok, err := v.isValidLocation(move.Location); !ok {
+	if ok, err := v.isValidLocation(move.Location, move.UnitType); !ok {
 		return false, err
 	}
-	if ok, err := v.isValidLocation(move.Destination); !ok {
+	if ok, err := v.isValidLocation(move.Destination, move.UnitType); !ok {
 		return false, err
 	}
 
@@ -193,10 +193,10 @@ func (v *validator) IsValidRetreat(retreat *models.RetreatCommand) (bool, error)
 		return false, locationError(retreat.Destination.ID)
 	}
 
-	if ok, err := v.isValidLocation(retreat.Location); !ok {
+	if ok, err := v.isValidLocation(retreat.Location, retreat.UnitType); !ok {
 		return false, err
 	}
-	if ok, err := v.isValidLocation(retreat.Destination); !ok {
+	if ok, err := v.isValidLocation(retreat.Destination, retreat.UnitType); !ok {
 		return false, err
 	}
 
@@ -231,7 +231,7 @@ func (v *validator) IsValidSupport(support *models.SupportCommand) (bool, error)
 	if ok, err := v.IsValidMove(&support.Move, false); !ok {
 		return false, err
 	}
-	if ok, err := v.isValidLocation(support.Location); !ok {
+	if ok, err := v.isValidLocation(support.Location, support.UnitType); !ok {
 		return false, err
 	}
 
@@ -261,7 +261,7 @@ func (v *validator) IsValidConvoy(convoy *models.ConvoyCommand) (bool, error) {
 	if ok, err := v.IsValidMove(&convoy.Move, false); !ok {
 		return false, err
 	}
-	if ok, err := v.isValidLocation(convoy.Location); !ok {
+	if ok, err := v.isValidLocation(convoy.Location, convoy.UnitType); !ok {
 		return false, err
 	}
 
@@ -287,7 +287,7 @@ func (v *validator) IsValidReinforce(reinforce *models.ReinforceCommand) (bool, 
 		return false, locationError(reinforce.Location.ID)
 	}
 
-	if ok, err := v.isValidLocation(reinforce.Location); !ok {
+	if ok, err := v.isValidLocation(reinforce.Location, reinforce.UnitType); !ok {
 		return false, err
 	}
 
@@ -319,7 +319,7 @@ func (v *validator) IsValidDisband(disband *models.DisbandCommand) (bool, error)
 		return false, locationError(disband.Location.ID)
 	}
 
-	if ok, err := v.isValidLocation(disband.Location); !ok {
+	if ok, err := v.isValidLocation(disband.Location, disband.UnitType); !ok {
 		return false, err
 	}
 
