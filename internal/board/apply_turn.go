@@ -408,47 +408,10 @@ func (a *applicator) resolveAttack(n *node) {
 		minStrength = 1
 	}
 
-	var maxStrength int
-	strongestAttacks := make([]int, 0)
-	done := false
-
-	for !done {
-		done = true
-
-		maxStrength = 0
-		for _, att := range n.Attacks {
-			maxStrength = max(maxStrength, len(att.Support)+1)
-		}
-
-		strongestAttacks = make([]int, 0)
-		for index, att := range n.Attacks {
-			if len(att.Support)+1 == maxStrength {
-				strongestAttacks = append(strongestAttacks, index)
-			}
-		}
-
-		if len(strongestAttacks) == 1 && n.Province.Unit != nil {
-			att := &n.Attacks[strongestAttacks[0]]
-
-			for index, locID := range att.Support {
-				supportLoc := a.BoardMap[locID]
-
-				if supportLoc.Province.Unit == nil {
-					continue
-				}
-
-				if supportLoc.Province.Unit.ControlledBy == n.Province.Unit.ControlledBy {
-					att.Support = append(att.Support[:index], att.Support[index+1:]...)
-					done = false
-					break
-				}
-			}
-
-		}
-	}
+	maxStrength, strongestAttacks := a.strongestAttacks(n)
 
 	if len(strongestAttacks) == 1 && maxStrength > minStrength {
-		att := &n.Attacks[strongestAttacks[0]]
+		att := strongestAttacks[0]
 		attLoc := a.BoardMap[att.LocationID]
 
 		attackingOwnUnit := n.Province.Unit != nil && n.Province.Unit.ControlledBy == attLoc.Province.Unit.ControlledBy
@@ -469,6 +432,57 @@ func (a *applicator) resolveAttack(n *node) {
 	n.Attacks = nil
 	n.UnresolvedCommand = nil
 	n.Convoy = nil
+}
+
+func (a *applicator) strongestAttacks(n *node) (int, []*attack) {
+	var maxStrength int
+	strongest := make([]*attack, 0)
+
+	for {
+		maxStrength = 0
+		strongest = strongest[:0]
+
+		for i := range n.Attacks {
+			att := &n.Attacks[i]
+			strength := len(att.Support)+1
+			switch {
+			case strength > maxStrength:
+				maxStrength = strength
+				strongest = []*attack{att}
+			case strength == maxStrength:
+				strongest = append(strongest, att)
+			}
+		}
+
+		removed := false
+		if len(strongest) == 1 && n.Province.Unit != nil {
+			att := strongest[0]
+
+			for index, locID := range att.Support {
+				supportLoc, ok := a.BoardMap[locID]
+				if !ok {
+					continue
+				}
+
+				if supportLoc.Province.Unit == nil {
+					continue
+				}
+
+				if supportLoc.Province.Unit.ControlledBy == n.Province.Unit.ControlledBy {
+					att.Support = append(att.Support[:index], att.Support[index+1:]...)
+					removed = true
+					break
+				}
+			}
+
+		}
+
+		if !removed {
+			break
+		}
+	}
+
+	return maxStrength, strongest
 }
 
 func (a *applicator) compareMove(lhs, rhs models.MoveCommand) int {
