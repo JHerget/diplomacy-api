@@ -329,18 +329,20 @@ func (a *applicator) ApplyDisband(disband models.DisbandCommand) {
 
 func (a *applicator) ResolveAttacks() {
 	for _, n := range a.BoardMap {
-		if n.UnresolvedCommand == nil {
-			a.resolveAttack(n)
-			continue
-		}
-
 		stack := []*node{n}
 
 		for len(stack) > 0 {
 			top := stack[len(stack)-1]
-			dest := a.BoardMap[top.UnresolvedCommand.Destination.ID]
+			if top.UnresolvedCommand == nil {
+				a.resolveAttack(top)
+				stack = stack[:len(stack)-1]
+				continue
+			}
 
-			if dest.UnresolvedCommand != nil {
+			dest := a.BoardMap[top.UnresolvedCommand.Destination.ID]
+			hadCycle := a.resolveCycle(stack, dest)
+
+			if hadCycle || dest.UnresolvedCommand != nil {
 				stack = append(stack, dest)
 				continue
 			}
@@ -558,4 +560,55 @@ func (a *applicator) removeRandomUnits(playerName string, amount int) {
 		playerNodes = playerNodes[:len(playerNodes)-1]
 		amount--
 	}
+}
+
+func (a *applicator) rotateUnits(nodes []*node) {
+	if len(nodes) < 2 {
+		return
+	}
+
+	unit := nodes[0].Province.Unit
+	for _, n := range nodes[1:] {
+		newUnit := n.Province.Unit
+		n.Province.Unit = unit
+		n.UnresolvedCommand = nil
+		unit = newUnit
+	}
+	nodes[0].Province.Unit = unit
+	nodes[0].UnresolvedCommand = nil
+}
+
+func (a *applicator) resolveCycle(stack []*node, newNode *node) bool {
+	var cycle []*node
+	for i, elem := range stack {
+		if elem.Province.ID == newNode.Province.ID {
+			cycle = stack[i:]
+			break
+		}
+	}
+	if len(cycle) == 0 {
+		return false
+	}
+
+	cycle = append(cycle, newNode)
+	
+	var resolvable *node
+	for _, elem := range cycle {
+		_, strongestAttacks := a.strongestAttacks(elem)
+
+		if len(strongestAttacks) == 1  && strongestAttacks[0].LocationID == elem.Province.ID {
+			continue
+		}
+
+		resolvable = elem
+		break
+	}
+
+	if resolvable != nil {
+		a.resolveAttack(resolvable)
+	} else {
+		a.rotateUnits(cycle)
+	}
+
+	return true
 }
