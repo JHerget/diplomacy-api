@@ -82,10 +82,10 @@
             "type": "coastal",
             "routes": [
                 "cly",
-                "nrg",
-                "nth",
                 "yor",
-                "lvp"
+                "lvp",
+                "nrg",
+                "nth"
             ],
             "coasts": {
                 "default": {
@@ -222,11 +222,11 @@
             },
             "type": "coastal",
             "routes": [
-                "mid",
-                "eng",
                 "pic",
                 "par",
-                "gas"
+                "gas",
+                "mid",
+                "eng"
             ],
             "coasts": {
                 "default": {
@@ -272,7 +272,6 @@
                 "bre",
                 "pic",
                 "bur",
-                "mar",
                 "gas"
             ],
             "coasts": null
@@ -303,11 +302,11 @@
             },
             "type": "coastal",
             "routes": [
-                "gol",
                 "spa",
                 "gas",
                 "bur",
-                "pie"
+                "pie",
+                "gol"
             ],
             "coasts": {
                 "default": {
@@ -344,9 +343,9 @@
                 "por",
                 "mar",
                 "gas",
-                "gol",
                 "mid",
-                "wes"
+                "wes",
+                "gol"
             ],
             "coasts": {
                 "nc": {
@@ -393,8 +392,8 @@
             },
             "type": "coastal",
             "routes": [
-                "mid",
-                "spa"
+                "spa",
+                "mid"
             ],
             "coasts": {
                 "default": {
@@ -519,9 +518,9 @@
             },
             "type": "coastal",
             "routes": [
-                "tyn",
                 "rom",
                 "apu",
+                "tyn",
                 "ion"
             ],
             "coasts": {
@@ -568,10 +567,10 @@
                 "pie",
                 "tyr",
                 "tri",
-                "adr",
                 "apu",
                 "rom",
-                "tus"
+                "tus",
+                "adr"
             ],
             "coasts": {
                 "default": {
@@ -650,10 +649,10 @@
             "type": "coastal",
             "routes": [
                 "kie",
-                "bal",
                 "pru",
                 "sil",
-                "mun"
+                "mun",
+                "bal"
             ],
             "coasts": {
                 "default": {
@@ -697,11 +696,11 @@
             "routes": [
                 "ruh",
                 "hol",
-                "hel",
                 "den",
-                "bal",
                 "ber",
-                "mun"
+                "mun",
+                "hel",
+                "bal"
             ],
             "coasts": {
                 "default": {
@@ -737,11 +736,11 @@
             },
             "type": "coastal",
             "routes": [
-                "nth",
-                "hel",
                 "kie",
                 "ruh",
-                "bel"
+                "bel",
+                "nth",
+                "hel"
             ],
             "coasts": {
                 "default": {
@@ -777,11 +776,11 @@
             "type": "coastal",
             "routes": [
                 "pic",
-                "eng",
-                "nth",
                 "hol",
                 "ruh",
-                "bur"
+                "bur",
+                "eng",
+                "nth"
             ],
             "coasts": {
                 "default": {
@@ -892,13 +891,13 @@
             },
             "type": "coastal",
             "routes": [
-                "adr",
                 "ven",
                 "tyr",
                 "vie",
                 "bud",
                 "ser",
-                "alb"
+                "alb",
+                "adr"
             ],
             "coasts": {
                 "default": {
@@ -936,9 +935,9 @@
                 "gal",
                 "ukr",
                 "sev",
-                "bla",
                 "bul",
-                "ser"
+                "ser",
+                "bla"
             ],
             "coasts": {
                 "default": {
@@ -976,8 +975,8 @@
                 "rum",
                 "con",
                 "gre",
-                "aeg",
-                "bla"
+                "bla",
+                "aeg"
             ],
             "coasts": {
                 "ec": {
@@ -1022,10 +1021,10 @@
             },
             "type": "coastal",
             "routes": [
-                "ion",
                 "alb",
                 "ser",
                 "bul",
+                "ion",
                 "aeg"
             ],
             "coasts": {
@@ -1096,11 +1095,11 @@
             },
             "type": "coastal",
             "routes": [
-                "aeg",
                 "bul",
-                "bla",
                 "ank",
-                "smy"
+                "smy",
+                "aeg",
+                "bla"
             ],
             "coasts": {
                 "default": {
@@ -1192,10 +1191,10 @@
             },
             "type": "coastal",
             "routes": [
-                "bla",
                 "arm",
                 "smy",
-                "con"
+                "con",
+                "bla"
             ],
             "coasts": {
                 "default": {
@@ -1240,8 +1239,8 @@
                 "ukr",
                 "mos",
                 "arm",
-                "bla",
-                "rum"
+                "rum",
+                "bla"
             ],
             "coasts": {
                 "default": {
@@ -1318,11 +1317,11 @@
             "type": "inland",
             "routes": [
                 "pru",
-                "svn",
                 "mos",
                 "ukr",
                 "gal",
-                "sil"
+                "sil",
+                "lvn"
             ],
             "coasts": null
         },
@@ -1402,11 +1401,11 @@
             "type": "coastal",
             "routes": [
                 "kie",
+                "swe",
                 "hel",
                 "nth",
                 "ska",
-                "bal",
-                "swe"
+                "bal"
             ],
             "coasts": {
                 "default": {
@@ -1443,11 +1442,13 @@
             },
             "type": "coastal",
             "routes": [
+                "swe",
                 "nrg",
                 "bar",
-                "swe",
                 "ska",
-                "nth"
+                "nth",
+                "fin",
+                "stp"
             ],
             "coasts": {
                 "default": {
@@ -1485,10 +1486,10 @@
             "routes": [
                 "nor",
                 "fin",
+                "den",
                 "bot",
                 "bal",
-                "ska",
-                "den"
+                "ska"
             ],
             "coasts": {
                 "default": {
@@ -1518,10 +1519,10 @@
             },
             "type": "coastal",
             "routes": [
-                "nat",
-                "nrg",
                 "edi",
-                "lvp"
+                "lvp",
+                "nat",
+                "nrg"
             ],
             "coasts": {
                 "default": {
@@ -1580,10 +1581,10 @@
             },
             "type": "coastal",
             "routes": [
-                "iri",
                 "lvp",
                 "yor",
                 "lon",
+                "iri",
                 "eng"
             ],
             "coasts": {
@@ -1613,10 +1614,10 @@
             "type": "coastal",
             "routes": [
                 "bre",
-                "eng",
                 "bel",
                 "bur",
-                "par"
+                "par",
+                "eng"
             ],
             "coasts": {
                 "default": {
@@ -1644,11 +1645,11 @@
             "type": "coastal",
             "routes": [
                 "spa",
-                "mid",
                 "bre",
                 "par",
                 "bur",
-                "mar"
+                "mar",
+                "mid"
             ],
             "coasts": {
                 "default": {
@@ -1696,9 +1697,9 @@
             },
             "type": "coastal",
             "routes": [
+                "tun",
                 "mid",
-                "wes",
-                "tun"
+                "wes"
             ],
             "coasts": {
                 "default": {
@@ -1745,10 +1746,10 @@
             "type": "coastal",
             "routes": [
                 "ber",
-                "bal",
                 "lvn",
                 "war",
-                "sil"
+                "sil",
+                "bal"
             ],
             "coasts": {
                 "default": {
@@ -1918,11 +1919,11 @@
             },
             "type": "coastal",
             "routes": [
-                "adr",
-                "ion",
                 "nap",
                 "rom",
-                "ven"
+                "ven",
+                "adr",
+                "ion"
             ],
             "coasts": {
                 "default": {
@@ -1950,10 +1951,10 @@
             },
             "type": "coastal",
             "routes": [
-                "adr",
                 "tri",
                 "ser",
                 "gre",
+                "adr",
                 "ion"
             ],
             "coasts": {
@@ -1982,11 +1983,11 @@
             },
             "type": "coastal",
             "routes": [
-                "bla",
                 "sev",
                 "syr",
                 "smy",
-                "ank"
+                "ank",
+                "bla"
             ],
             "coasts": {
                 "default": {
@@ -2013,9 +2014,9 @@
             },
             "type": "coastal",
             "routes": [
-                "eas",
                 "smy",
-                "arm"
+                "arm",
+                "eas"
             ],
             "coasts": {
                 "default": {
@@ -2062,7 +2063,8 @@
             "routes": [
                 "swe",
                 "stp",
-                "bot"
+                "bot",
+                "nor"
             ],
             "coasts": {
                 "default": {
@@ -2089,11 +2091,11 @@
             },
             "type": "coastal",
             "routes": [
-                "bot",
                 "stp",
                 "mos",
                 "war",
                 "pru",
+                "bot",
                 "bal"
             ],
             "coasts": {
@@ -2168,7 +2170,8 @@
                 "lon",
                 "yor",
                 "hol",
-                "bel"
+                "bel",
+                "eng"
             ],
             "coasts": null
         },
@@ -2303,7 +2306,8 @@
                 "bel",
                 "pic",
                 "bre",
-                "mid"
+                "mid",
+                "nth"
             ],
             "coasts": null
         },
@@ -2325,7 +2329,8 @@
                 "gas",
                 "spa",
                 "por",
-                "wes"
+                "wes",
+                "naf"
             ],
             "coasts": null
         },
@@ -2385,7 +2390,8 @@
                 "rom",
                 "nap",
                 "tun",
-                "wes"
+                "wes",
+                "ion"
             ],
             "coasts": null
         },

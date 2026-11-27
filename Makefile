@@ -30,6 +30,9 @@ publish: build
 run: build
 	go run ./cmd/local
 
+test: build
+	go test -count=1 -timeout=60s ./tests
+
 setup: build
 	sudo install -m 644 diplomacy-api.service /etc/systemd/system/diplomacy-api.service
 	sudo systemctl daemon-reload

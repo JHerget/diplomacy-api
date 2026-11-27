@@ -21,6 +21,9 @@ func wrongUnit(playerName string) error {
 func noRoute(locationID string, destinationID string) error {
 	return fmt.Errorf("No route from '%s' to '%s'.", locationID, destinationID)
 }
+func noCoastRoute(coast models.Coast) error {
+	return fmt.Errorf("No routes exist for coast '%s'.", coast)
+}
 
 type validator struct {
 	BoardMap map[string]models.Province
@@ -367,6 +370,13 @@ func (v *validator) isValidRoute(location models.Province, destination models.Pr
 		return false, noUnitError(location.ID)
 	}
 
+	if location.Unit.IsArmy() && destination.IsOcean() {
+		return false, fmt.Errorf("Armies cannot move to ocean provinces.")
+	}
+	if location.Unit.IsFleet() && destination.IsInland() {
+		return false, fmt.Errorf("Fleets cannot move to inland provinces.")
+	}
+
 	if location.IsOcean() && destination.IsInland() {
 		return false, fmt.Errorf("Units cannot move from ocean to inland.")
 	}
@@ -381,7 +391,7 @@ func (v *validator) isValidRoute(location models.Province, destination models.Pr
 	}
 
 	requireLocCost := location.Unit != nil && location.Unit.IsFleet() && len(location.Coasts) > 1
-	requireDestCoast := len(destination.Coasts) > 1
+	requireDestCoast := location.Unit.IsFleet() && len(destination.Coasts) > 1
 
 	if destRef.Coast != nil {
 		if !requireDestCoast {
@@ -390,13 +400,30 @@ func (v *validator) isValidRoute(location models.Province, destination models.Pr
 
 		coast, ok := destination.Coasts[*destRef.Coast]
 		if !ok {
-			return false, fmt.Errorf("No routes exist for coast '%s'.", *destRef.Coast)
+			return false, noCoastRoute(*destRef.Coast)
 		}
 
 		return hasRoute(coast.Routes, location.ID, destination.ID)
 	}
 	if destRef.Coast == nil && requireDestCoast {
 		return false, fmt.Errorf("Expecting a coast, none specified.")
+	}
+
+	if location.Unit.IsFleet() && location.IsCoastal() && destination.IsOcean() && requireLocCost {
+		unitCoast := location.Unit.Location.Coast
+		if unitCoast == nil {
+			return false, fmt.Errorf("The unit at '%s' does not have a coast specified.", location.ID)
+		}
+
+		coast, ok := location.Coasts[*unitCoast]
+		if !ok {
+			return false, noCoastRoute(*unitCoast)
+		}
+		if !slices.Contains(coast.Routes, destination.ID) {
+			return false, noRoute(location.ID, destination.ID)
+		}
+
+		return true, nil
 	}
 
 	isCoastalRoute := location.Unit.IsFleet() && location.IsCoastal() && destination.IsCoastal()

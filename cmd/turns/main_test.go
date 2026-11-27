@@ -5,50 +5,43 @@ import (
 	"testing"
 )
 
-func TestDecodeTurnEvent(t *testing.T) {
-	tests := []struct {
-		name     string
-		input    string
-		routeKey string
-		gameID   string
-		wantErr  bool
-	}{
-		{
-			name:     "scheduled invocation",
-			input:    `{"gameId":"game-123"}`,
-			routeKey: "POST /games/{gid}/turns",
-			gameID:   "game-123",
-		},
-		{
-			name:     "API Gateway invocation",
-			input:    `{"routeKey":"POST /games/{gid}/turns","pathParameters":{"gid":"game-456"}}`,
-			routeKey: "POST /games/{gid}/turns",
-			gameID:   "game-456",
-		},
-		{
-			name:    "missing scheduled game ID",
-			input:   `{}`,
-			wantErr: true,
-		},
-		{
-			name:    "invalid JSON",
-			input:   `{`,
-			wantErr: true,
-		},
+func TestScheduledTurnEventUsesGameID(t *testing.T) {
+	event, err := decodeTurnEvent(json.RawMessage(`{"gameId":"game-123"}`))
+	if err != nil {
+		t.Fatal(err)
 	}
+	if got := event.RouteKey; got != "POST /games/{gid}/turns" {
+		t.Errorf("route key = %q, want POST /games/{gid}/turns", got)
+	}
+	if got := event.PathParameters["gid"]; got != "game-123" {
+		t.Errorf("gid = %q, want game-123", got)
+	}
+}
 
-	for _, test := range tests {
-		t.Run(test.name, func(t *testing.T) {
-			event, err := decodeTurnEvent(json.RawMessage(test.input))
-			if (err != nil) != test.wantErr {
-				t.Fatalf("decodeTurnEvent() error = %v, wantErr = %v", err, test.wantErr)
-			}
-			if test.wantErr {
-				return
-			}
-			if event.RouteKey != test.routeKey || event.PathParameters["gid"] != test.gameID {
-				t.Fatalf("decodeTurnEvent() = route %q, game %q; want route %q, game %q", event.RouteKey, event.PathParameters["gid"], test.routeKey, test.gameID)
-			}
-		})
+func TestAPIGatewayTurnEventKeepsRouteAndGameID(t *testing.T) {
+	input := json.RawMessage(`{"routeKey":"POST /games/{gid}/turns","pathParameters":{"gid":"game-456"}}`)
+	event, err := decodeTurnEvent(input)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if got := event.RouteKey; got != "POST /games/{gid}/turns" {
+		t.Errorf("route key = %q, want POST /games/{gid}/turns", got)
+	}
+	if got := event.PathParameters["gid"]; got != "game-456" {
+		t.Errorf("gid = %q, want game-456", got)
+	}
+}
+
+func TestScheduledTurnEventRequiresGameID(t *testing.T) {
+	_, err := decodeTurnEvent(json.RawMessage(`{}`))
+	if err == nil {
+		t.Fatal("expected an error for a scheduled turn without a game ID")
+	}
+}
+
+func TestTurnEventRejectsInvalidJSON(t *testing.T) {
+	_, err := decodeTurnEvent(json.RawMessage(`{`))
+	if err == nil {
+		t.Fatal("expected an error for malformed JSON")
 	}
 }
