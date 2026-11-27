@@ -22,3 +22,11 @@ const (
 type ProvinceType string
 type UnitType string
 type Coast string
+
+func (u UnitType) IsFleet() bool {
+	return u == UnitFleet
+}
+
+func (u UnitType) IsArmy() bool {
+	return u == UnitArmy
+}

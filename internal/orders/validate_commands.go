@@ -231,7 +231,11 @@ func (v *validator) IsValidSupport(support *models.SupportCommand) (bool, error)
 		return false, locationError(support.Move.Destination.ID)
 	}
 
-	if ok, err := v.IsValidMove(&support.Move, false); !ok {
+	if ok, err := onReachableCoast(dest, support.Move.UnitType, func(ref models.LocationReference) (bool, error) {
+		move := support.Move
+		move.Destination = ref
+		return v.IsValidMove(&move, false)
+	}); !ok {
 		return false, err
 	}
 	if ok, err := v.isValidLocation(support.Location, support.UnitType); !ok {
@@ -248,11 +252,35 @@ func (v *validator) IsValidSupport(support *models.SupportCommand) (bool, error)
 		return false, wrongUnit(support.PlayerName)
 	}
 
-	if ok, err := v.isValidRoute(loc, dest, support.Move.Destination); !ok {
+	if ok, err := onReachableCoast(dest, support.UnitType, func(ref models.LocationReference) (bool, error) {
+		return v.isValidRoute(loc, dest, ref)
+	}); !ok {
 		return false, err
 	}
 
 	return true, nil
+}
+
+func onReachableCoast(dest models.Province, unitType models.UnitType, reachable func(models.LocationReference) (bool, error)) (bool, error) {
+	ref := models.LocationReference{ID: dest.ID}
+	if !unitType.IsFleet() || len(dest.Coasts) <= 1 {
+		return reachable(ref)
+	}
+
+	var firstErr error
+	for coast := range dest.Coasts {
+		ref.Coast = &coast
+		if ok, err := reachable(ref); ok {
+			return true, nil
+		} else if firstErr == nil {
+			firstErr = err
+		}
+	}
+	if firstErr != nil {
+		return false, firstErr
+	}
+
+	return false, fmt.Errorf("No reachable coast at '%s'.", dest.ID)
 }
 
 func (v *validator) IsValidConvoy(convoy *models.ConvoyCommand) (bool, error) {
@@ -306,10 +334,10 @@ func (v *validator) IsValidReinforce(reinforce *models.ReinforceCommand) (bool, 
 	if *loc.SupplyCenter.ControlledBy != reinforce.PlayerName {
 		return false, fmt.Errorf("The supply center is not controlled by '%s'.", reinforce.PlayerName)
 	}
-	if reinforce.UnitType == models.UnitArmy && loc.IsOcean() {
+	if reinforce.UnitType.IsArmy() && loc.IsOcean() {
 		return false, fmt.Errorf("You cannot reinforce armies to ocean provinces.")
 	}
-	if reinforce.UnitType == models.UnitFleet && loc.IsInland() {
+	if reinforce.UnitType.IsFleet() && loc.IsInland() {
 		return false, fmt.Errorf("You cannot reinforce fleets to inland provinces.")
 	}
 
@@ -348,14 +376,14 @@ func (v *validator) isValidLocation(ref models.LocationReference, unitType model
 	coastProvided := ref.Coast != nil
 	hasCoasts := len(loc.Coasts) > 1
 
-	if coastProvided && (!hasCoasts || unitType == models.UnitArmy) {
+	if coastProvided && (!hasCoasts || unitType.IsArmy()) {
 		return false, fmt.Errorf("A coast was provided when not expected.")
 	}
-	if !coastProvided && hasCoasts && unitType == models.UnitFleet {
+	if !coastProvided && hasCoasts && unitType.IsFleet() {
 		return false, fmt.Errorf("A coast was not provided when expected.")
 	}
 
-	if hasCoasts && unitType == models.UnitFleet {
+	if hasCoasts && unitType.IsFleet() {
 		_, routesExist := loc.Coasts[*ref.Coast]
 		if !routesExist {
 			return false, fmt.Errorf("The coast provided does not exist.")
@@ -401,6 +429,20 @@ func (v *validator) isValidRoute(location models.Province, destination models.Pr
 		coast, ok := destination.Coasts[*destRef.Coast]
 		if !ok {
 			return false, noCoastRoute(*destRef.Coast)
+		}
+
+		if requireLocCost {
+			unitCoast := location.Unit.Location.Coast
+			if unitCoast == nil {
+				return false, fmt.Errorf("The unit at '%s' does not have a coast specified.", location.ID)
+			}
+			originCoast, ok := location.Coasts[*unitCoast]
+			if !ok {
+				return false, noCoastRoute(*unitCoast)
+			}
+			if !slices.Contains(originCoast.Routes, destination.ID) {
+				return false, noRoute(location.ID, destination.ID)
+			}
 		}
 
 		return hasRoute(coast.Routes, location.ID, destination.ID)

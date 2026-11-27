@@ -33,6 +33,7 @@ type node struct {
 	Attacks           []attack
 	AttackResult      attackResult
 	UnresolvedCommand *models.MoveCommand
+	Support           *models.SupportCommand
 	Convoy            *models.ConvoyCommand
 	RetreatUnit       *models.Unit
 }
@@ -159,9 +160,7 @@ func (a *applicator) ApplyMove(move models.MoveCommand) {
 	}
 	a.ReceivedCommands[loc.Province.ID] = true
 
-	needsConvoy := move.UnitType == models.UnitArmy &&
-		!slices.Contains(dest.Province.Routes, loc.Province.ID)
-	if needsConvoy && !a.hasConvoyRoute(loc, dest, move) {
+	if needsConvoy(move, dest) && !a.hasConvoyRoute(loc, dest, move) {
 		a.IgnoredCommands[move.Value] = fmt.Sprintf("No convoy route from '%s' to '%s'.", loc.Province.ID, dest.Province.ID)
 		return
 	}
@@ -260,11 +259,44 @@ func (a *applicator) ApplySupport(support models.SupportCommand) {
 		return a.LocationID == support.Move.Location.ID
 	})
 	if !ok {
+		isHold := support.Move.Location.ID == support.Move.Destination.ID
+		if isHold && dest.UnresolvedCommand == nil {
+			dest.Attacks = append(dest.Attacks, attack{
+				UnitType:   support.Move.UnitType,
+				LocationID: support.Move.Location.ID,
+				Support:    []string{support.Location.ID},
+			})
+			loc.Support = &support
+			return
+		}
+
 		a.IgnoredCommands[support.Value] = "Could not find the move to support."
 		return
 	}
 
 	att.Support = append(att.Support, support.Location.ID)
+	loc.Support = &support
+}
+
+func (a *applicator) withdrawDislodgedSupport(support models.SupportCommand) {
+	loc := a.BoardMap[support.Location.ID]
+	if loc.AttackResult.DislodgedUnit == nil || a.IgnoredCommands[support.Value] != "" {
+		return
+	}
+
+	dest := a.BoardMap[support.Move.Destination.ID]
+	for i := range dest.Attacks {
+		att := &dest.Attacks[i]
+		if att.LocationID != support.Move.Location.ID {
+			continue
+		}
+
+		att.Support = slices.DeleteFunc(att.Support, func(origin string) bool {
+			return origin == support.Location.ID
+		})
+	}
+
+	a.IgnoredCommands[support.Value] = fmt.Sprintf("Support was cut from '%s'.", *loc.AttackResult.LocationID)
 }
 
 func (a *applicator) ApplyReinforce(reinforce models.ReinforceCommand) {
@@ -368,7 +400,7 @@ func (a *applicator) ResolveAttacks() {
 			}
 
 			dest := a.BoardMap[top.UnresolvedCommand.Destination.ID]
-			hadCycle := a.resolveCycle(stack, dest)
+			hadCycle := dest.UnresolvedCommand != nil && a.resolveCycle(stack, dest)
 
 			if hadCycle || dest.UnresolvedCommand != nil {
 				stack = append(stack, dest)
@@ -458,8 +490,11 @@ func (a *applicator) resolveAttack(n *node) {
 			attLoc.Province.Unit = nil
 		}
 	} else if len(strongestAttacks) > 0 {
-		// Later visits after attacks are cleared must preserve the standoff for retreats.
 		n.AttackResult.Standoff = true
+	}
+
+	if n.Support != nil {
+		a.withdrawDislodgedSupport(*n.Support)
 	}
 
 	n.Attacks = nil
@@ -593,53 +628,88 @@ func (a *applicator) removeRandomUnits(playerName string, amount int) {
 	}
 }
 
-func (a *applicator) rotateUnits(nodes []*node) {
-	if len(nodes) < 2 {
-		return
-	}
-
-	unit := nodes[0].Province.Unit
-	for _, n := range nodes[1:] {
-		newUnit := n.Province.Unit
-		n.Province.Unit = unit
-		n.UnresolvedCommand = nil
-		unit = newUnit
-	}
-	nodes[0].Province.Unit = unit
-	nodes[0].UnresolvedCommand = nil
+func needsConvoy(move models.MoveCommand, dest *node) bool {
+	return move.UnitType.IsArmy() && !slices.Contains(dest.Province.Routes, move.Location.ID)
 }
 
-func (a *applicator) resolveCycle(stack []*node, newNode *node) bool {
-	var cycle []*node
-	for i, elem := range stack {
-		if elem.Province.ID == newNode.Province.ID {
-			cycle = stack[i:]
-			break
-		}
-	}
-	if len(cycle) == 0 {
+func (a *applicator) resolveHeadToHead(origin, dest *node) bool {
+	if origin.Province.Unit.ControlledBy == dest.Province.Unit.ControlledBy {
 		return false
 	}
 
-	cycle = append(cycle, newNode)
-
-	var resolvable *node
-	for _, elem := range cycle {
-		_, strongestAttacks := a.strongestAttacks(elem)
-
-		if len(strongestAttacks) == 1 && strongestAttacks[0].LocationID == elem.Province.ID {
+	strength, opposition := 0, 1
+	for _, bid := range dest.Attacks {
+		if bid.LocationID != origin.Province.ID {
+			opposition = max(opposition, 1+len(bid.Support))
 			continue
 		}
-
-		resolvable = elem
-		break
+		strength = 1
+		for _, id := range bid.Support {
+			unit := a.BoardMap[id].Province.Unit
+			if unit != nil && unit.ControlledBy != dest.Province.Unit.ControlledBy {
+				strength++
+			}
+		}
+	}
+	for _, bid := range origin.Attacks {
+		if bid.LocationID == dest.Province.ID {
+			opposition = max(opposition, 1+len(bid.Support))
+			break
+		}
+	}
+	if strength <= opposition {
+		return false
 	}
 
-	if resolvable != nil {
-		a.resolveAttack(resolvable)
-	} else {
-		a.rotateUnits(cycle)
+	a.resolveAttack(dest)
+	origin.UnresolvedCommand = nil
+	origin.Attacks = slices.DeleteFunc(origin.Attacks, func(bid attack) bool {
+		return bid.LocationID == dest.Province.ID
+	})
+	return true
+}
+
+func rotateUnits(cycle []*node) {
+	units := make([]*models.Unit, len(cycle))
+	for i, origin := range cycle {
+		units[i] = origin.Province.Unit
+		units[i].Location = origin.UnresolvedCommand.Destination
+	}
+	for i, origin := range cycle {
+		dest := cycle[(i+1)%len(cycle)]
+		dest.Province.Unit = units[i]
+		origin.Attacks = nil
+		origin.UnresolvedCommand = nil
+		origin.Convoy = nil
+	}
+}
+
+func (a *applicator) resolveCycle(stack []*node, newNode *node) bool {
+	start := slices.Index(stack, newNode)
+	if start < 0 {
+		return false
+	}
+	cycle := stack[start:]
+
+	if len(cycle) == 2 {
+		left, right := cycle[0], cycle[1]
+		if !needsConvoy(*left.UnresolvedCommand, right) && !needsConvoy(*right.UnresolvedCommand, left) &&
+			(a.resolveHeadToHead(left, right) || a.resolveHeadToHead(right, left)) {
+			return true
+		}
+	}
+	if len(cycle) >= 3 {
+		for i, origin := range cycle {
+			dest := cycle[(i+1)%len(cycle)]
+			if len(dest.Attacks) != 1 || dest.Attacks[0].LocationID != origin.Province.ID {
+				a.resolveAttack(newNode)
+				return true
+			}
+		}
+		rotateUnits(cycle)
+		return true
 	}
 
+	a.resolveAttack(newNode)
 	return true
 }

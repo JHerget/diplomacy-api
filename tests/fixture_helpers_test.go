@@ -29,7 +29,13 @@ const (
 	accepted  disposition = "accepted"
 	invalid   disposition = "invalid"
 	duplicate disposition = "ignored duplicate"
+	unmatched disposition = "support does not match the unit's order"
+	standoff  disposition = "retreat blocked by standoff"
 )
+
+func supportCutFrom(province string) disposition {
+	return disposition("support was cut from '" + province + "'.")
+}
 
 type expectedCommand struct {
 	value   string
@@ -41,6 +47,11 @@ func checkMovement(t *testing.T, id int, want []expectedCommand) {
 	f, players := loadFixture(t, id)
 	t.Log(f.ExpectedOutcome)
 
+	checkSpringFixture(t, f, players, want)
+}
+
+func checkSpringFixture(t *testing.T, f fixture, players []models.Player, want []expectedCommand) {
+	t.Helper()
 	submitted := orders.ListCommands(f.Orders)
 	got, results := resolveSpring(t, f, players)
 	checkBoard(t, got, f.OutputBoard)
@@ -79,12 +90,17 @@ func addMarseillesDislodgement(t *testing.T, f *fixture) {
 
 func placeArmy(t *testing.T, provinces []models.Province, player, origin, destination string) {
 	t.Helper()
+	placeUnit(t, provinces, models.UnitArmy, player, origin, destination)
+}
+
+func placeUnit(t *testing.T, provinces []models.Province, unitType models.UnitType, player, origin, destination string) {
+	t.Helper()
 	for i := range provinces {
 		if provinces[i].ID == destination {
 			provinces[i].Unit = &models.Unit{
 				ID:           "u-" + origin,
 				ControlledBy: player,
-				Type:         models.UnitArmy,
+				Type:         unitType,
 				Location:     models.LocationReference{ID: destination},
 			}
 			return
@@ -222,8 +238,15 @@ func checkDispositions(t *testing.T, submitted, results []models.CommandValidati
 			if reason == "" {
 				t.Errorf("order %d %s %q: missing rejection reason", i+1, key.player, key.value)
 			}
-			if strings.Contains(reason, "already applied a command") || strings.Contains(reason, "duplicate") {
+			switch {
+			case strings.Contains(reason, "already applied a command"), strings.Contains(reason, "duplicate"):
 				got = duplicate
+			case strings.HasPrefix(reason, "support was cut from "):
+				got = disposition(reason)
+			case reason == "could not find the move to support.":
+				got = unmatched
+			case reason == "cannot retreat to where a standoff occurred.":
+				got = standoff
 			}
 		}
 		if got != want[i].outcome {

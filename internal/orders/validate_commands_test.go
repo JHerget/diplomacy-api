@@ -114,6 +114,131 @@ func TestSplitCoastFleetDepartureToOcean(t *testing.T) {
 	}
 }
 
+func TestSupportIntoSplitCoast(t *testing.T) {
+	tests := []struct {
+		name      string
+		change    func(*validator, *models.SupportCommand)
+		wantError string
+	}{
+		{name: "different reachable coasts"},
+		{
+			name: "unknown supported origin",
+			change: func(v *validator, support *models.SupportCommand) {
+				support.Move.Location.ID = "xxx"
+			},
+			wantError: "Province not found: xxx.",
+		},
+		{
+			name: "missing supported unit",
+			change: func(v *validator, support *models.SupportCommand) {
+				origin := v.BoardMap["gas"]
+				origin.Unit = nil
+				v.BoardMap["gas"] = origin
+			},
+			wantError: "No unit at province 'gas'.",
+		},
+		{
+			name: "wrong supported unit type",
+			change: func(v *validator, support *models.SupportCommand) {
+				v.BoardMap["gas"].Unit.Type = models.UnitArmy
+			},
+			wantError: "Unit type mismatch.",
+		},
+		{
+			name: "supported fleet cannot reach any coast",
+			change: func(v *validator, support *models.SupportCommand) {
+				v.BoardMap["spa"].Coasts[models.NorthCoast] = models.ProvinceCoast{}
+			},
+			wantError: "No route from 'gas' to 'spa'.",
+		},
+		{
+			name: "supporter cannot reach any coast",
+			change: func(v *validator, support *models.SupportCommand) {
+				v.BoardMap["spa"].Coasts[models.SouthCoast] = models.ProvinceCoast{}
+			},
+			wantError: "No route from 'gol' to 'spa'.",
+		},
+		{
+			name: "supported fleet occupies unreachable coast",
+			change: func(v *validator, support *models.SupportCommand) {
+				origin := v.BoardMap["gas"]
+				coast := models.SouthCoast
+				origin.Unit.Location.Coast = &coast
+				origin.Coasts = map[models.Coast]models.ProvinceCoast{
+					models.NorthCoast: {Routes: []string{"spa"}},
+					models.SouthCoast: {Routes: []string{"other"}},
+				}
+				v.BoardMap["gas"] = origin
+				support.Move.Location.Coast = &coast
+			},
+			wantError: "No route from 'gas' to 'spa'.",
+		},
+		{
+			name: "supporter occupies unreachable coast",
+			change: func(v *validator, support *models.SupportCommand) {
+				origin := v.BoardMap["gol"]
+				coast := models.SouthCoast
+				origin.Type = models.ProvinceCoastal
+				origin.Unit.Location.Coast = &coast
+				origin.Coasts = map[models.Coast]models.ProvinceCoast{
+					models.NorthCoast: {Routes: []string{"spa"}},
+					models.SouthCoast: {Routes: []string{"other"}},
+				}
+				v.BoardMap["gol"] = origin
+				support.Location.Coast = &coast
+			},
+			wantError: "No route from 'gol' to 'spa'.",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			v := validator{BoardMap: map[string]models.Province{
+				"gas": {
+					ID: "gas", Type: models.ProvinceCoastal,
+					Unit: &models.Unit{
+						Type: models.UnitFleet, ControlledBy: "France",
+						Location: models.LocationReference{ID: "gas"},
+					},
+				},
+				"gol": {
+					ID: "gol", Type: models.ProvinceOcean,
+					Unit: &models.Unit{
+						Type: models.UnitFleet, ControlledBy: "Italy",
+						Location: models.LocationReference{ID: "gol"},
+					},
+				},
+				"spa": {
+					ID: "spa", Type: models.ProvinceCoastal,
+					Routes: []string{"gas", "gol"},
+					Coasts: map[models.Coast]models.ProvinceCoast{
+						models.NorthCoast: {Routes: []string{"gas"}},
+						models.SouthCoast: {Routes: []string{"gol"}},
+					},
+				},
+			}}
+			support := models.SupportCommand{
+				PlayerName: "Italy", UnitType: models.UnitFleet,
+				Location: models.LocationReference{ID: "gol"},
+				Move: models.MoveCommand{
+					UnitType:    models.UnitFleet,
+					Location:    models.LocationReference{ID: "gas"},
+					Destination: models.LocationReference{ID: "spa"},
+				},
+			}
+			if tt.change != nil {
+				tt.change(&v, &support)
+			}
+			valid, err := v.IsValidSupport(&support)
+			if valid != (tt.wantError == "") || errorMessage(err) != tt.wantError {
+				t.Fatalf("IsValidSupport() = (%v, %v), want valid=%v, error=%q", valid, err, tt.wantError == "", tt.wantError)
+			}
+			if support.Move.Destination.ID != "spa" || support.Move.Destination.Coast != nil {
+				t.Fatalf("support destination was modified: %+v", support.Move.Destination)
+			}
+		})
+	}
+}
+
 func checkRoute(t *testing.T, unit models.UnitType, from, to models.ProvinceType, wantValid bool) {
 	t.Helper()
 	origin := models.Province{

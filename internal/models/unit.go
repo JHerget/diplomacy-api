@@ -8,9 +8,9 @@ type Unit struct {
 }
 
 func (u *Unit) IsArmy() bool {
-	return u.Type == UnitArmy
+	return u.Type.IsArmy()
 }
 
 func (u *Unit) IsFleet() bool {
-	return u.Type == UnitFleet
+	return u.Type.IsFleet()
 }
