@@ -24,16 +24,16 @@ build: format
 	cd dist/orders && zip ../orders.zip bootstrap
 	cd dist/test && zip ../test.zip bootstrap
 
-publish: build
-	terraform -chdir=terraform apply
-
-run: build
-	go run ./cmd/local
-
 test: build
 	go test -count=1 -timeout=60s ./tests
 
-setup: build
+publish: test
+	terraform -chdir=terraform apply
+
+run: test
+	go run ./cmd/local
+
+setup: test 
 	sudo install -m 644 diplomacy-api.service /etc/systemd/system/diplomacy-api.service
 	sudo systemctl daemon-reload
 	sudo systemctl enable diplomacy-api
