@@ -230,7 +230,7 @@ func checkDispositions(t *testing.T, submitted, results []models.CommandValidati
 		t.Fatalf("parsed commands: want %d, got %d", len(want), len(submitted))
 	}
 	// Results are grouped by command kind. Identical commands have the same kind
-	// and retain their submission order within the group (case 725).
+	// and retain their submission order within the group (case 625).
 	type commandKey struct{ player, value string }
 	byCommand := make(map[commandKey][]models.CommandValidationResult, len(results))
 	for _, result := range results {

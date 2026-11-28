@@ -1,7 +1,7 @@
 {
-  "name": "Disband before census",
-  "description": "Fall 1901 (H1, §§12.4,13,14). Germany has an army in Belgium. France has an army in Picardy and an army in Burgundy. France controls Brest and Paris. Germany controls Munich and Belgium.",
-  "expectedOutcome": "The army from Picardy moves to Belgium. The original Belgium army is dislodged and disbanded. Belgium becomes French. Germany has one center and zero survivors, so builds a German army in Munich.",
+  "name": "English armies abroad during civil disorder",
+  "description": "Fall 1901 (H3, §§14.1,15). England is in civil disorder. England has an army in Picardy and an army in Tyrolia. England controls London.",
+  "expectedOutcome": "Randomly remove one English army. London supplies exactly one survivor, which may be the original army in either Tyrolia or Picardy.",
   "inputBoard": [
     {
       "id": "edi",
@@ -91,7 +91,7 @@
       "name": "London",
       "supplyCenter": {
         "homeFor": "England",
-        "controlledBy": null,
+        "controlledBy": "England",
         "coordinates": {
           "x": 295,
           "y": 404
@@ -131,7 +131,7 @@
       "name": "Brest",
       "supplyCenter": {
         "homeFor": "France",
-        "controlledBy": "France",
+        "controlledBy": null,
         "coordinates": {
           "x": 200,
           "y": 459
@@ -172,7 +172,7 @@
       "name": "Paris",
       "supplyCenter": {
         "homeFor": "France",
-        "controlledBy": "France",
+        "controlledBy": null,
         "coordinates": {
           "x": 317,
           "y": 481
@@ -491,7 +491,7 @@
       "name": "Munich",
       "supplyCenter": {
         "homeFor": "Germany",
-        "controlledBy": "Germany",
+        "controlledBy": null,
         "coordinates": {
           "x": 480,
           "y": 527
@@ -645,21 +645,13 @@
       "name": "Belgium",
       "supplyCenter": {
         "homeFor": null,
-        "controlledBy": "Germany",
+        "controlledBy": null,
         "coordinates": {
           "x": 367,
           "y": 438
         }
       },
-      "unit": {
-        "id": "u-bel",
-        "controlledBy": "Germany",
-        "type": "army",
-        "location": {
-          "id": "bel",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 375,
         "y": 451
@@ -1458,7 +1450,7 @@
       "supplyCenter": null,
       "unit": {
         "id": "u-pic",
-        "controlledBy": "France",
+        "controlledBy": "England",
         "type": "army",
         "location": {
           "id": "pic",
@@ -1531,15 +1523,7 @@
       "id": "bur",
       "name": "Burgundy",
       "supplyCenter": null,
-      "unit": {
-        "id": "u-bur",
-        "controlledBy": "France",
-        "type": "army",
-        "location": {
-          "id": "bur",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 361,
         "y": 524
@@ -1686,7 +1670,15 @@
       "id": "tyr",
       "name": "Tyrolia",
       "supplyCenter": null,
-      "unit": null,
+      "unit": {
+        "id": "u-tyr",
+        "controlledBy": "England",
+        "type": "army",
+        "location": {
+          "id": "tyr",
+          "coast": null
+        }
+      },
       "coordinates": {
         "x": 513,
         "y": 553
@@ -2501,7 +2493,7 @@
       "name": "London",
       "supplyCenter": {
         "homeFor": "England",
-        "controlledBy": null,
+        "controlledBy": "England",
         "coordinates": {
           "x": 295,
           "y": 404
@@ -2541,7 +2533,7 @@
       "name": "Brest",
       "supplyCenter": {
         "homeFor": "France",
-        "controlledBy": "France",
+        "controlledBy": null,
         "coordinates": {
           "x": 200,
           "y": 459
@@ -2582,7 +2574,7 @@
       "name": "Paris",
       "supplyCenter": {
         "homeFor": "France",
-        "controlledBy": "France",
+        "controlledBy": null,
         "coordinates": {
           "x": 317,
           "y": 481
@@ -2901,21 +2893,13 @@
       "name": "Munich",
       "supplyCenter": {
         "homeFor": "Germany",
-        "controlledBy": "Germany",
+        "controlledBy": null,
         "coordinates": {
           "x": 480,
           "y": 527
         }
       },
-      "unit": {
-        "id": "new-mun",
-        "controlledBy": "Germany",
-        "type": "army",
-        "location": {
-          "id": "mun",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 467,
         "y": 503
@@ -3063,21 +3047,13 @@
       "name": "Belgium",
       "supplyCenter": {
         "homeFor": null,
-        "controlledBy": "France",
+        "controlledBy": null,
         "coordinates": {
           "x": 367,
           "y": 438
         }
       },
-      "unit": {
-        "id": "u-pic",
-        "controlledBy": "France",
-        "type": "army",
-        "location": {
-          "id": "bel",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 375,
         "y": 451
@@ -3941,15 +3917,7 @@
       "id": "bur",
       "name": "Burgundy",
       "supplyCenter": null,
-      "unit": {
-        "id": "u-bur",
-        "controlledBy": "France",
-        "type": "army",
-        "location": {
-          "id": "bur",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 361,
         "y": 524
@@ -4096,7 +4064,15 @@
       "id": "tyr",
       "name": "Tyrolia",
       "supplyCenter": null,
-      "unit": null,
+      "unit": {
+        "id": "u-tyr",
+        "controlledBy": "England",
+        "type": "army",
+        "location": {
+          "id": "tyr",
+          "coast": null
+        }
+      },
       "coordinates": {
         "x": 513,
         "y": 553
@@ -4822,24 +4798,5 @@
       "coasts": null
     }
   ],
-  "orders": [
-    {
-      "id": "707-1",
-      "playerName": "France",
-      "createdDate": 1,
-      "value": "A pic - bel"
-    },
-    {
-      "id": "707-2",
-      "playerName": "France",
-      "createdDate": 2,
-      "value": "A bur S A pic - bel"
-    },
-    {
-      "id": "707-3",
-      "playerName": "Germany",
-      "createdDate": 3,
-      "value": "A mun"
-    }
-  ]
+  "orders": []
 }

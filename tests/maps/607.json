@@ -1,7 +1,7 @@
 {
-  "name": "Occupied refuge",
-  "description": "Spring 1901 (§12.2, §12.4). Germany has an army in Holland and an army in Belgium. France has an army in Picardy and an army in Burgundy.",
-  "expectedOutcome": "The army from Picardy moves to Belgium. The original Belgium army is dislodged and disbanded. Holland's occupant stays.",
+  "name": "Disband before census",
+  "description": "Fall 1901 (H1, §§12.4,13,14). Germany has an army in Belgium. France has an army in Picardy and an army in Burgundy. France controls Brest and Paris. Germany controls Munich and Belgium.",
+  "expectedOutcome": "The army from Picardy moves to Belgium. The original Belgium army is dislodged and disbanded. Belgium becomes French. Germany has one center and zero survivors, so builds a German army in Munich.",
   "inputBoard": [
     {
       "id": "edi",
@@ -131,7 +131,7 @@
       "name": "Brest",
       "supplyCenter": {
         "homeFor": "France",
-        "controlledBy": null,
+        "controlledBy": "France",
         "coordinates": {
           "x": 200,
           "y": 459
@@ -172,7 +172,7 @@
       "name": "Paris",
       "supplyCenter": {
         "homeFor": "France",
-        "controlledBy": null,
+        "controlledBy": "France",
         "coordinates": {
           "x": 317,
           "y": 481
@@ -491,7 +491,7 @@
       "name": "Munich",
       "supplyCenter": {
         "homeFor": "Germany",
-        "controlledBy": null,
+        "controlledBy": "Germany",
         "coordinates": {
           "x": 480,
           "y": 527
@@ -610,15 +610,7 @@
           "y": 405
         }
       },
-      "unit": {
-        "id": "u-hol",
-        "controlledBy": "Germany",
-        "type": "army",
-        "location": {
-          "id": "hol",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 411,
         "y": 393
@@ -653,7 +645,7 @@
       "name": "Belgium",
       "supplyCenter": {
         "homeFor": null,
-        "controlledBy": null,
+        "controlledBy": "Germany",
         "coordinates": {
           "x": 367,
           "y": 438
@@ -2549,7 +2541,7 @@
       "name": "Brest",
       "supplyCenter": {
         "homeFor": "France",
-        "controlledBy": null,
+        "controlledBy": "France",
         "coordinates": {
           "x": 200,
           "y": 459
@@ -2590,7 +2582,7 @@
       "name": "Paris",
       "supplyCenter": {
         "homeFor": "France",
-        "controlledBy": null,
+        "controlledBy": "France",
         "coordinates": {
           "x": 317,
           "y": 481
@@ -2909,13 +2901,21 @@
       "name": "Munich",
       "supplyCenter": {
         "homeFor": "Germany",
-        "controlledBy": null,
+        "controlledBy": "Germany",
         "coordinates": {
           "x": 480,
           "y": 527
         }
       },
-      "unit": null,
+      "unit": {
+        "id": "new-mun",
+        "controlledBy": "Germany",
+        "type": "army",
+        "location": {
+          "id": "mun",
+          "coast": null
+        }
+      },
       "coordinates": {
         "x": 467,
         "y": 503
@@ -3028,15 +3028,7 @@
           "y": 405
         }
       },
-      "unit": {
-        "id": "u-hol",
-        "controlledBy": "Germany",
-        "type": "army",
-        "location": {
-          "id": "hol",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 411,
         "y": 393
@@ -3071,7 +3063,7 @@
       "name": "Belgium",
       "supplyCenter": {
         "homeFor": null,
-        "controlledBy": null,
+        "controlledBy": "France",
         "coordinates": {
           "x": 367,
           "y": 438
@@ -4847,7 +4839,7 @@
       "id": "607-3",
       "playerName": "Germany",
       "createdDate": 3,
-      "value": "A R bel - hol"
+      "value": "A mun"
     }
   ]
 }

@@ -1,7 +1,7 @@
 {
-  "name": "Fall occupation transfers control",
-  "description": "Fall 1901 (§13). France has an army in Picardy. Germany controls Belgium.",
-  "expectedOutcome": "The army from Picardy moves to Belgium. Belgium becomes French, supplying the one army.",
+  "name": "Other powers may defend civil units",
+  "description": "Spring 1901 (§15). Italy is in civil disorder. Italy has an army in Rome and an army in Venice. France has an army in Tuscany and an army in Apulia. Austria-Hungary has a fleet in Tyrrhenian Sea.",
+  "expectedOutcome": "All units and center control stay as they were. Foreign hold support saves Rome.",
   "inputBoard": [
     {
       "id": "edi",
@@ -375,7 +375,15 @@
           "y": 679
         }
       },
-      "unit": null,
+      "unit": {
+        "id": "u-rom",
+        "controlledBy": "Italy",
+        "type": "army",
+        "location": {
+          "id": "rom",
+          "coast": null
+        }
+      },
       "coordinates": {
         "x": 497,
         "y": 680
@@ -455,7 +463,15 @@
           "y": 595
         }
       },
-      "unit": null,
+      "unit": {
+        "id": "u-ven",
+        "controlledBy": "Italy",
+        "type": "army",
+        "location": {
+          "id": "ven",
+          "coast": null
+        }
+      },
       "coordinates": {
         "x": 467,
         "y": 604
@@ -645,7 +661,7 @@
       "name": "Belgium",
       "supplyCenter": {
         "homeFor": null,
-        "controlledBy": "Germany",
+        "controlledBy": null,
         "coordinates": {
           "x": 367,
           "y": 438
@@ -1448,15 +1464,7 @@
       "id": "pic",
       "name": "Picardy",
       "supplyCenter": null,
-      "unit": {
-        "id": "u-pic",
-        "controlledBy": "France",
-        "type": "army",
-        "location": {
-          "id": "pic",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 324,
         "y": 457
@@ -1746,7 +1754,15 @@
       "id": "tus",
       "name": "Tuscany",
       "supplyCenter": null,
-      "unit": null,
+      "unit": {
+        "id": "u-tus",
+        "controlledBy": "France",
+        "type": "army",
+        "location": {
+          "id": "tus",
+          "coast": null
+        }
+      },
       "coordinates": {
         "x": 453,
         "y": 634
@@ -1780,7 +1796,15 @@
       "id": "apu",
       "name": "Apulia",
       "supplyCenter": null,
-      "unit": null,
+      "unit": {
+        "id": "u-apu",
+        "controlledBy": "France",
+        "type": "army",
+        "location": {
+          "id": "apu",
+          "coast": null
+        }
+      },
       "coordinates": {
         "x": 551,
         "y": 700
@@ -2272,7 +2296,15 @@
       "id": "tyn",
       "name": "Tyrrhenian Sea",
       "supplyCenter": null,
-      "unit": null,
+      "unit": {
+        "id": "u-tyn",
+        "controlledBy": "Austria-Hungary",
+        "type": "fleet",
+        "location": {
+          "id": "tyn",
+          "coast": null
+        }
+      },
       "coordinates": {
         "x": 465,
         "y": 729
@@ -2769,7 +2801,15 @@
           "y": 679
         }
       },
-      "unit": null,
+      "unit": {
+        "id": "u-rom",
+        "controlledBy": "Italy",
+        "type": "army",
+        "location": {
+          "id": "rom",
+          "coast": null
+        }
+      },
       "coordinates": {
         "x": 497,
         "y": 680
@@ -2849,7 +2889,15 @@
           "y": 595
         }
       },
-      "unit": null,
+      "unit": {
+        "id": "u-ven",
+        "controlledBy": "Italy",
+        "type": "army",
+        "location": {
+          "id": "ven",
+          "coast": null
+        }
+      },
       "coordinates": {
         "x": 467,
         "y": 604
@@ -3039,21 +3087,13 @@
       "name": "Belgium",
       "supplyCenter": {
         "homeFor": null,
-        "controlledBy": "France",
+        "controlledBy": null,
         "coordinates": {
           "x": 367,
           "y": 438
         }
       },
-      "unit": {
-        "id": "u-pic",
-        "controlledBy": "France",
-        "type": "army",
-        "location": {
-          "id": "bel",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 375,
         "y": 451
@@ -4140,7 +4180,15 @@
       "id": "tus",
       "name": "Tuscany",
       "supplyCenter": null,
-      "unit": null,
+      "unit": {
+        "id": "u-tus",
+        "controlledBy": "France",
+        "type": "army",
+        "location": {
+          "id": "tus",
+          "coast": null
+        }
+      },
       "coordinates": {
         "x": 453,
         "y": 634
@@ -4174,7 +4222,15 @@
       "id": "apu",
       "name": "Apulia",
       "supplyCenter": null,
-      "unit": null,
+      "unit": {
+        "id": "u-apu",
+        "controlledBy": "France",
+        "type": "army",
+        "location": {
+          "id": "apu",
+          "coast": null
+        }
+      },
       "coordinates": {
         "x": 551,
         "y": 700
@@ -4666,7 +4722,15 @@
       "id": "tyn",
       "name": "Tyrrhenian Sea",
       "supplyCenter": null,
-      "unit": null,
+      "unit": {
+        "id": "u-tyn",
+        "controlledBy": "Austria-Hungary",
+        "type": "fleet",
+        "location": {
+          "id": "tyn",
+          "coast": null
+        }
+      },
       "coordinates": {
         "x": 465,
         "y": 729
@@ -4795,7 +4859,19 @@
       "id": "702-1",
       "playerName": "France",
       "createdDate": 1,
-      "value": "A pic - bel"
+      "value": "A tus - rom"
+    },
+    {
+      "id": "702-2",
+      "playerName": "France",
+      "createdDate": 2,
+      "value": "A apu S A tus - rom"
+    },
+    {
+      "id": "702-3",
+      "playerName": "Austria-Hungary",
+      "createdDate": 3,
+      "value": "F tyn S A rom - H"
     }
   ]
 }

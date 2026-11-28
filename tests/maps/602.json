@@ -1,7 +1,7 @@
 {
-  "name": "Condition true",
-  "description": "Spring 1901 (H1, §§8.1,12.2). Germany has an army in Belgium. France has an army in Picardy and an army in Burgundy.",
-  "expectedOutcome": "Picardy dislodges the Belgian army with support from Burgundy. The Belgian army retreats to Holland.",
+  "name": "Fall occupation transfers control",
+  "description": "Fall 1901 (§13). France has an army in Picardy. Germany controls Belgium.",
+  "expectedOutcome": "The army from Picardy moves to Belgium. Belgium becomes French, supplying the one army.",
   "inputBoard": [
     {
       "id": "edi",
@@ -645,21 +645,13 @@
       "name": "Belgium",
       "supplyCenter": {
         "homeFor": null,
-        "controlledBy": null,
+        "controlledBy": "Germany",
         "coordinates": {
           "x": 367,
           "y": 438
         }
       },
-      "unit": {
-        "id": "u-bel",
-        "controlledBy": "Germany",
-        "type": "army",
-        "location": {
-          "id": "bel",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 375,
         "y": 451
@@ -1531,15 +1523,7 @@
       "id": "bur",
       "name": "Burgundy",
       "supplyCenter": null,
-      "unit": {
-        "id": "u-bur",
-        "controlledBy": "France",
-        "type": "army",
-        "location": {
-          "id": "bur",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 361,
         "y": 524
@@ -3020,15 +3004,7 @@
           "y": 405
         }
       },
-      "unit": {
-        "id": "u-bel",
-        "controlledBy": "Germany",
-        "type": "army",
-        "location": {
-          "id": "hol",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 411,
         "y": 393
@@ -3063,7 +3039,7 @@
       "name": "Belgium",
       "supplyCenter": {
         "homeFor": null,
-        "controlledBy": null,
+        "controlledBy": "France",
         "coordinates": {
           "x": 367,
           "y": 438
@@ -3941,15 +3917,7 @@
       "id": "bur",
       "name": "Burgundy",
       "supplyCenter": null,
-      "unit": {
-        "id": "u-bur",
-        "controlledBy": "France",
-        "type": "army",
-        "location": {
-          "id": "bur",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 361,
         "y": 524
@@ -4828,18 +4796,6 @@
       "playerName": "France",
       "createdDate": 1,
       "value": "A pic - bel"
-    },
-    {
-      "id": "602-2",
-      "playerName": "France",
-      "createdDate": 2,
-      "value": "A bur S A pic - bel"
-    },
-    {
-      "id": "602-3",
-      "playerName": "Germany",
-      "createdDate": 3,
-      "value": "A R bel - hol"
     }
   ]
 }

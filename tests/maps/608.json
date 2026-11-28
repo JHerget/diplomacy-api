@@ -1,7 +1,7 @@
 {
-  "name": "Newly vacated refuge",
-  "description": "Spring 1901 (§12.2). Germany has an army in Holland and an army in Belgium. France has an army in Picardy and an army in Burgundy.",
-  "expectedOutcome": "The army from Picardy moves to Belgium. The army from Holland moves to Kiel. The army from Belgium retreats to Holland. Use post-movement occupancy.",
+  "name": "Spring build ignored",
+  "description": "Spring 1901 (H3, §14.2). France controls Brest.",
+  "expectedOutcome": "Brest stays vacant. The French fleet build is ignored in Spring.",
   "inputBoard": [
     {
       "id": "edi",
@@ -131,7 +131,7 @@
       "name": "Brest",
       "supplyCenter": {
         "homeFor": "France",
-        "controlledBy": null,
+        "controlledBy": "France",
         "coordinates": {
           "x": 200,
           "y": 459
@@ -610,15 +610,7 @@
           "y": 405
         }
       },
-      "unit": {
-        "id": "u-hol",
-        "controlledBy": "Germany",
-        "type": "army",
-        "location": {
-          "id": "hol",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 411,
         "y": 393
@@ -659,15 +651,7 @@
           "y": 438
         }
       },
-      "unit": {
-        "id": "u-bel",
-        "controlledBy": "Germany",
-        "type": "army",
-        "location": {
-          "id": "bel",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 375,
         "y": 451
@@ -1464,15 +1448,7 @@
       "id": "pic",
       "name": "Picardy",
       "supplyCenter": null,
-      "unit": {
-        "id": "u-pic",
-        "controlledBy": "France",
-        "type": "army",
-        "location": {
-          "id": "pic",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 324,
         "y": 457
@@ -1539,15 +1515,7 @@
       "id": "bur",
       "name": "Burgundy",
       "supplyCenter": null,
-      "unit": {
-        "id": "u-bur",
-        "controlledBy": "France",
-        "type": "army",
-        "location": {
-          "id": "bur",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 361,
         "y": 524
@@ -2549,7 +2517,7 @@
       "name": "Brest",
       "supplyCenter": {
         "homeFor": "France",
-        "controlledBy": null,
+        "controlledBy": "France",
         "coordinates": {
           "x": 200,
           "y": 459
@@ -2984,15 +2952,7 @@
           "y": 371
         }
       },
-      "unit": {
-        "id": "u-hol",
-        "controlledBy": "Germany",
-        "type": "army",
-        "location": {
-          "id": "kie",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 468,
         "y": 407
@@ -3036,15 +2996,7 @@
           "y": 405
         }
       },
-      "unit": {
-        "id": "u-bel",
-        "controlledBy": "Germany",
-        "type": "army",
-        "location": {
-          "id": "hol",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 411,
         "y": 393
@@ -3085,15 +3037,7 @@
           "y": 438
         }
       },
-      "unit": {
-        "id": "u-pic",
-        "controlledBy": "France",
-        "type": "army",
-        "location": {
-          "id": "bel",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 375,
         "y": 451
@@ -3957,15 +3901,7 @@
       "id": "bur",
       "name": "Burgundy",
       "supplyCenter": null,
-      "unit": {
-        "id": "u-bur",
-        "controlledBy": "France",
-        "type": "army",
-        "location": {
-          "id": "bur",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 361,
         "y": 524
@@ -4843,25 +4779,7 @@
       "id": "608-1",
       "playerName": "France",
       "createdDate": 1,
-      "value": "A pic - bel"
-    },
-    {
-      "id": "608-2",
-      "playerName": "France",
-      "createdDate": 2,
-      "value": "A bur S A pic - bel"
-    },
-    {
-      "id": "608-3",
-      "playerName": "Germany",
-      "createdDate": 3,
-      "value": "A hol - kie"
-    },
-    {
-      "id": "608-4",
-      "playerName": "Germany",
-      "createdDate": 4,
-      "value": "A R bel - hol"
+      "value": "F bre"
     }
   ]
 }

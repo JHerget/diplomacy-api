@@ -1,7 +1,7 @@
 {
-  "name": "Condition false",
-  "description": "Spring 1901 (H1, §12.1). Germany has an army in Belgium. France has an army in Picardy.",
-  "expectedOutcome": "All units and center control stay as they were. Belgium defends at one. The conditional retreat never activates.",
+  "name": "Spring occupation",
+  "description": "Spring 1901 (§13). France has an army in Picardy. Germany controls Belgium.",
+  "expectedOutcome": "The army from Picardy moves to Belgium. Belgium remains German.",
   "inputBoard": [
     {
       "id": "edi",
@@ -645,21 +645,13 @@
       "name": "Belgium",
       "supplyCenter": {
         "homeFor": null,
-        "controlledBy": null,
+        "controlledBy": "Germany",
         "coordinates": {
           "x": 367,
           "y": 438
         }
       },
-      "unit": {
-        "id": "u-bel",
-        "controlledBy": "Germany",
-        "type": "army",
-        "location": {
-          "id": "bel",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 375,
         "y": 451
@@ -3047,15 +3039,15 @@
       "name": "Belgium",
       "supplyCenter": {
         "homeFor": null,
-        "controlledBy": null,
+        "controlledBy": "Germany",
         "coordinates": {
           "x": 367,
           "y": 438
         }
       },
       "unit": {
-        "id": "u-bel",
-        "controlledBy": "Germany",
+        "id": "u-pic",
+        "controlledBy": "France",
         "type": "army",
         "location": {
           "id": "bel",
@@ -3858,15 +3850,7 @@
       "id": "pic",
       "name": "Picardy",
       "supplyCenter": null,
-      "unit": {
-        "id": "u-pic",
-        "controlledBy": "France",
-        "type": "army",
-        "location": {
-          "id": "pic",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 324,
         "y": 457
@@ -4812,12 +4796,6 @@
       "playerName": "France",
       "createdDate": 1,
       "value": "A pic - bel"
-    },
-    {
-      "id": "601-2",
-      "playerName": "Germany",
-      "createdDate": 2,
-      "value": "A R bel - hol"
     }
   ]
 }

@@ -1,7 +1,7 @@
 {
-  "name": "Retreats cannot receive support",
-  "description": "Spring 1901 (§§6.3,12.2–12.3). France has an army in Brest and an army in Gascony. England has an army in Paris. Italy has an army in Holland and an army in Ruhr. Germany has an army in Belgium and a fleet in English Channel.",
-  "expectedOutcome": "Brest takes Paris and Holland takes Belgium. Both dislodged armies retreat to Picardy and disband. The Channel fleet's movement-phase support cannot break the retreat tie.",
+  "name": "Home site occupied by builder",
+  "description": "Fall 1901 (§14.2). France has an army in Brest. France controls Brest and Paris.",
+  "expectedOutcome": "All units and center control stay as they were. French surplus cannot stack a second unit at Brest.",
   "inputBoard": [
     {
       "id": "edi",
@@ -131,7 +131,7 @@
       "name": "Brest",
       "supplyCenter": {
         "homeFor": "France",
-        "controlledBy": null,
+        "controlledBy": "France",
         "coordinates": {
           "x": 200,
           "y": 459
@@ -180,21 +180,13 @@
       "name": "Paris",
       "supplyCenter": {
         "homeFor": "France",
-        "controlledBy": null,
+        "controlledBy": "France",
         "coordinates": {
           "x": 317,
           "y": 481
         }
       },
-      "unit": {
-        "id": "u-par",
-        "controlledBy": "England",
-        "type": "army",
-        "location": {
-          "id": "par",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 304,
         "y": 512
@@ -626,15 +618,7 @@
           "y": 405
         }
       },
-      "unit": {
-        "id": "u-hol",
-        "controlledBy": "Italy",
-        "type": "army",
-        "location": {
-          "id": "hol",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 411,
         "y": 393
@@ -675,15 +659,7 @@
           "y": 438
         }
       },
-      "unit": {
-        "id": "u-bel",
-        "controlledBy": "Germany",
-        "type": "army",
-        "location": {
-          "id": "bel",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 375,
         "y": 451
@@ -1513,15 +1489,7 @@
       "id": "gas",
       "name": "Gascony",
       "supplyCenter": null,
-      "unit": {
-        "id": "u-gas",
-        "controlledBy": "France",
-        "type": "army",
-        "location": {
-          "id": "gas",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 265,
         "y": 574
@@ -1608,15 +1576,7 @@
       "id": "ruh",
       "name": "Ruhr",
       "supplyCenter": null,
-      "unit": {
-        "id": "u-ruh",
-        "controlledBy": "Italy",
-        "type": "army",
-        "location": {
-          "id": "ruh",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 421,
         "y": 461
@@ -2223,15 +2183,7 @@
       "id": "eng",
       "name": "English Channel",
       "supplyCenter": null,
-      "unit": {
-        "id": "u-eng",
-        "controlledBy": "Germany",
-        "type": "fleet",
-        "location": {
-          "id": "eng",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 219,
         "y": 433
@@ -2573,13 +2525,21 @@
       "name": "Brest",
       "supplyCenter": {
         "homeFor": "France",
-        "controlledBy": null,
+        "controlledBy": "France",
         "coordinates": {
           "x": 200,
           "y": 459
         }
       },
-      "unit": null,
+      "unit": {
+        "id": "u-bre",
+        "controlledBy": "France",
+        "type": "army",
+        "location": {
+          "id": "bre",
+          "coast": null
+        }
+      },
       "coordinates": {
         "x": 250,
         "y": 490
@@ -2614,21 +2574,13 @@
       "name": "Paris",
       "supplyCenter": {
         "homeFor": "France",
-        "controlledBy": null,
+        "controlledBy": "France",
         "coordinates": {
           "x": 317,
           "y": 481
         }
       },
-      "unit": {
-        "id": "u-bre",
-        "controlledBy": "France",
-        "type": "army",
-        "location": {
-          "id": "par",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 304,
         "y": 512
@@ -3101,15 +3053,7 @@
           "y": 438
         }
       },
-      "unit": {
-        "id": "u-hol",
-        "controlledBy": "Italy",
-        "type": "army",
-        "location": {
-          "id": "bel",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 375,
         "y": 451
@@ -3939,15 +3883,7 @@
       "id": "gas",
       "name": "Gascony",
       "supplyCenter": null,
-      "unit": {
-        "id": "u-gas",
-        "controlledBy": "France",
-        "type": "army",
-        "location": {
-          "id": "gas",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 265,
         "y": 574
@@ -4034,15 +3970,7 @@
       "id": "ruh",
       "name": "Ruhr",
       "supplyCenter": null,
-      "unit": {
-        "id": "u-ruh",
-        "controlledBy": "Italy",
-        "type": "army",
-        "location": {
-          "id": "ruh",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 421,
         "y": 461
@@ -4649,15 +4577,7 @@
       "id": "eng",
       "name": "English Channel",
       "supplyCenter": null,
-      "unit": {
-        "id": "u-eng",
-        "controlledBy": "Germany",
-        "type": "fleet",
-        "location": {
-          "id": "eng",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 219,
         "y": 433
@@ -4875,43 +4795,7 @@
       "id": "621-1",
       "playerName": "France",
       "createdDate": 1,
-      "value": "A bre - par"
-    },
-    {
-      "id": "621-2",
-      "playerName": "France",
-      "createdDate": 2,
-      "value": "A gas S A bre - par"
-    },
-    {
-      "id": "621-3",
-      "playerName": "Italy",
-      "createdDate": 3,
-      "value": "A hol - bel"
-    },
-    {
-      "id": "621-4",
-      "playerName": "Italy",
-      "createdDate": 4,
-      "value": "A ruh S A hol - bel"
-    },
-    {
-      "id": "621-5",
-      "playerName": "Germany",
-      "createdDate": 5,
-      "value": "F eng S A bel - pic"
-    },
-    {
-      "id": "621-6",
-      "playerName": "England",
-      "createdDate": 6,
-      "value": "A R par - pic"
-    },
-    {
-      "id": "621-7",
-      "playerName": "Germany",
-      "createdDate": 7,
-      "value": "A R bel - pic"
+      "value": "F bre"
     }
   ]
 }

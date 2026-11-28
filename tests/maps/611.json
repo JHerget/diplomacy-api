@@ -1,7 +1,7 @@
 {
-  "name": "Empty standoff province forbidden",
-  "description": "Spring 1901 (§§5.2,12.2). Italy has an army in Kiel. Germany has an army in Belgium. France has an army in Picardy and an army in Burgundy. England has a fleet in North Sea.",
-  "expectedOutcome": "The army from Picardy moves to Belgium. The original Belgium army is dislodged and disbanded. Holland remains empty after the bounce and the failed retreat.",
+  "name": "Fall owner selects removal",
+  "description": "Fall 1901 (§14.1). France has an army in Picardy and an army in Burgundy. France controls Paris.",
+  "expectedOutcome": "Remove French army in Picardy. Burgundy stays.",
   "inputBoard": [
     {
       "id": "edi",
@@ -172,7 +172,7 @@
       "name": "Paris",
       "supplyCenter": {
         "homeFor": "France",
-        "controlledBy": null,
+        "controlledBy": "France",
         "coordinates": {
           "x": 317,
           "y": 481
@@ -566,15 +566,7 @@
           "y": 371
         }
       },
-      "unit": {
-        "id": "u-kie",
-        "controlledBy": "Italy",
-        "type": "army",
-        "location": {
-          "id": "kie",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 468,
         "y": 407
@@ -659,15 +651,7 @@
           "y": 438
         }
       },
-      "unit": {
-        "id": "u-bel",
-        "controlledBy": "Germany",
-        "type": "army",
-        "location": {
-          "id": "bel",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 375,
         "y": 451
@@ -2061,15 +2045,7 @@
       "id": "nth",
       "name": "North Sea",
       "supplyCenter": null,
-      "unit": {
-        "id": "u-nth",
-        "controlledBy": "England",
-        "type": "fleet",
-        "location": {
-          "id": "nth",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 373,
         "y": 316
@@ -2598,7 +2574,7 @@
       "name": "Paris",
       "supplyCenter": {
         "homeFor": "France",
-        "controlledBy": null,
+        "controlledBy": "France",
         "coordinates": {
           "x": 317,
           "y": 481
@@ -2992,15 +2968,7 @@
           "y": 371
         }
       },
-      "unit": {
-        "id": "u-kie",
-        "controlledBy": "Italy",
-        "type": "army",
-        "location": {
-          "id": "kie",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 468,
         "y": 407
@@ -3085,15 +3053,7 @@
           "y": 438
         }
       },
-      "unit": {
-        "id": "u-pic",
-        "controlledBy": "France",
-        "type": "army",
-        "location": {
-          "id": "bel",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 375,
         "y": 451
@@ -4479,15 +4439,7 @@
       "id": "nth",
       "name": "North Sea",
       "supplyCenter": null,
-      "unit": {
-        "id": "u-nth",
-        "controlledBy": "England",
-        "type": "fleet",
-        "location": {
-          "id": "nth",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 373,
         "y": 316
@@ -4851,31 +4803,7 @@
       "id": "611-1",
       "playerName": "France",
       "createdDate": 1,
-      "value": "A pic - bel"
-    },
-    {
-      "id": "611-2",
-      "playerName": "France",
-      "createdDate": 2,
-      "value": "A bur S A pic - bel"
-    },
-    {
-      "id": "611-3",
-      "playerName": "England",
-      "createdDate": 3,
-      "value": "F nth - hol"
-    },
-    {
-      "id": "611-4",
-      "playerName": "Italy",
-      "createdDate": 4,
-      "value": "A kie - hol"
-    },
-    {
-      "id": "611-5",
-      "playerName": "Germany",
-      "createdDate": 5,
-      "value": "A R bel - hol"
+      "value": "D A pic"
     }
   ]
 }

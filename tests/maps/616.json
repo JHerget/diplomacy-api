@@ -1,7 +1,7 @@
 {
-  "name": "No legal escape",
-  "description": "Spring 1901 (§§12.2,12.4). England has a fleet in Spain (north coast) and a fleet in Mid Atlantic. France has a fleet in Portugal.",
-  "expectedOutcome": "The fleet from Mid Atlantic moves to Portugal. The original Portugal fleet is dislodged and disbanded. Every reachable province is the dislodger's origin or occupied.",
+  "name": "Army build on coast",
+  "description": "Fall 1901 (§14.2). France controls Brest.",
+  "expectedOutcome": "Build French army at Brest, null coast.",
   "inputBoard": [
     {
       "id": "edi",
@@ -131,7 +131,7 @@
       "name": "Brest",
       "supplyCenter": {
         "homeFor": "France",
-        "controlledBy": null,
+        "controlledBy": "France",
         "coordinates": {
           "x": 200,
           "y": 459
@@ -244,15 +244,7 @@
           "y": 654
         }
       },
-      "unit": {
-        "id": "u-spa",
-        "controlledBy": "England",
-        "type": "fleet",
-        "location": {
-          "id": "spa",
-          "coast": "nc"
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 198,
         "y": 644
@@ -307,15 +299,7 @@
           "y": 658
         }
       },
-      "unit": {
-        "id": "u-por",
-        "controlledBy": "France",
-        "type": "fleet",
-        "location": {
-          "id": "por",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 91,
         "y": 641
@@ -2214,15 +2198,7 @@
       "id": "mid",
       "name": "Mid Atlantic",
       "supplyCenter": null,
-      "unit": {
-        "id": "u-mid",
-        "controlledBy": "England",
-        "type": "fleet",
-        "location": {
-          "id": "mid",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 136,
         "y": 510
@@ -2541,13 +2517,21 @@
       "name": "Brest",
       "supplyCenter": {
         "homeFor": "France",
-        "controlledBy": null,
+        "controlledBy": "France",
         "coordinates": {
           "x": 200,
           "y": 459
         }
       },
-      "unit": null,
+      "unit": {
+        "id": "new-bre",
+        "controlledBy": "France",
+        "type": "army",
+        "location": {
+          "id": "bre",
+          "coast": null
+        }
+      },
       "coordinates": {
         "x": 250,
         "y": 490
@@ -2654,15 +2638,7 @@
           "y": 654
         }
       },
-      "unit": {
-        "id": "u-spa",
-        "controlledBy": "England",
-        "type": "fleet",
-        "location": {
-          "id": "spa",
-          "coast": "nc"
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 198,
         "y": 644
@@ -2717,15 +2693,7 @@
           "y": 658
         }
       },
-      "unit": {
-        "id": "u-mid",
-        "controlledBy": "England",
-        "type": "fleet",
-        "location": {
-          "id": "por",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 91,
         "y": 641
@@ -4817,15 +4785,9 @@
   "orders": [
     {
       "id": "616-1",
-      "playerName": "England",
+      "playerName": "France",
       "createdDate": 1,
-      "value": "F mid - por"
-    },
-    {
-      "id": "616-2",
-      "playerName": "England",
-      "createdDate": 2,
-      "value": "F spa-nc S F mid - por"
+      "value": "A bre"
     }
   ]
 }

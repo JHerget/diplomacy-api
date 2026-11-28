@@ -1,7 +1,7 @@
 {
-  "name": "Vacant center retains control",
-  "description": "Fall 1901 (§13). Germany has an army in Belgium. Germany controls Belgium.",
-  "expectedOutcome": "The army from Belgium moves to Ruhr. Belgium remains German and supplies Ruhr.",
+  "name": "Random removal from a mixed force",
+  "description": "Fall 1901 (H3, §§14.1,15). France is in civil disorder. France has an army in Piedmont and a fleet in Mid Atlantic. France controls Paris.",
+  "expectedOutcome": "France retains one unit for Paris. Either the fleet in the Mid Atlantic or the army in Piedmont survives in place.",
   "inputBoard": [
     {
       "id": "edi",
@@ -172,7 +172,7 @@
       "name": "Paris",
       "supplyCenter": {
         "homeFor": "France",
-        "controlledBy": null,
+        "controlledBy": "France",
         "coordinates": {
           "x": 317,
           "y": 481
@@ -645,21 +645,13 @@
       "name": "Belgium",
       "supplyCenter": {
         "homeFor": null,
-        "controlledBy": "Germany",
+        "controlledBy": null,
         "coordinates": {
           "x": 367,
           "y": 438
         }
       },
-      "unit": {
-        "id": "u-bel",
-        "controlledBy": "Germany",
-        "type": "army",
-        "location": {
-          "id": "bel",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 375,
         "y": 451
@@ -1713,7 +1705,15 @@
       "id": "pie",
       "name": "Piedmont",
       "supplyCenter": null,
-      "unit": null,
+      "unit": {
+        "id": "u-pie",
+        "controlledBy": "France",
+        "type": "army",
+        "location": {
+          "id": "pie",
+          "coast": null
+        }
+      },
       "coordinates": {
         "x": 416,
         "y": 592
@@ -2206,7 +2206,15 @@
       "id": "mid",
       "name": "Mid Atlantic",
       "supplyCenter": null,
-      "unit": null,
+      "unit": {
+        "id": "u-mid",
+        "controlledBy": "France",
+        "type": "fleet",
+        "location": {
+          "id": "mid",
+          "coast": null
+        }
+      },
       "coordinates": {
         "x": 136,
         "y": 510
@@ -2566,7 +2574,7 @@
       "name": "Paris",
       "supplyCenter": {
         "homeFor": "France",
-        "controlledBy": null,
+        "controlledBy": "France",
         "coordinates": {
           "x": 317,
           "y": 481
@@ -3039,7 +3047,7 @@
       "name": "Belgium",
       "supplyCenter": {
         "homeFor": null,
-        "controlledBy": "Germany",
+        "controlledBy": null,
         "coordinates": {
           "x": 367,
           "y": 438
@@ -3962,15 +3970,7 @@
       "id": "ruh",
       "name": "Ruhr",
       "supplyCenter": null,
-      "unit": {
-        "id": "u-bel",
-        "controlledBy": "Germany",
-        "type": "army",
-        "location": {
-          "id": "ruh",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 421,
         "y": 461
@@ -4600,7 +4600,15 @@
       "id": "mid",
       "name": "Mid Atlantic",
       "supplyCenter": null,
-      "unit": null,
+      "unit": {
+        "id": "u-mid",
+        "controlledBy": "France",
+        "type": "fleet",
+        "location": {
+          "id": "mid",
+          "coast": null
+        }
+      },
       "coordinates": {
         "x": 136,
         "y": 510
@@ -4790,12 +4798,5 @@
       "coasts": null
     }
   ],
-  "orders": [
-    {
-      "id": "705-1",
-      "playerName": "Germany",
-      "createdDate": 1,
-      "value": "A bel - ruh"
-    }
-  ]
+  "orders": []
 }

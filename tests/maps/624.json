@@ -1,7 +1,7 @@
 {
-  "name": "First refuge occupied after movement",
-  "description": "Spring 1901 (H1–H2, §12.2). Germany has an army in Belgium. France has an army in Picardy and an army in Burgundy. England has a fleet in North Sea.",
-  "expectedOutcome": "The army from Picardy moves to Belgium. The fleet from North Sea moves to Holland. The army from Belgium retreats to Ruhr. England occupies Holland before retreats. Skip that invalid retreat and accept Ruhr.",
+  "name": "Recaptured home is still occupied",
+  "description": "Fall 1901 (§§13,14.2). France has an army in Picardy. Germany controls Paris. France controls Belgium.",
+  "expectedOutcome": "The army from Picardy moves to Paris. Paris becomes French. France has one spare build but cannot place it on the occupying army.",
   "inputBoard": [
     {
       "id": "edi",
@@ -172,7 +172,7 @@
       "name": "Paris",
       "supplyCenter": {
         "homeFor": "France",
-        "controlledBy": null,
+        "controlledBy": "Germany",
         "coordinates": {
           "x": 317,
           "y": 481
@@ -645,21 +645,13 @@
       "name": "Belgium",
       "supplyCenter": {
         "homeFor": null,
-        "controlledBy": null,
+        "controlledBy": "France",
         "coordinates": {
           "x": 367,
           "y": 438
         }
       },
-      "unit": {
-        "id": "u-bel",
-        "controlledBy": "Germany",
-        "type": "army",
-        "location": {
-          "id": "bel",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 375,
         "y": 451
@@ -1531,15 +1523,7 @@
       "id": "bur",
       "name": "Burgundy",
       "supplyCenter": null,
-      "unit": {
-        "id": "u-bur",
-        "controlledBy": "France",
-        "type": "army",
-        "location": {
-          "id": "bur",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 361,
         "y": 524
@@ -2053,15 +2037,7 @@
       "id": "nth",
       "name": "North Sea",
       "supplyCenter": null,
-      "unit": {
-        "id": "u-nth",
-        "controlledBy": "England",
-        "type": "fleet",
-        "location": {
-          "id": "nth",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 373,
         "y": 316
@@ -2590,13 +2566,21 @@
       "name": "Paris",
       "supplyCenter": {
         "homeFor": "France",
-        "controlledBy": null,
+        "controlledBy": "France",
         "coordinates": {
           "x": 317,
           "y": 481
         }
       },
-      "unit": null,
+      "unit": {
+        "id": "u-pic",
+        "controlledBy": "France",
+        "type": "army",
+        "location": {
+          "id": "par",
+          "coast": null
+        }
+      },
       "coordinates": {
         "x": 304,
         "y": 512
@@ -3028,15 +3012,7 @@
           "y": 405
         }
       },
-      "unit": {
-        "id": "u-nth",
-        "controlledBy": "England",
-        "type": "fleet",
-        "location": {
-          "id": "hol",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 411,
         "y": 393
@@ -3071,21 +3047,13 @@
       "name": "Belgium",
       "supplyCenter": {
         "homeFor": null,
-        "controlledBy": null,
+        "controlledBy": "France",
         "coordinates": {
           "x": 367,
           "y": 438
         }
       },
-      "unit": {
-        "id": "u-pic",
-        "controlledBy": "France",
-        "type": "army",
-        "location": {
-          "id": "bel",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 375,
         "y": 451
@@ -3949,15 +3917,7 @@
       "id": "bur",
       "name": "Burgundy",
       "supplyCenter": null,
-      "unit": {
-        "id": "u-bur",
-        "controlledBy": "France",
-        "type": "army",
-        "location": {
-          "id": "bur",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 361,
         "y": 524
@@ -4010,15 +3970,7 @@
       "id": "ruh",
       "name": "Ruhr",
       "supplyCenter": null,
-      "unit": {
-        "id": "u-bel",
-        "controlledBy": "Germany",
-        "type": "army",
-        "location": {
-          "id": "ruh",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 421,
         "y": 461
@@ -4841,33 +4793,15 @@
   "orders": [
     {
       "id": "624-1",
-      "playerName": "Germany",
+      "playerName": "France",
       "createdDate": 1,
-      "value": "A R bel - hol"
+      "value": "A pic - par"
     },
     {
       "id": "624-2",
-      "playerName": "Germany",
+      "playerName": "France",
       "createdDate": 2,
-      "value": "A R bel - ruh"
-    },
-    {
-      "id": "624-3",
-      "playerName": "France",
-      "createdDate": 3,
-      "value": "A pic - bel"
-    },
-    {
-      "id": "624-4",
-      "playerName": "France",
-      "createdDate": 4,
-      "value": "A bur S A pic - bel"
-    },
-    {
-      "id": "624-5",
-      "playerName": "England",
-      "createdDate": 5,
-      "value": "F nth - hol"
+      "value": "A par"
     }
   ]
 }

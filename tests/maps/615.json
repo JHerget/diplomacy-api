@@ -1,7 +1,7 @@
 {
-  "name": "Fleet retreats to unreachable coast",
-  "description": "Spring 1901 (§§2.3,12.2,12.4). England has an army in Paris and a fleet in Mid Atlantic. France has a fleet in Gascony.",
-  "expectedOutcome": "The fleet from Mid Atlantic moves to Gascony. The original Gascony fleet is dislodged and disbanded.",
+  "name": "Army build inland",
+  "description": "Fall 1901 (§14.2). France controls Paris.",
+  "expectedOutcome": "Build French army at Paris.",
   "inputBoard": [
     {
       "id": "edi",
@@ -172,21 +172,13 @@
       "name": "Paris",
       "supplyCenter": {
         "homeFor": "France",
-        "controlledBy": null,
+        "controlledBy": "France",
         "coordinates": {
           "x": 317,
           "y": 481
         }
       },
-      "unit": {
-        "id": "u-par",
-        "controlledBy": "England",
-        "type": "army",
-        "location": {
-          "id": "par",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 304,
         "y": 512
@@ -1489,15 +1481,7 @@
       "id": "gas",
       "name": "Gascony",
       "supplyCenter": null,
-      "unit": {
-        "id": "u-gas",
-        "controlledBy": "France",
-        "type": "fleet",
-        "location": {
-          "id": "gas",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 265,
         "y": 574
@@ -2214,15 +2198,7 @@
       "id": "mid",
       "name": "Mid Atlantic",
       "supplyCenter": null,
-      "unit": {
-        "id": "u-mid",
-        "controlledBy": "England",
-        "type": "fleet",
-        "location": {
-          "id": "mid",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 136,
         "y": 510
@@ -2582,15 +2558,15 @@
       "name": "Paris",
       "supplyCenter": {
         "homeFor": "France",
-        "controlledBy": null,
+        "controlledBy": "France",
         "coordinates": {
           "x": 317,
           "y": 481
         }
       },
       "unit": {
-        "id": "u-par",
-        "controlledBy": "England",
+        "id": "new-par",
+        "controlledBy": "France",
         "type": "army",
         "location": {
           "id": "par",
@@ -3899,15 +3875,7 @@
       "id": "gas",
       "name": "Gascony",
       "supplyCenter": null,
-      "unit": {
-        "id": "u-mid",
-        "controlledBy": "England",
-        "type": "fleet",
-        "location": {
-          "id": "gas",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 265,
         "y": 574
@@ -4817,21 +4785,9 @@
   "orders": [
     {
       "id": "615-1",
-      "playerName": "England",
-      "createdDate": 1,
-      "value": "F mid - gas"
-    },
-    {
-      "id": "615-2",
-      "playerName": "England",
-      "createdDate": 2,
-      "value": "A par S F mid - gas"
-    },
-    {
-      "id": "615-3",
       "playerName": "France",
-      "createdDate": 3,
-      "value": "F R gas - spa-sc"
+      "createdDate": 1,
+      "value": "A par"
     }
   ]
 }

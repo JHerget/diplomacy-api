@@ -1,7 +1,7 @@
 {
-  "name": "Two retreats collide",
-  "description": "Spring 1901 (§12.3). France has an army in Brest and an army in Gascony. England has an army in Paris. Italy has an army in Holland and an army in Ruhr. Germany has an army in Belgium.",
-  "expectedOutcome": "Brest takes Paris and Holland takes Belgium. Both dislodged armies retreat to Picardy, collide and disband. Picardy stays empty.",
+  "name": "Fleet build missing coast",
+  "description": "Fall 1901 (§14.2). Russia controls St. Petersburg.",
+  "expectedOutcome": "All units and center control stay as they were. Russia must name a coast even when the center is empty.",
   "inputBoard": [
     {
       "id": "edi",
@@ -137,15 +137,7 @@
           "y": 459
         }
       },
-      "unit": {
-        "id": "u-bre",
-        "controlledBy": "France",
-        "type": "army",
-        "location": {
-          "id": "bre",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 250,
         "y": 490
@@ -186,15 +178,7 @@
           "y": 481
         }
       },
-      "unit": {
-        "id": "u-par",
-        "controlledBy": "England",
-        "type": "army",
-        "location": {
-          "id": "par",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 304,
         "y": 512
@@ -626,15 +610,7 @@
           "y": 405
         }
       },
-      "unit": {
-        "id": "u-hol",
-        "controlledBy": "Italy",
-        "type": "army",
-        "location": {
-          "id": "hol",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 411,
         "y": 393
@@ -675,15 +651,7 @@
           "y": 438
         }
       },
-      "unit": {
-        "id": "u-bel",
-        "controlledBy": "Germany",
-        "type": "army",
-        "location": {
-          "id": "bel",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 375,
         "y": 451
@@ -1197,7 +1165,7 @@
       "name": "St. Petersburg",
       "supplyCenter": {
         "homeFor": "Russia",
-        "controlledBy": null,
+        "controlledBy": "Russia",
         "coordinates": {
           "x": 802,
           "y": 267
@@ -1513,15 +1481,7 @@
       "id": "gas",
       "name": "Gascony",
       "supplyCenter": null,
-      "unit": {
-        "id": "u-gas",
-        "controlledBy": "France",
-        "type": "army",
-        "location": {
-          "id": "gas",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 265,
         "y": 574
@@ -1608,15 +1568,7 @@
       "id": "ruh",
       "name": "Ruhr",
       "supplyCenter": null,
-      "unit": {
-        "id": "u-ruh",
-        "controlledBy": "Italy",
-        "type": "army",
-        "location": {
-          "id": "ruh",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 421,
         "y": 461
@@ -2612,15 +2564,7 @@
           "y": 481
         }
       },
-      "unit": {
-        "id": "u-bre",
-        "controlledBy": "France",
-        "type": "army",
-        "location": {
-          "id": "par",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 304,
         "y": 512
@@ -3093,15 +3037,7 @@
           "y": 438
         }
       },
-      "unit": {
-        "id": "u-hol",
-        "controlledBy": "Italy",
-        "type": "army",
-        "location": {
-          "id": "bel",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 375,
         "y": 451
@@ -3615,7 +3551,7 @@
       "name": "St. Petersburg",
       "supplyCenter": {
         "homeFor": "Russia",
-        "controlledBy": null,
+        "controlledBy": "Russia",
         "coordinates": {
           "x": 802,
           "y": 267
@@ -3931,15 +3867,7 @@
       "id": "gas",
       "name": "Gascony",
       "supplyCenter": null,
-      "unit": {
-        "id": "u-gas",
-        "controlledBy": "France",
-        "type": "army",
-        "location": {
-          "id": "gas",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 265,
         "y": 574
@@ -4026,15 +3954,7 @@
       "id": "ruh",
       "name": "Ruhr",
       "supplyCenter": null,
-      "unit": {
-        "id": "u-ruh",
-        "controlledBy": "Italy",
-        "type": "army",
-        "location": {
-          "id": "ruh",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 421,
         "y": 461
@@ -4857,39 +4777,9 @@
   "orders": [
     {
       "id": "618-1",
-      "playerName": "France",
+      "playerName": "Russia",
       "createdDate": 1,
-      "value": "A bre - par"
-    },
-    {
-      "id": "618-2",
-      "playerName": "France",
-      "createdDate": 2,
-      "value": "A gas S A bre - par"
-    },
-    {
-      "id": "618-3",
-      "playerName": "Italy",
-      "createdDate": 3,
-      "value": "A hol - bel"
-    },
-    {
-      "id": "618-4",
-      "playerName": "Italy",
-      "createdDate": 4,
-      "value": "A ruh S A hol - bel"
-    },
-    {
-      "id": "618-5",
-      "playerName": "England",
-      "createdDate": 5,
-      "value": "A R par - pic"
-    },
-    {
-      "id": "618-6",
-      "playerName": "Germany",
-      "createdDate": 6,
-      "value": "A R bel - pic"
+      "value": "F stp"
     }
   ]
 }

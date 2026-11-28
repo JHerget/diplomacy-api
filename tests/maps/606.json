@@ -1,7 +1,7 @@
 {
-  "name": "Retreat submitted first and unit escapes by moving",
-  "description": "Spring 1901 (H1–H2). Germany has an army in Belgium. France has an army in Picardy and an army in Burgundy.",
-  "expectedOutcome": "Belgium moves to Ruhr. Picardy enters the vacated province and the German army's retreat to Holland never activates.",
+  "name": "Retreat captures center and funds build",
+  "description": "Fall 1901 (H1, §§12.2,13,14.2). Germany has an army in Belgium. France has an army in Picardy and an army in Burgundy. France controls Brest and Paris. Germany controls Munich and Belgium.",
+  "expectedOutcome": "The army from Picardy moves to Belgium. The army from Belgium retreats to Holland. Belgium becomes French, Holland German. Germany has two centers and one survivor, so builds a German army in Munich. France waives its spare build.",
   "inputBoard": [
     {
       "id": "edi",
@@ -131,7 +131,7 @@
       "name": "Brest",
       "supplyCenter": {
         "homeFor": "France",
-        "controlledBy": null,
+        "controlledBy": "France",
         "coordinates": {
           "x": 200,
           "y": 459
@@ -172,7 +172,7 @@
       "name": "Paris",
       "supplyCenter": {
         "homeFor": "France",
-        "controlledBy": null,
+        "controlledBy": "France",
         "coordinates": {
           "x": 317,
           "y": 481
@@ -491,7 +491,7 @@
       "name": "Munich",
       "supplyCenter": {
         "homeFor": "Germany",
-        "controlledBy": null,
+        "controlledBy": "Germany",
         "coordinates": {
           "x": 480,
           "y": 527
@@ -645,7 +645,7 @@
       "name": "Belgium",
       "supplyCenter": {
         "homeFor": null,
-        "controlledBy": null,
+        "controlledBy": "Germany",
         "coordinates": {
           "x": 367,
           "y": 438
@@ -2541,7 +2541,7 @@
       "name": "Brest",
       "supplyCenter": {
         "homeFor": "France",
-        "controlledBy": null,
+        "controlledBy": "France",
         "coordinates": {
           "x": 200,
           "y": 459
@@ -2582,7 +2582,7 @@
       "name": "Paris",
       "supplyCenter": {
         "homeFor": "France",
-        "controlledBy": null,
+        "controlledBy": "France",
         "coordinates": {
           "x": 317,
           "y": 481
@@ -2901,13 +2901,21 @@
       "name": "Munich",
       "supplyCenter": {
         "homeFor": "Germany",
-        "controlledBy": null,
+        "controlledBy": "Germany",
         "coordinates": {
           "x": 480,
           "y": 527
         }
       },
-      "unit": null,
+      "unit": {
+        "id": "new-mun",
+        "controlledBy": "Germany",
+        "type": "army",
+        "location": {
+          "id": "mun",
+          "coast": null
+        }
+      },
       "coordinates": {
         "x": 467,
         "y": 503
@@ -3014,13 +3022,21 @@
       "name": "Holland",
       "supplyCenter": {
         "homeFor": null,
-        "controlledBy": null,
+        "controlledBy": "Germany",
         "coordinates": {
           "x": 383,
           "y": 405
         }
       },
-      "unit": null,
+      "unit": {
+        "id": "u-bel",
+        "controlledBy": "Germany",
+        "type": "army",
+        "location": {
+          "id": "hol",
+          "coast": null
+        }
+      },
       "coordinates": {
         "x": 411,
         "y": 393
@@ -3055,7 +3071,7 @@
       "name": "Belgium",
       "supplyCenter": {
         "homeFor": null,
-        "controlledBy": null,
+        "controlledBy": "France",
         "coordinates": {
           "x": 367,
           "y": 438
@@ -3994,15 +4010,7 @@
       "id": "ruh",
       "name": "Ruhr",
       "supplyCenter": null,
-      "unit": {
-        "id": "u-bel",
-        "controlledBy": "Germany",
-        "type": "army",
-        "location": {
-          "id": "ruh",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 421,
         "y": 461
@@ -4825,27 +4833,27 @@
   "orders": [
     {
       "id": "606-1",
-      "playerName": "Germany",
-      "createdDate": 1,
-      "value": "A R bel - hol"
-    },
-    {
-      "id": "606-2",
-      "playerName": "Germany",
-      "createdDate": 2,
-      "value": "A bel - ruh"
-    },
-    {
-      "id": "606-3",
       "playerName": "France",
-      "createdDate": 3,
+      "createdDate": 1,
       "value": "A pic - bel"
     },
     {
-      "id": "606-4",
+      "id": "606-2",
       "playerName": "France",
-      "createdDate": 4,
+      "createdDate": 2,
       "value": "A bur S A pic - bel"
+    },
+    {
+      "id": "606-3",
+      "playerName": "Germany",
+      "createdDate": 3,
+      "value": "A R bel - hol"
+    },
+    {
+      "id": "606-4",
+      "playerName": "Germany",
+      "createdDate": 4,
+      "value": "A mun"
     }
   ]
 }

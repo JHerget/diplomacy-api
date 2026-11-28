@@ -1,7 +1,7 @@
 {
-  "name": "Capture neutral by staying",
-  "description": "Fall 1901 (§13). England has a fleet in Belgium.",
-  "expectedOutcome": "The English fleet stays in Belgium and claims the center for England.",
+  "name": "Random removal at home or abroad",
+  "description": "Fall 1901 (H3, §§14.1,15). France is in civil disorder. France has a fleet in Brest and an army in Galicia. France controls Brest.",
+  "expectedOutcome": "Randomly remove one French unit. Exactly one survives in place, either the army in Galicia or the fleet in Brest. Brest remains French even if the fleet is removed.",
   "inputBoard": [
     {
       "id": "edi",
@@ -131,13 +131,21 @@
       "name": "Brest",
       "supplyCenter": {
         "homeFor": "France",
-        "controlledBy": null,
+        "controlledBy": "France",
         "coordinates": {
           "x": 200,
           "y": 459
         }
       },
-      "unit": null,
+      "unit": {
+        "id": "u-bre",
+        "controlledBy": "France",
+        "type": "fleet",
+        "location": {
+          "id": "bre",
+          "coast": null
+        }
+      },
       "coordinates": {
         "x": 250,
         "y": 490
@@ -651,15 +659,7 @@
           "y": 438
         }
       },
-      "unit": {
-        "id": "u-bel",
-        "controlledBy": "England",
-        "type": "fleet",
-        "location": {
-          "id": "bel",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 375,
         "y": 451
@@ -1691,7 +1691,15 @@
       "id": "gal",
       "name": "Galicia",
       "supplyCenter": null,
-      "unit": null,
+      "unit": {
+        "id": "u-gal",
+        "controlledBy": "France",
+        "type": "army",
+        "location": {
+          "id": "gal",
+          "coast": null
+        }
+      },
       "coordinates": {
         "x": 692,
         "y": 508
@@ -2525,7 +2533,7 @@
       "name": "Brest",
       "supplyCenter": {
         "homeFor": "France",
-        "controlledBy": null,
+        "controlledBy": "France",
         "coordinates": {
           "x": 200,
           "y": 459
@@ -3039,21 +3047,13 @@
       "name": "Belgium",
       "supplyCenter": {
         "homeFor": null,
-        "controlledBy": "England",
+        "controlledBy": null,
         "coordinates": {
           "x": 367,
           "y": 438
         }
       },
-      "unit": {
-        "id": "u-bel",
-        "controlledBy": "England",
-        "type": "fleet",
-        "location": {
-          "id": "bel",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 375,
         "y": 451
@@ -4085,7 +4085,15 @@
       "id": "gal",
       "name": "Galicia",
       "supplyCenter": null,
-      "unit": null,
+      "unit": {
+        "id": "u-gal",
+        "controlledBy": "France",
+        "type": "army",
+        "location": {
+          "id": "gal",
+          "coast": null
+        }
+      },
       "coordinates": {
         "x": 692,
         "y": 508
@@ -4790,12 +4798,5 @@
       "coasts": null
     }
   ],
-  "orders": [
-    {
-      "id": "704-1",
-      "playerName": "England",
-      "createdDate": 1,
-      "value": "F bel - H"
-    }
-  ]
+  "orders": []
 }

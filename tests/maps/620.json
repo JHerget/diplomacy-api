@@ -1,7 +1,7 @@
 {
-  "name": "Three-way retreat collision",
-  "description": "Spring 1901 (§12.3). France has an army in Brest and an army in Gascony. England has an army in Paris, an army in Belgium, and an army in Burgundy. Germany has an army in Marseilles and an army in Munich. Italy has an army in Holland and an army in Ruhr.",
-  "expectedOutcome": "Brest takes Paris, Holland takes Belgium and Munich takes Burgundy. All three dislodged English armies retreat to Picardy and disband in the collision.",
+  "name": "Home site under foreign control",
+  "description": "Fall 1901 (§14.2). France controls Brest. Germany controls Paris.",
+  "expectedOutcome": "All units and center control stay as they were. Paris is French home territory under German control.",
   "inputBoard": [
     {
       "id": "edi",
@@ -131,21 +131,13 @@
       "name": "Brest",
       "supplyCenter": {
         "homeFor": "France",
-        "controlledBy": null,
+        "controlledBy": "France",
         "coordinates": {
           "x": 200,
           "y": 459
         }
       },
-      "unit": {
-        "id": "u-bre",
-        "controlledBy": "France",
-        "type": "army",
-        "location": {
-          "id": "bre",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 250,
         "y": 490
@@ -180,21 +172,13 @@
       "name": "Paris",
       "supplyCenter": {
         "homeFor": "France",
-        "controlledBy": null,
+        "controlledBy": "Germany",
         "coordinates": {
           "x": 317,
           "y": 481
         }
       },
-      "unit": {
-        "id": "u-par",
-        "controlledBy": "England",
-        "type": "army",
-        "location": {
-          "id": "par",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 304,
         "y": 512
@@ -220,15 +204,7 @@
           "y": 628
         }
       },
-      "unit": {
-        "id": "u-mar",
-        "controlledBy": "Germany",
-        "type": "army",
-        "location": {
-          "id": "mar",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 333,
         "y": 597
@@ -521,15 +497,7 @@
           "y": 527
         }
       },
-      "unit": {
-        "id": "u-mun",
-        "controlledBy": "Germany",
-        "type": "army",
-        "location": {
-          "id": "mun",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 467,
         "y": 503
@@ -642,15 +610,7 @@
           "y": 405
         }
       },
-      "unit": {
-        "id": "u-hol",
-        "controlledBy": "Italy",
-        "type": "army",
-        "location": {
-          "id": "hol",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 411,
         "y": 393
@@ -691,15 +651,7 @@
           "y": 438
         }
       },
-      "unit": {
-        "id": "u-bel",
-        "controlledBy": "England",
-        "type": "army",
-        "location": {
-          "id": "bel",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 375,
         "y": 451
@@ -1529,15 +1481,7 @@
       "id": "gas",
       "name": "Gascony",
       "supplyCenter": null,
-      "unit": {
-        "id": "u-gas",
-        "controlledBy": "France",
-        "type": "army",
-        "location": {
-          "id": "gas",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 265,
         "y": 574
@@ -1571,15 +1515,7 @@
       "id": "bur",
       "name": "Burgundy",
       "supplyCenter": null,
-      "unit": {
-        "id": "u-bur",
-        "controlledBy": "England",
-        "type": "army",
-        "location": {
-          "id": "bur",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 361,
         "y": 524
@@ -1632,15 +1568,7 @@
       "id": "ruh",
       "name": "Ruhr",
       "supplyCenter": null,
-      "unit": {
-        "id": "u-ruh",
-        "controlledBy": "Italy",
-        "type": "army",
-        "location": {
-          "id": "ruh",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 421,
         "y": 461
@@ -2589,7 +2517,7 @@
       "name": "Brest",
       "supplyCenter": {
         "homeFor": "France",
-        "controlledBy": null,
+        "controlledBy": "France",
         "coordinates": {
           "x": 200,
           "y": 459
@@ -2630,21 +2558,13 @@
       "name": "Paris",
       "supplyCenter": {
         "homeFor": "France",
-        "controlledBy": null,
+        "controlledBy": "Germany",
         "coordinates": {
           "x": 317,
           "y": 481
         }
       },
-      "unit": {
-        "id": "u-bre",
-        "controlledBy": "France",
-        "type": "army",
-        "location": {
-          "id": "par",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 304,
         "y": 512
@@ -2670,15 +2590,7 @@
           "y": 628
         }
       },
-      "unit": {
-        "id": "u-mar",
-        "controlledBy": "Germany",
-        "type": "army",
-        "location": {
-          "id": "mar",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 333,
         "y": 597
@@ -3125,15 +3037,7 @@
           "y": 438
         }
       },
-      "unit": {
-        "id": "u-hol",
-        "controlledBy": "Italy",
-        "type": "army",
-        "location": {
-          "id": "bel",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 375,
         "y": 451
@@ -3963,15 +3867,7 @@
       "id": "gas",
       "name": "Gascony",
       "supplyCenter": null,
-      "unit": {
-        "id": "u-gas",
-        "controlledBy": "France",
-        "type": "army",
-        "location": {
-          "id": "gas",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 265,
         "y": 574
@@ -4005,15 +3901,7 @@
       "id": "bur",
       "name": "Burgundy",
       "supplyCenter": null,
-      "unit": {
-        "id": "u-mun",
-        "controlledBy": "Germany",
-        "type": "army",
-        "location": {
-          "id": "bur",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 361,
         "y": 524
@@ -4066,15 +3954,7 @@
       "id": "ruh",
       "name": "Ruhr",
       "supplyCenter": null,
-      "unit": {
-        "id": "u-ruh",
-        "controlledBy": "Italy",
-        "type": "army",
-        "location": {
-          "id": "ruh",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 421,
         "y": 461
@@ -4899,55 +4779,7 @@
       "id": "620-1",
       "playerName": "France",
       "createdDate": 1,
-      "value": "A bre - par"
-    },
-    {
-      "id": "620-2",
-      "playerName": "France",
-      "createdDate": 2,
-      "value": "A gas S A bre - par"
-    },
-    {
-      "id": "620-3",
-      "playerName": "Italy",
-      "createdDate": 3,
-      "value": "A hol - bel"
-    },
-    {
-      "id": "620-4",
-      "playerName": "Italy",
-      "createdDate": 4,
-      "value": "A ruh S A hol - bel"
-    },
-    {
-      "id": "620-5",
-      "playerName": "Germany",
-      "createdDate": 5,
-      "value": "A mun - bur"
-    },
-    {
-      "id": "620-6",
-      "playerName": "Germany",
-      "createdDate": 6,
-      "value": "A mar S A mun - bur"
-    },
-    {
-      "id": "620-7",
-      "playerName": "England",
-      "createdDate": 7,
-      "value": "A R par - pic"
-    },
-    {
-      "id": "620-8",
-      "playerName": "England",
-      "createdDate": 8,
-      "value": "A R bel - pic"
-    },
-    {
-      "id": "620-9",
-      "playerName": "England",
-      "createdDate": 9,
-      "value": "A R bur - pic"
+      "value": "A par"
     }
   ]
 }

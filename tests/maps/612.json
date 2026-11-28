@@ -1,7 +1,7 @@
 {
-  "name": "Nonadjacent refuge",
-  "description": "Spring 1901 (§§2.1,12.2). Germany has an army in Belgium. France has an army in Picardy and an army in Burgundy.",
-  "expectedOutcome": "The army from Picardy moves to Belgium. The original Belgium army is dislodged and disbanded.",
+  "name": "Multiple required removals",
+  "description": "Fall 1901 (§14.1). France has an army in Picardy, an army in Burgundy, and a fleet in English Channel. France controls Paris.",
+  "expectedOutcome": "Remove Burgundy and Channel units. Picardy stays.",
   "inputBoard": [
     {
       "id": "edi",
@@ -172,7 +172,7 @@
       "name": "Paris",
       "supplyCenter": {
         "homeFor": "France",
-        "controlledBy": null,
+        "controlledBy": "France",
         "coordinates": {
           "x": 317,
           "y": 481
@@ -651,15 +651,7 @@
           "y": 438
         }
       },
-      "unit": {
-        "id": "u-bel",
-        "controlledBy": "Germany",
-        "type": "army",
-        "location": {
-          "id": "bel",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 375,
         "y": 451
@@ -2199,7 +2191,15 @@
       "id": "eng",
       "name": "English Channel",
       "supplyCenter": null,
-      "unit": null,
+      "unit": {
+        "id": "u-eng",
+        "controlledBy": "France",
+        "type": "fleet",
+        "location": {
+          "id": "eng",
+          "coast": null
+        }
+      },
       "coordinates": {
         "x": 219,
         "y": 433
@@ -2582,7 +2582,7 @@
       "name": "Paris",
       "supplyCenter": {
         "homeFor": "France",
-        "controlledBy": null,
+        "controlledBy": "France",
         "coordinates": {
           "x": 317,
           "y": 481
@@ -3061,15 +3061,7 @@
           "y": 438
         }
       },
-      "unit": {
-        "id": "u-pic",
-        "controlledBy": "France",
-        "type": "army",
-        "location": {
-          "id": "bel",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 375,
         "y": 451
@@ -3866,7 +3858,15 @@
       "id": "pic",
       "name": "Picardy",
       "supplyCenter": null,
-      "unit": null,
+      "unit": {
+        "id": "u-pic",
+        "controlledBy": "France",
+        "type": "army",
+        "location": {
+          "id": "pic",
+          "coast": null
+        }
+      },
       "coordinates": {
         "x": 324,
         "y": 457
@@ -3933,15 +3933,7 @@
       "id": "bur",
       "name": "Burgundy",
       "supplyCenter": null,
-      "unit": {
-        "id": "u-bur",
-        "controlledBy": "France",
-        "type": "army",
-        "location": {
-          "id": "bur",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 361,
         "y": 524
@@ -4819,19 +4811,13 @@
       "id": "612-1",
       "playerName": "France",
       "createdDate": 1,
-      "value": "A pic - bel"
+      "value": "D A bur"
     },
     {
       "id": "612-2",
       "playerName": "France",
       "createdDate": 2,
-      "value": "A bur S A pic - bel"
-    },
-    {
-      "id": "612-3",
-      "playerName": "Germany",
-      "createdDate": 3,
-      "value": "A R bel - ber"
+      "value": "D F eng"
     }
   ]
 }

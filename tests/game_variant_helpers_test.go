@@ -25,13 +25,13 @@ func checkGameVariant(t *testing.T, id, number int) {
 	t.Log(f.ExpectedOutcome)
 	g := fixtureGame(f, players, number)
 	switch id {
-	case 808, 809:
+	case 708, 709:
 		g.PlayerCount = 6
-	case 810:
+	case 710:
 		g.PlayerCount = 5
-	case 811:
+	case 711:
 		g.PlayerCount = 4
-	case 812, 813:
+	case 712, 713:
 		g.PlayerCount = 2
 	}
 	for i := range g.Players {
@@ -39,7 +39,7 @@ func checkGameVariant(t *testing.T, id, number int) {
 	}
 	for i, combo := range models.PlayerCombos[g.PlayerCount] {
 		powers := strings.Split(combo, "/")
-		if id == 813 && slices.Contains(powers, "France") {
+		if id == 713 && slices.Contains(powers, "France") {
 			// The fixed Fall 1914 coin result assigns Italy to the Allied player.
 			powers = append(powers, "Italy")
 		}
@@ -52,11 +52,11 @@ func checkGameVariant(t *testing.T, id, number int) {
 	turn.Orders = slices.Clone(f.Orders)
 	disorder := ""
 	switch id {
-	case 801, 802, 803:
+	case 701, 702, 703:
 		disorder = "Italy"
-	case 804, 805, 806:
+	case 704, 705, 706:
 		disorder = "France"
-	case 807:
+	case 707:
 		disorder = "England"
 	}
 	for _, p := range g.Players {

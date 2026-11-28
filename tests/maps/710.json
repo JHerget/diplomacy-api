@@ -1,7 +1,7 @@
 {
-  "name": "Spring removal ignored",
-  "description": "Spring 1901 (H3, §14.1). France has an army in Picardy and an army in Burgundy. France controls Paris.",
-  "expectedOutcome": "Both French armies survive. The removal order is ignored in Spring.",
+  "name": "Five-player second neutral power",
+  "description": "Spring 1901 (§15, PDF p. 19). Germany and Italy are neutral in a five-player game. Italy has an army in Rome, a fleet in Naples, and an army in Venice. Germany has an army in Munich, an army in Berlin, and a fleet in Kiel. France has an army in Burgundy and an army in Ruhr.",
+  "expectedOutcome": "The army from Burgundy moves to Munich. The original Munich army is dislodged and disbanded. Kiel and Berlin do not automatically defend Munich. The other neutral units stay.",
   "inputBoard": [
     {
       "id": "edi",
@@ -172,7 +172,7 @@
       "name": "Paris",
       "supplyCenter": {
         "homeFor": "France",
-        "controlledBy": "France",
+        "controlledBy": null,
         "coordinates": {
           "x": 317,
           "y": 481
@@ -375,7 +375,15 @@
           "y": 679
         }
       },
-      "unit": null,
+      "unit": {
+        "id": "u-rom",
+        "controlledBy": "Italy",
+        "type": "army",
+        "location": {
+          "id": "rom",
+          "coast": null
+        }
+      },
       "coordinates": {
         "x": 497,
         "y": 680
@@ -415,7 +423,15 @@
           "y": 704
         }
       },
-      "unit": null,
+      "unit": {
+        "id": "u-nap",
+        "controlledBy": "Italy",
+        "type": "fleet",
+        "location": {
+          "id": "nap",
+          "coast": null
+        }
+      },
       "coordinates": {
         "x": 554,
         "y": 739
@@ -455,7 +471,15 @@
           "y": 595
         }
       },
-      "unit": null,
+      "unit": {
+        "id": "u-ven",
+        "controlledBy": "Italy",
+        "type": "army",
+        "location": {
+          "id": "ven",
+          "coast": null
+        }
+      },
       "coordinates": {
         "x": 467,
         "y": 604
@@ -497,7 +521,15 @@
           "y": 527
         }
       },
-      "unit": null,
+      "unit": {
+        "id": "u-mun",
+        "controlledBy": "Germany",
+        "type": "army",
+        "location": {
+          "id": "mun",
+          "coast": null
+        }
+      },
       "coordinates": {
         "x": 467,
         "y": 503
@@ -526,7 +558,15 @@
           "y": 422
         }
       },
-      "unit": null,
+      "unit": {
+        "id": "u-ber",
+        "controlledBy": "Germany",
+        "type": "army",
+        "location": {
+          "id": "ber",
+          "coast": null
+        }
+      },
       "coordinates": {
         "x": 510,
         "y": 429
@@ -566,7 +606,15 @@
           "y": 371
         }
       },
-      "unit": null,
+      "unit": {
+        "id": "u-kie",
+        "controlledBy": "Germany",
+        "type": "fleet",
+        "location": {
+          "id": "kie",
+          "coast": null
+        }
+      },
       "coordinates": {
         "x": 468,
         "y": 407
@@ -1448,15 +1496,7 @@
       "id": "pic",
       "name": "Picardy",
       "supplyCenter": null,
-      "unit": {
-        "id": "u-pic",
-        "controlledBy": "France",
-        "type": "army",
-        "location": {
-          "id": "pic",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 324,
         "y": 457
@@ -1584,7 +1624,15 @@
       "id": "ruh",
       "name": "Ruhr",
       "supplyCenter": null,
-      "unit": null,
+      "unit": {
+        "id": "u-ruh",
+        "controlledBy": "France",
+        "type": "army",
+        "location": {
+          "id": "ruh",
+          "coast": null
+        }
+      },
       "coordinates": {
         "x": 421,
         "y": 461
@@ -2574,7 +2622,7 @@
       "name": "Paris",
       "supplyCenter": {
         "homeFor": "France",
-        "controlledBy": "France",
+        "controlledBy": null,
         "coordinates": {
           "x": 317,
           "y": 481
@@ -2777,7 +2825,15 @@
           "y": 679
         }
       },
-      "unit": null,
+      "unit": {
+        "id": "u-rom",
+        "controlledBy": "Italy",
+        "type": "army",
+        "location": {
+          "id": "rom",
+          "coast": null
+        }
+      },
       "coordinates": {
         "x": 497,
         "y": 680
@@ -2817,7 +2873,15 @@
           "y": 704
         }
       },
-      "unit": null,
+      "unit": {
+        "id": "u-nap",
+        "controlledBy": "Italy",
+        "type": "fleet",
+        "location": {
+          "id": "nap",
+          "coast": null
+        }
+      },
       "coordinates": {
         "x": 554,
         "y": 739
@@ -2857,7 +2921,15 @@
           "y": 595
         }
       },
-      "unit": null,
+      "unit": {
+        "id": "u-ven",
+        "controlledBy": "Italy",
+        "type": "army",
+        "location": {
+          "id": "ven",
+          "coast": null
+        }
+      },
       "coordinates": {
         "x": 467,
         "y": 604
@@ -2899,7 +2971,15 @@
           "y": 527
         }
       },
-      "unit": null,
+      "unit": {
+        "id": "u-bur",
+        "controlledBy": "France",
+        "type": "army",
+        "location": {
+          "id": "mun",
+          "coast": null
+        }
+      },
       "coordinates": {
         "x": 467,
         "y": 503
@@ -2928,7 +3008,15 @@
           "y": 422
         }
       },
-      "unit": null,
+      "unit": {
+        "id": "u-ber",
+        "controlledBy": "Germany",
+        "type": "army",
+        "location": {
+          "id": "ber",
+          "coast": null
+        }
+      },
       "coordinates": {
         "x": 510,
         "y": 429
@@ -2968,7 +3056,15 @@
           "y": 371
         }
       },
-      "unit": null,
+      "unit": {
+        "id": "u-kie",
+        "controlledBy": "Germany",
+        "type": "fleet",
+        "location": {
+          "id": "kie",
+          "coast": null
+        }
+      },
       "coordinates": {
         "x": 468,
         "y": 407
@@ -3850,15 +3946,7 @@
       "id": "pic",
       "name": "Picardy",
       "supplyCenter": null,
-      "unit": {
-        "id": "u-pic",
-        "controlledBy": "France",
-        "type": "army",
-        "location": {
-          "id": "pic",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 324,
         "y": 457
@@ -3925,15 +4013,7 @@
       "id": "bur",
       "name": "Burgundy",
       "supplyCenter": null,
-      "unit": {
-        "id": "u-bur",
-        "controlledBy": "France",
-        "type": "army",
-        "location": {
-          "id": "bur",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 361,
         "y": 524
@@ -3986,7 +4066,15 @@
       "id": "ruh",
       "name": "Ruhr",
       "supplyCenter": null,
-      "unit": null,
+      "unit": {
+        "id": "u-ruh",
+        "controlledBy": "France",
+        "type": "army",
+        "location": {
+          "id": "ruh",
+          "coast": null
+        }
+      },
       "coordinates": {
         "x": 421,
         "y": 461
@@ -4811,7 +4899,13 @@
       "id": "710-1",
       "playerName": "France",
       "createdDate": 1,
-      "value": "D A pic"
+      "value": "A bur - mun"
+    },
+    {
+      "id": "710-2",
+      "playerName": "France",
+      "createdDate": 2,
+      "value": "A ruh S A bur - mun"
     }
   ]
 }

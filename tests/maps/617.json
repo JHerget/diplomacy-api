@@ -1,7 +1,7 @@
 {
-  "name": "Omit retreat after ordering a hold",
-  "description": "Spring 1901 (H1, §12.4, PDF p. 18). Germany has an army in Belgium. France has an army in Picardy and an army in Burgundy.",
-  "expectedOutcome": "Picardy dislodges the holding German army in Belgium. Without a retreat order it disbands, even though Holland is open.",
+  "name": "Fleet build at named split coast",
+  "description": "Fall 1901 (§14.2, PDF p. 19). Russia controls St. Petersburg.",
+  "expectedOutcome": "Build Russian fleet at St. Petersburg south coast.",
   "inputBoard": [
     {
       "id": "edi",
@@ -651,15 +651,7 @@
           "y": 438
         }
       },
-      "unit": {
-        "id": "u-bel",
-        "controlledBy": "Germany",
-        "type": "army",
-        "location": {
-          "id": "bel",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 375,
         "y": 451
@@ -1173,7 +1165,7 @@
       "name": "St. Petersburg",
       "supplyCenter": {
         "homeFor": "Russia",
-        "controlledBy": null,
+        "controlledBy": "Russia",
         "coordinates": {
           "x": 802,
           "y": 267
@@ -1456,15 +1448,7 @@
       "id": "pic",
       "name": "Picardy",
       "supplyCenter": null,
-      "unit": {
-        "id": "u-pic",
-        "controlledBy": "France",
-        "type": "army",
-        "location": {
-          "id": "pic",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 324,
         "y": 457
@@ -1531,15 +1515,7 @@
       "id": "bur",
       "name": "Burgundy",
       "supplyCenter": null,
-      "unit": {
-        "id": "u-bur",
-        "controlledBy": "France",
-        "type": "army",
-        "location": {
-          "id": "bur",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 361,
         "y": 524
@@ -3061,15 +3037,7 @@
           "y": 438
         }
       },
-      "unit": {
-        "id": "u-pic",
-        "controlledBy": "France",
-        "type": "army",
-        "location": {
-          "id": "bel",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 375,
         "y": 451
@@ -3583,13 +3551,21 @@
       "name": "St. Petersburg",
       "supplyCenter": {
         "homeFor": "Russia",
-        "controlledBy": null,
+        "controlledBy": "Russia",
         "coordinates": {
           "x": 802,
           "y": 267
         }
       },
-      "unit": null,
+      "unit": {
+        "id": "new-stp",
+        "controlledBy": "Russia",
+        "type": "fleet",
+        "location": {
+          "id": "stp",
+          "coast": "sc"
+        }
+      },
       "coordinates": {
         "x": 910,
         "y": 217
@@ -3933,15 +3909,7 @@
       "id": "bur",
       "name": "Burgundy",
       "supplyCenter": null,
-      "unit": {
-        "id": "u-bur",
-        "controlledBy": "France",
-        "type": "army",
-        "location": {
-          "id": "bur",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 361,
         "y": 524
@@ -4817,21 +4785,9 @@
   "orders": [
     {
       "id": "617-1",
-      "playerName": "Germany",
+      "playerName": "Russia",
       "createdDate": 1,
-      "value": "A bel - H"
-    },
-    {
-      "id": "617-2",
-      "playerName": "France",
-      "createdDate": 2,
-      "value": "A pic - bel"
-    },
-    {
-      "id": "617-3",
-      "playerName": "France",
-      "createdDate": 3,
-      "value": "A bur S A pic - bel"
+      "value": "F stp-sc"
     }
   ]
 }

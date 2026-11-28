@@ -1,7 +1,7 @@
 {
-  "name": "Balanced count",
-  "description": "Fall 1901 (§14). France has an army in Picardy. France controls Paris.",
-  "expectedOutcome": "All units and center control stay as they were. Neither an extra build nor a discretionary adjustment removal is due.",
+  "name": "Italian neutrality ends",
+  "description": "Spring 1915 (PDF p. 19). Italy joined England, France and Russia in Fall 1914. France has an army in Marseilles.",
+  "expectedOutcome": "The French army moves from Marseilles into Piedmont after Italy joins the Allies.",
   "inputBoard": [
     {
       "id": "edi",
@@ -172,7 +172,7 @@
       "name": "Paris",
       "supplyCenter": {
         "homeFor": "France",
-        "controlledBy": "France",
+        "controlledBy": null,
         "coordinates": {
           "x": 317,
           "y": 481
@@ -204,7 +204,15 @@
           "y": 628
         }
       },
-      "unit": null,
+      "unit": {
+        "id": "u-mar",
+        "controlledBy": "France",
+        "type": "army",
+        "location": {
+          "id": "mar",
+          "coast": null
+        }
+      },
       "coordinates": {
         "x": 333,
         "y": 597
@@ -1448,15 +1456,7 @@
       "id": "pic",
       "name": "Picardy",
       "supplyCenter": null,
-      "unit": {
-        "id": "u-pic",
-        "controlledBy": "France",
-        "type": "army",
-        "location": {
-          "id": "pic",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 324,
         "y": 457
@@ -2566,7 +2566,7 @@
       "name": "Paris",
       "supplyCenter": {
         "homeFor": "France",
-        "controlledBy": "France",
+        "controlledBy": null,
         "coordinates": {
           "x": 317,
           "y": 481
@@ -3842,15 +3842,7 @@
       "id": "pic",
       "name": "Picardy",
       "supplyCenter": null,
-      "unit": {
-        "id": "u-pic",
-        "controlledBy": "France",
-        "type": "army",
-        "location": {
-          "id": "pic",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 324,
         "y": 457
@@ -4107,7 +4099,15 @@
       "id": "pie",
       "name": "Piedmont",
       "supplyCenter": null,
-      "unit": null,
+      "unit": {
+        "id": "u-mar",
+        "controlledBy": "France",
+        "type": "army",
+        "location": {
+          "id": "pie",
+          "coast": null
+        }
+      },
       "coordinates": {
         "x": 416,
         "y": 592
@@ -4795,13 +4795,7 @@
       "id": "713-1",
       "playerName": "France",
       "createdDate": 1,
-      "value": "A par"
-    },
-    {
-      "id": "713-2",
-      "playerName": "France",
-      "createdDate": 2,
-      "value": "D A pic"
+      "value": "A mar - pie"
     }
   ]
 }

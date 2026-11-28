@@ -1,7 +1,7 @@
 {
-  "name": "Empty dislodger origin forbidden",
-  "description": "Spring 1901 (§§8.2,12.2). Germany has an army in Belgium. France has an army in Picardy and an army in Burgundy.",
-  "expectedOutcome": "The army from Picardy moves to Belgium. The original Belgium army is dislodged and disbanded. Picardy stays empty.",
+  "name": "Spring removal ignored",
+  "description": "Spring 1901 (H3, §14.1). France has an army in Picardy and an army in Burgundy. France controls Paris.",
+  "expectedOutcome": "Both French armies survive. The removal order is ignored in Spring.",
   "inputBoard": [
     {
       "id": "edi",
@@ -172,7 +172,7 @@
       "name": "Paris",
       "supplyCenter": {
         "homeFor": "France",
-        "controlledBy": null,
+        "controlledBy": "France",
         "coordinates": {
           "x": 317,
           "y": 481
@@ -651,15 +651,7 @@
           "y": 438
         }
       },
-      "unit": {
-        "id": "u-bel",
-        "controlledBy": "Germany",
-        "type": "army",
-        "location": {
-          "id": "bel",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 375,
         "y": 451
@@ -2582,7 +2574,7 @@
       "name": "Paris",
       "supplyCenter": {
         "homeFor": "France",
-        "controlledBy": null,
+        "controlledBy": "France",
         "coordinates": {
           "x": 317,
           "y": 481
@@ -3061,15 +3053,7 @@
           "y": 438
         }
       },
-      "unit": {
-        "id": "u-pic",
-        "controlledBy": "France",
-        "type": "army",
-        "location": {
-          "id": "bel",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 375,
         "y": 451
@@ -3866,7 +3850,15 @@
       "id": "pic",
       "name": "Picardy",
       "supplyCenter": null,
-      "unit": null,
+      "unit": {
+        "id": "u-pic",
+        "controlledBy": "France",
+        "type": "army",
+        "location": {
+          "id": "pic",
+          "coast": null
+        }
+      },
       "coordinates": {
         "x": 324,
         "y": 457
@@ -4819,19 +4811,7 @@
       "id": "610-1",
       "playerName": "France",
       "createdDate": 1,
-      "value": "A pic - bel"
-    },
-    {
-      "id": "610-2",
-      "playerName": "France",
-      "createdDate": 2,
-      "value": "A bur S A pic - bel"
-    },
-    {
-      "id": "610-3",
-      "playerName": "Germany",
-      "createdDate": 3,
-      "value": "A R bel - pic"
+      "value": "D A pic"
     }
   ]
 }

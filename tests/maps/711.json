@@ -1,7 +1,7 @@
 {
-  "name": "Fall owner selects removal",
-  "description": "Fall 1901 (§14.1). France has an army in Picardy and an army in Burgundy. France controls Paris.",
-  "expectedOutcome": "Remove French army in Picardy. Burgundy stays.",
+  "name": "Shared player, separate national counts",
+  "description": "Fall 1901 (PDF p. 19, §14). France and Austria-Hungary share one of the four players. France has an army in Picardy and an army in Burgundy. France controls Paris. Austria-Hungary controls Vienna and Budapest.",
+  "expectedOutcome": "Remove Picardy. Build Austrian armies in Vienna and Budapest. France keeps Burgundy. Compute each country's adjustment independently.",
   "inputBoard": [
     {
       "id": "edi",
@@ -687,7 +687,7 @@
       "name": "Vienna",
       "supplyCenter": {
         "homeFor": "Austria-Hungary",
-        "controlledBy": null,
+        "controlledBy": "Austria-Hungary",
         "coordinates": {
           "x": 568,
           "y": 534
@@ -714,7 +714,7 @@
       "name": "Budapest",
       "supplyCenter": {
         "homeFor": "Austria-Hungary",
-        "controlledBy": null,
+        "controlledBy": "Austria-Hungary",
         "coordinates": {
           "x": 616,
           "y": 552
@@ -3089,13 +3089,21 @@
       "name": "Vienna",
       "supplyCenter": {
         "homeFor": "Austria-Hungary",
-        "controlledBy": null,
+        "controlledBy": "Austria-Hungary",
         "coordinates": {
           "x": 568,
           "y": 534
         }
       },
-      "unit": null,
+      "unit": {
+        "id": "new-vie",
+        "controlledBy": "Austria-Hungary",
+        "type": "army",
+        "location": {
+          "id": "vie",
+          "coast": null
+        }
+      },
       "coordinates": {
         "x": 593,
         "y": 537
@@ -3116,13 +3124,21 @@
       "name": "Budapest",
       "supplyCenter": {
         "homeFor": "Austria-Hungary",
-        "controlledBy": null,
+        "controlledBy": "Austria-Hungary",
         "coordinates": {
           "x": 616,
           "y": 552
         }
       },
-      "unit": null,
+      "unit": {
+        "id": "new-bud",
+        "controlledBy": "Austria-Hungary",
+        "type": "army",
+        "location": {
+          "id": "bud",
+          "coast": null
+        }
+      },
       "coordinates": {
         "x": 666,
         "y": 578
@@ -4804,6 +4820,18 @@
       "playerName": "France",
       "createdDate": 1,
       "value": "D A pic"
+    },
+    {
+      "id": "711-2",
+      "playerName": "Austria-Hungary",
+      "createdDate": 2,
+      "value": "A vie"
+    },
+    {
+      "id": "711-3",
+      "playerName": "Austria-Hungary",
+      "createdDate": 3,
+      "value": "A bud"
     }
   ]
 }

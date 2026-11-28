@@ -94,15 +94,15 @@ func checkTurnBoard(t *testing.T, id int, got []models.Province, f fixture) {
 
 func randomRemovalSites(id int) []string {
 	switch id {
-	case 731, 739:
+	case 631, 639:
 		return []string{"pic", "bur"}
-	case 804:
+	case 704:
 		return []string{"gal", "bre"}
-	case 805:
+	case 705:
 		return []string{"mid", "pie"}
-	case 806:
+	case 706:
 		return []string{"pie", "spa"}
-	case 807:
+	case 707:
 		return []string{"tyr", "pic"}
 	default:
 		return nil

@@ -1,7 +1,7 @@
 {
-  "name": "Retreat cannot use a convoy",
-  "description": "Spring 1901 (§§10.1,12.2). Germany has an army in Belgium and a fleet in North Sea. France has an army in Picardy and an army in Burgundy.",
-  "expectedOutcome": "The army from Picardy moves to Belgium. The original Belgium army is dislodged and disbanded. London empty and fleet stays in North Sea.",
+  "name": "Balanced count",
+  "description": "Fall 1901 (§14). France has an army in Picardy. France controls Paris.",
+  "expectedOutcome": "All units and center control stay as they were. Neither an extra build nor a discretionary adjustment removal is due.",
   "inputBoard": [
     {
       "id": "edi",
@@ -172,7 +172,7 @@
       "name": "Paris",
       "supplyCenter": {
         "homeFor": "France",
-        "controlledBy": null,
+        "controlledBy": "France",
         "coordinates": {
           "x": 317,
           "y": 481
@@ -651,15 +651,7 @@
           "y": 438
         }
       },
-      "unit": {
-        "id": "u-bel",
-        "controlledBy": "Germany",
-        "type": "army",
-        "location": {
-          "id": "bel",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 375,
         "y": 451
@@ -1531,15 +1523,7 @@
       "id": "bur",
       "name": "Burgundy",
       "supplyCenter": null,
-      "unit": {
-        "id": "u-bur",
-        "controlledBy": "France",
-        "type": "army",
-        "location": {
-          "id": "bur",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 361,
         "y": 524
@@ -2053,15 +2037,7 @@
       "id": "nth",
       "name": "North Sea",
       "supplyCenter": null,
-      "unit": {
-        "id": "u-nth",
-        "controlledBy": "Germany",
-        "type": "fleet",
-        "location": {
-          "id": "nth",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 373,
         "y": 316
@@ -2590,7 +2566,7 @@
       "name": "Paris",
       "supplyCenter": {
         "homeFor": "France",
-        "controlledBy": null,
+        "controlledBy": "France",
         "coordinates": {
           "x": 317,
           "y": 481
@@ -3069,15 +3045,7 @@
           "y": 438
         }
       },
-      "unit": {
-        "id": "u-pic",
-        "controlledBy": "France",
-        "type": "army",
-        "location": {
-          "id": "bel",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 375,
         "y": 451
@@ -3874,7 +3842,15 @@
       "id": "pic",
       "name": "Picardy",
       "supplyCenter": null,
-      "unit": null,
+      "unit": {
+        "id": "u-pic",
+        "controlledBy": "France",
+        "type": "army",
+        "location": {
+          "id": "pic",
+          "coast": null
+        }
+      },
       "coordinates": {
         "x": 324,
         "y": 457
@@ -3941,15 +3917,7 @@
       "id": "bur",
       "name": "Burgundy",
       "supplyCenter": null,
-      "unit": {
-        "id": "u-bur",
-        "controlledBy": "France",
-        "type": "army",
-        "location": {
-          "id": "bur",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 361,
         "y": 524
@@ -4463,15 +4431,7 @@
       "id": "nth",
       "name": "North Sea",
       "supplyCenter": null,
-      "unit": {
-        "id": "u-nth",
-        "controlledBy": "Germany",
-        "type": "fleet",
-        "location": {
-          "id": "nth",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 373,
         "y": 316
@@ -4835,25 +4795,13 @@
       "id": "613-1",
       "playerName": "France",
       "createdDate": 1,
-      "value": "A pic - bel"
+      "value": "A par"
     },
     {
       "id": "613-2",
       "playerName": "France",
       "createdDate": 2,
-      "value": "A bur S A pic - bel"
-    },
-    {
-      "id": "613-3",
-      "playerName": "Germany",
-      "createdDate": 3,
-      "value": "F nth C A bel - lon"
-    },
-    {
-      "id": "613-4",
-      "playerName": "Germany",
-      "createdDate": 4,
-      "value": "A R bel - lon"
+      "value": "D A pic"
     }
   ]
 }

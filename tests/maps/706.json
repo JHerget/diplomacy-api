@@ -1,7 +1,7 @@
 {
-  "name": "Retreat captures center and funds build",
-  "description": "Fall 1901 (H1, §§12.2,13,14.2). Germany has an army in Belgium. France has an army in Picardy and an army in Burgundy. France controls Brest and Paris. Germany controls Munich and Belgium.",
-  "expectedOutcome": "The army from Picardy moves to Belgium. The army from Belgium retreats to Holland. Belgium becomes French, Holland German. Germany has two centers and one survivor, so builds a German army in Munich. France waives its spare build.",
+  "name": "Random removal from two armies",
+  "description": "Fall 1901 (H3, §§14.1,15). France is in civil disorder. France has an army in Spain and an army in Piedmont. France controls Spain.",
+  "expectedOutcome": "France retains one army, in either Piedmont or Spain. Spain remains French whichever army is removed.",
   "inputBoard": [
     {
       "id": "edi",
@@ -131,7 +131,7 @@
       "name": "Brest",
       "supplyCenter": {
         "homeFor": "France",
-        "controlledBy": "France",
+        "controlledBy": null,
         "coordinates": {
           "x": 200,
           "y": 459
@@ -172,7 +172,7 @@
       "name": "Paris",
       "supplyCenter": {
         "homeFor": "France",
-        "controlledBy": "France",
+        "controlledBy": null,
         "coordinates": {
           "x": 317,
           "y": 481
@@ -238,13 +238,21 @@
       "name": "Spain",
       "supplyCenter": {
         "homeFor": null,
-        "controlledBy": null,
+        "controlledBy": "France",
         "coordinates": {
           "x": 170,
           "y": 654
         }
       },
-      "unit": null,
+      "unit": {
+        "id": "u-spa",
+        "controlledBy": "France",
+        "type": "army",
+        "location": {
+          "id": "spa",
+          "coast": null
+        }
+      },
       "coordinates": {
         "x": 198,
         "y": 644
@@ -491,7 +499,7 @@
       "name": "Munich",
       "supplyCenter": {
         "homeFor": "Germany",
-        "controlledBy": "Germany",
+        "controlledBy": null,
         "coordinates": {
           "x": 480,
           "y": 527
@@ -645,21 +653,13 @@
       "name": "Belgium",
       "supplyCenter": {
         "homeFor": null,
-        "controlledBy": "Germany",
+        "controlledBy": null,
         "coordinates": {
           "x": 367,
           "y": 438
         }
       },
-      "unit": {
-        "id": "u-bel",
-        "controlledBy": "Germany",
-        "type": "army",
-        "location": {
-          "id": "bel",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 375,
         "y": 451
@@ -1456,15 +1456,7 @@
       "id": "pic",
       "name": "Picardy",
       "supplyCenter": null,
-      "unit": {
-        "id": "u-pic",
-        "controlledBy": "France",
-        "type": "army",
-        "location": {
-          "id": "pic",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 324,
         "y": 457
@@ -1531,15 +1523,7 @@
       "id": "bur",
       "name": "Burgundy",
       "supplyCenter": null,
-      "unit": {
-        "id": "u-bur",
-        "controlledBy": "France",
-        "type": "army",
-        "location": {
-          "id": "bur",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 361,
         "y": 524
@@ -1729,7 +1713,15 @@
       "id": "pie",
       "name": "Piedmont",
       "supplyCenter": null,
-      "unit": null,
+      "unit": {
+        "id": "u-pie",
+        "controlledBy": "France",
+        "type": "army",
+        "location": {
+          "id": "pie",
+          "coast": null
+        }
+      },
       "coordinates": {
         "x": 416,
         "y": 592
@@ -2541,7 +2533,7 @@
       "name": "Brest",
       "supplyCenter": {
         "homeFor": "France",
-        "controlledBy": "France",
+        "controlledBy": null,
         "coordinates": {
           "x": 200,
           "y": 459
@@ -2582,7 +2574,7 @@
       "name": "Paris",
       "supplyCenter": {
         "homeFor": "France",
-        "controlledBy": "France",
+        "controlledBy": null,
         "coordinates": {
           "x": 317,
           "y": 481
@@ -2648,7 +2640,7 @@
       "name": "Spain",
       "supplyCenter": {
         "homeFor": null,
-        "controlledBy": null,
+        "controlledBy": "France",
         "coordinates": {
           "x": 170,
           "y": 654
@@ -2901,21 +2893,13 @@
       "name": "Munich",
       "supplyCenter": {
         "homeFor": "Germany",
-        "controlledBy": "Germany",
+        "controlledBy": null,
         "coordinates": {
           "x": 480,
           "y": 527
         }
       },
-      "unit": {
-        "id": "new-mun",
-        "controlledBy": "Germany",
-        "type": "army",
-        "location": {
-          "id": "mun",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 467,
         "y": 503
@@ -3022,21 +3006,13 @@
       "name": "Holland",
       "supplyCenter": {
         "homeFor": null,
-        "controlledBy": "Germany",
+        "controlledBy": null,
         "coordinates": {
           "x": 383,
           "y": 405
         }
       },
-      "unit": {
-        "id": "u-bel",
-        "controlledBy": "Germany",
-        "type": "army",
-        "location": {
-          "id": "hol",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 411,
         "y": 393
@@ -3071,21 +3047,13 @@
       "name": "Belgium",
       "supplyCenter": {
         "homeFor": null,
-        "controlledBy": "France",
+        "controlledBy": null,
         "coordinates": {
           "x": 367,
           "y": 438
         }
       },
-      "unit": {
-        "id": "u-pic",
-        "controlledBy": "France",
-        "type": "army",
-        "location": {
-          "id": "bel",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 375,
         "y": 451
@@ -3949,15 +3917,7 @@
       "id": "bur",
       "name": "Burgundy",
       "supplyCenter": null,
-      "unit": {
-        "id": "u-bur",
-        "controlledBy": "France",
-        "type": "army",
-        "location": {
-          "id": "bur",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 361,
         "y": 524
@@ -4147,7 +4107,15 @@
       "id": "pie",
       "name": "Piedmont",
       "supplyCenter": null,
-      "unit": null,
+      "unit": {
+        "id": "u-pie",
+        "controlledBy": "France",
+        "type": "army",
+        "location": {
+          "id": "pie",
+          "coast": null
+        }
+      },
       "coordinates": {
         "x": 416,
         "y": 592
@@ -4830,30 +4798,5 @@
       "coasts": null
     }
   ],
-  "orders": [
-    {
-      "id": "706-1",
-      "playerName": "France",
-      "createdDate": 1,
-      "value": "A pic - bel"
-    },
-    {
-      "id": "706-2",
-      "playerName": "France",
-      "createdDate": 2,
-      "value": "A bur S A pic - bel"
-    },
-    {
-      "id": "706-3",
-      "playerName": "Germany",
-      "createdDate": 3,
-      "value": "A R bel - hol"
-    },
-    {
-      "id": "706-4",
-      "playerName": "Germany",
-      "createdDate": 4,
-      "value": "A mun"
-    }
-  ]
+  "orders": []
 }

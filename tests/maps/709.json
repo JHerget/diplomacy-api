@@ -1,7 +1,7 @@
 {
-  "name": "Fall coastal fleet build",
-  "description": "Fall 1901 (§14.2). France controls Brest.",
-  "expectedOutcome": "Build French fleet at Brest.",
+  "name": "Neutral receives outside hold support",
+  "description": "Spring 1901 (§15, PDF p. 19). Italy is neutral in a six-player game. Italy has an army in Rome, a fleet in Naples, and an army in Venice. Austria-Hungary has an army in Tyrolia and a fleet in Adriatic Sea. France has an army in Piedmont.",
+  "expectedOutcome": "All units and center control stay as they were. Venice survives two against two.",
   "inputBoard": [
     {
       "id": "edi",
@@ -131,7 +131,7 @@
       "name": "Brest",
       "supplyCenter": {
         "homeFor": "France",
-        "controlledBy": "France",
+        "controlledBy": null,
         "coordinates": {
           "x": 200,
           "y": 459
@@ -375,7 +375,15 @@
           "y": 679
         }
       },
-      "unit": null,
+      "unit": {
+        "id": "u-rom",
+        "controlledBy": "Italy",
+        "type": "army",
+        "location": {
+          "id": "rom",
+          "coast": null
+        }
+      },
       "coordinates": {
         "x": 497,
         "y": 680
@@ -415,7 +423,15 @@
           "y": 704
         }
       },
-      "unit": null,
+      "unit": {
+        "id": "u-nap",
+        "controlledBy": "Italy",
+        "type": "fleet",
+        "location": {
+          "id": "nap",
+          "coast": null
+        }
+      },
       "coordinates": {
         "x": 554,
         "y": 739
@@ -455,7 +471,15 @@
           "y": 595
         }
       },
-      "unit": null,
+      "unit": {
+        "id": "u-ven",
+        "controlledBy": "Italy",
+        "type": "army",
+        "location": {
+          "id": "ven",
+          "coast": null
+        }
+      },
       "coordinates": {
         "x": 467,
         "y": 604
@@ -1662,7 +1686,15 @@
       "id": "tyr",
       "name": "Tyrolia",
       "supplyCenter": null,
-      "unit": null,
+      "unit": {
+        "id": "u-tyr",
+        "controlledBy": "Austria-Hungary",
+        "type": "army",
+        "location": {
+          "id": "tyr",
+          "coast": null
+        }
+      },
       "coordinates": {
         "x": 513,
         "y": 553
@@ -1705,7 +1737,15 @@
       "id": "pie",
       "name": "Piedmont",
       "supplyCenter": null,
-      "unit": null,
+      "unit": {
+        "id": "u-pie",
+        "controlledBy": "France",
+        "type": "army",
+        "location": {
+          "id": "pie",
+          "coast": null
+        }
+      },
       "coordinates": {
         "x": 416,
         "y": 592
@@ -2310,7 +2350,15 @@
       "id": "adr",
       "name": "Adriatic Sea",
       "supplyCenter": null,
-      "unit": null,
+      "unit": {
+        "id": "u-adr",
+        "controlledBy": "Austria-Hungary",
+        "type": "fleet",
+        "location": {
+          "id": "adr",
+          "coast": null
+        }
+      },
       "coordinates": {
         "x": 533,
         "y": 652
@@ -2517,21 +2565,13 @@
       "name": "Brest",
       "supplyCenter": {
         "homeFor": "France",
-        "controlledBy": "France",
+        "controlledBy": null,
         "coordinates": {
           "x": 200,
           "y": 459
         }
       },
-      "unit": {
-        "id": "new-bre",
-        "controlledBy": "France",
-        "type": "fleet",
-        "location": {
-          "id": "bre",
-          "coast": null
-        }
-      },
+      "unit": null,
       "coordinates": {
         "x": 250,
         "y": 490
@@ -2769,7 +2809,15 @@
           "y": 679
         }
       },
-      "unit": null,
+      "unit": {
+        "id": "u-rom",
+        "controlledBy": "Italy",
+        "type": "army",
+        "location": {
+          "id": "rom",
+          "coast": null
+        }
+      },
       "coordinates": {
         "x": 497,
         "y": 680
@@ -2809,7 +2857,15 @@
           "y": 704
         }
       },
-      "unit": null,
+      "unit": {
+        "id": "u-nap",
+        "controlledBy": "Italy",
+        "type": "fleet",
+        "location": {
+          "id": "nap",
+          "coast": null
+        }
+      },
       "coordinates": {
         "x": 554,
         "y": 739
@@ -2849,7 +2905,15 @@
           "y": 595
         }
       },
-      "unit": null,
+      "unit": {
+        "id": "u-ven",
+        "controlledBy": "Italy",
+        "type": "army",
+        "location": {
+          "id": "ven",
+          "coast": null
+        }
+      },
       "coordinates": {
         "x": 467,
         "y": 604
@@ -4056,7 +4120,15 @@
       "id": "tyr",
       "name": "Tyrolia",
       "supplyCenter": null,
-      "unit": null,
+      "unit": {
+        "id": "u-tyr",
+        "controlledBy": "Austria-Hungary",
+        "type": "army",
+        "location": {
+          "id": "tyr",
+          "coast": null
+        }
+      },
       "coordinates": {
         "x": 513,
         "y": 553
@@ -4099,7 +4171,15 @@
       "id": "pie",
       "name": "Piedmont",
       "supplyCenter": null,
-      "unit": null,
+      "unit": {
+        "id": "u-pie",
+        "controlledBy": "France",
+        "type": "army",
+        "location": {
+          "id": "pie",
+          "coast": null
+        }
+      },
       "coordinates": {
         "x": 416,
         "y": 592
@@ -4704,7 +4784,15 @@
       "id": "adr",
       "name": "Adriatic Sea",
       "supplyCenter": null,
-      "unit": null,
+      "unit": {
+        "id": "u-adr",
+        "controlledBy": "Austria-Hungary",
+        "type": "fleet",
+        "location": {
+          "id": "adr",
+          "coast": null
+        }
+      },
       "coordinates": {
         "x": 533,
         "y": 652
@@ -4785,9 +4873,21 @@
   "orders": [
     {
       "id": "709-1",
-      "playerName": "France",
+      "playerName": "Austria-Hungary",
       "createdDate": 1,
-      "value": "F bre"
+      "value": "A tyr - ven"
+    },
+    {
+      "id": "709-2",
+      "playerName": "Austria-Hungary",
+      "createdDate": 2,
+      "value": "F adr S A tyr - ven"
+    },
+    {
+      "id": "709-3",
+      "playerName": "France",
+      "createdDate": 3,
+      "value": "A pie S A ven - H"
     }
   ]
 }
