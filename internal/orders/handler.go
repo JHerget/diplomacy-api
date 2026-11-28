@@ -167,7 +167,7 @@ func (h *Handler) Create(ctx context.Context, event events.APIGatewayV2HTTPReque
 
 	validFormatCommands := GetCommands([]models.Order{savedOrder})
 	allCommands := ListCommands([]models.Order{savedOrder})
-	_, results := ValidateCommands(validFormatCommands, g.Board)
+	_, results := ValidateGameCommands(validFormatCommands, g, turn)
 	for _, command := range allCommands {
 		if !command.Valid {
 			results = append(results, command)

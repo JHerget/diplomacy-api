@@ -26,12 +26,23 @@ type fixture struct {
 type disposition string
 
 const (
-	accepted  disposition = "accepted"
-	invalid   disposition = "invalid"
-	duplicate disposition = "ignored duplicate"
-	unmatched disposition = "support does not match the unit's order"
-	standoff  disposition = "retreat blocked by standoff"
+	accepted         disposition = "accepted"
+	invalid          disposition = "invalid"
+	duplicate        disposition = "ignored duplicate"
+	unmatched        disposition = "support does not match the unit's order"
+	standoff         disposition = "retreat blocked by standoff"
+	dormant          disposition = "unit was not dislodged"
+	occupiedRefuge   disposition = "occupied retreat destination"
+	dislodgerOrigin  disposition = "dislodger origin"
+	springAdjustment disposition = "out of season"
+	noBuildDue       disposition = "no build due"
+	noRemovalDue     disposition = "no removal due"
+	noConvoy         disposition = "missing convoy route"
 )
+
+func invalidBecause(reason string) disposition {
+	return disposition("invalid: " + strings.ToLower(reason))
+}
 
 func supportCutFrom(province string) disposition {
 	return disposition("support was cut from '" + province + "'.")
@@ -126,13 +137,18 @@ func resolveSpring(t *testing.T, f fixture, players []models.Player) ([]models.P
 		Board: f.InputBoard, Players: players, PlayerCount: len(players),
 		Turns: []models.Turn{{TurnNumber: 1, Orders: f.Orders}},
 	}
+	return resolveTurn(t, &game)
+}
+
+func resolveTurn(t *testing.T, game *models.Game) ([]models.Province, []models.CommandValidationResult) {
+	t.Helper()
 	// A resolver panic fails this fixture while letting the other tests run.
 	defer func() {
 		if problem := recover(); problem != nil {
 			t.Fatalf("ApplyTurn panicked: %v\n%s", problem, debug.Stack())
 		}
 	}()
-	got, results, err := board.ApplyTurn(game.Board, &game.Turns[0])
+	got, results, err := board.ApplyTurn(game.Board, &game.Turns[len(game.Turns)-1])
 	if err != nil {
 		t.Fatalf("ApplyTurn: %v", err)
 	}
@@ -142,7 +158,14 @@ func resolveSpring(t *testing.T, f fixture, players []models.Player) ([]models.P
 func checkBoard(t *testing.T, got, want []models.Province) {
 	t.Helper()
 	byID := make(map[string]models.Province, len(got))
+	unitIDs := map[string]bool{}
 	for _, province := range got {
+		if u := province.Unit; u != nil {
+			if u.ID == "" || unitIDs[u.ID] || u.Location.ID != province.ID {
+				t.Errorf("board %s: invalid unit identity or nested location: %+v", province.ID, u)
+			}
+			unitIDs[u.ID] = true
+		}
 		if _, exists := byID[province.ID]; exists {
 			t.Errorf("board %s: duplicate province", province.ID)
 		}
@@ -206,30 +229,30 @@ func checkDispositions(t *testing.T, submitted, results []models.CommandValidati
 	if len(submitted) != len(want) {
 		t.Fatalf("parsed commands: want %d, got %d", len(want), len(submitted))
 	}
-	// Each (issuer, command text) occurs once in these fixtures. ApplyTurn can
-	// return results in a different order and omit syntax errors reported by ListCommands.
+	// Results are grouped by command kind. Identical commands have the same kind
+	// and retain their submission order within the group (case 725).
 	type commandKey struct{ player, value string }
-	byCommand := make(map[commandKey]models.CommandValidationResult, len(results))
+	byCommand := make(map[commandKey][]models.CommandValidationResult, len(results))
 	for _, result := range results {
 		key := commandKey{result.PlayerName, result.Value}
-		if _, exists := byCommand[key]; exists {
-			t.Errorf("order %s %q: duplicate resolution result", key.player, key.value)
-		}
-		byCommand[key] = result
+		byCommand[key] = append(byCommand[key], result)
 	}
 	for i, raw := range submitted {
 		if !strings.EqualFold(raw.Value, want[i].value) {
 			t.Errorf("order %d %s: want %q, got %q", i+1, raw.PlayerName, want[i].value, raw.Value)
 		}
 		key := commandKey{raw.PlayerName, raw.Value}
-		result, found := byCommand[key]
-		delete(byCommand, key)
-		if !found {
-			if raw.Valid {
-				t.Errorf("order %d %s %q: missing resolution result", i+1, key.player, key.value)
-				continue
+		result := raw
+		if matches := byCommand[key]; len(matches) > 0 {
+			result = matches[0]
+			if len(matches) == 1 {
+				delete(byCommand, key)
+			} else {
+				byCommand[key] = matches[1:]
 			}
-			result = raw
+		} else if raw.Valid {
+			t.Errorf("order %d %s %q: missing resolution result", i+1, key.player, key.value)
+			continue
 		}
 		got := accepted
 		if !result.Valid {
@@ -245,11 +268,29 @@ func checkDispositions(t *testing.T, submitted, results []models.CommandValidati
 				got = disposition(reason)
 			case reason == "could not find the move to support.":
 				got = unmatched
+			case reason == "unit was not dislodged.":
+				got = dormant
+			case reason == "a unit occupies the destination.":
+				got = occupiedRefuge
+			case reason == "cannot retreat to where the attack originated.":
+				got = dislodgerOrigin
+			case reason == "it is not a fall turn.":
+				got = springAdjustment
+			case reason == "not enough supply centers to support a new unit.":
+				got = noBuildDue
+			case reason == "the number of supply centers exceeds or matches the number of units.":
+				got = noRemovalDue
+			case strings.HasPrefix(reason, "no convoy route from "):
+				got = noConvoy
 			case reason == "cannot retreat to where a standoff occurred.":
 				got = standoff
 			}
 		}
-		if got != want[i].outcome {
+		if got == invalid && want[i].outcome == invalidBecause(result.Error) {
+			continue
+		}
+		// A missing route is also a valid explanation in general illegal-move cases.
+		if got != want[i].outcome && !(got == noConvoy && want[i].outcome == invalid) {
 			reason := ""
 			if result.Error != "" {
 				reason = " (" + result.Error + ")"

@@ -26,12 +26,31 @@ func noCoastRoute(coast models.Coast) error {
 }
 
 type validator struct {
-	BoardMap map[string]models.Province
+	neutralItaly bool
+	BoardMap     map[string]models.Province
 }
 
 func ValidateCommands(commands models.Commands, board []models.Province) (models.Commands, []models.CommandValidationResult) {
+	return validateCommands(commands, board, false)
+}
+
+func ValidateGameCommands(commands models.Commands, game *models.Game, turn *models.Turn) (models.Commands, []models.CommandValidationResult) {
+	neutralItaly := false
+	if game.PlayerCount == 2 {
+		for _, power := range game.Players {
+			if power.Name == "Italy" {
+				neutralItaly = turn.TurnNumber <= 2 || power.UserID == nil
+				break
+			}
+		}
+	}
+	return validateCommands(commands, game.Board, neutralItaly)
+}
+
+func validateCommands(commands models.Commands, board []models.Province, neutralItaly bool) (models.Commands, []models.CommandValidationResult) {
 	v := validator{
-		BoardMap: make(map[string]models.Province),
+		neutralItaly: neutralItaly,
+		BoardMap:     make(map[string]models.Province),
 	}
 	for _, p := range board {
 		v.BoardMap[p.ID] = p
@@ -42,6 +61,7 @@ func ValidateCommands(commands models.Commands, board []models.Province) (models
 		Hold: utils.Filter(commands.Hold, func(c *models.HoldCommand) bool {
 			ok, err := v.IsValidHold(c)
 			results = append(results, models.CommandValidationResult{
+				Ordinal:    c.Ordinal,
 				PlayerName: c.PlayerName,
 				Value:      c.Value,
 				Valid:      ok,
@@ -53,6 +73,7 @@ func ValidateCommands(commands models.Commands, board []models.Province) (models
 		Move: utils.Filter(commands.Move, func(c *models.MoveCommand) bool {
 			ok, err := v.IsValidMove(c, true)
 			results = append(results, models.CommandValidationResult{
+				Ordinal:    c.Ordinal,
 				PlayerName: c.PlayerName,
 				Value:      c.Value,
 				Valid:      ok,
@@ -64,6 +85,7 @@ func ValidateCommands(commands models.Commands, board []models.Province) (models
 		Retreat: utils.Filter(commands.Retreat, func(c *models.RetreatCommand) bool {
 			ok, err := v.IsValidRetreat(c)
 			results = append(results, models.CommandValidationResult{
+				Ordinal:    c.Ordinal,
 				PlayerName: c.PlayerName,
 				Value:      c.Value,
 				Valid:      ok,
@@ -75,6 +97,7 @@ func ValidateCommands(commands models.Commands, board []models.Province) (models
 		Support: utils.Filter(commands.Support, func(c *models.SupportCommand) bool {
 			ok, err := v.IsValidSupport(c)
 			results = append(results, models.CommandValidationResult{
+				Ordinal:    c.Ordinal,
 				PlayerName: c.PlayerName,
 				Value:      c.Value,
 				Valid:      ok,
@@ -86,6 +109,7 @@ func ValidateCommands(commands models.Commands, board []models.Province) (models
 		Convoy: utils.Filter(commands.Convoy, func(c *models.ConvoyCommand) bool {
 			ok, err := v.IsValidConvoy(c)
 			results = append(results, models.CommandValidationResult{
+				Ordinal:    c.Ordinal,
 				PlayerName: c.PlayerName,
 				Value:      c.Value,
 				Valid:      ok,
@@ -97,6 +121,7 @@ func ValidateCommands(commands models.Commands, board []models.Province) (models
 		Reinforce: utils.Filter(commands.Reinforce, func(c *models.ReinforceCommand) bool {
 			ok, err := v.IsValidReinforce(c)
 			results = append(results, models.CommandValidationResult{
+				Ordinal:    c.Ordinal,
 				PlayerName: c.PlayerName,
 				Value:      c.Value,
 				Valid:      ok,
@@ -108,6 +133,7 @@ func ValidateCommands(commands models.Commands, board []models.Province) (models
 		Disband: utils.Filter(commands.Disband, func(c *models.DisbandCommand) bool {
 			ok, err := v.IsValidDisband(c)
 			results = append(results, models.CommandValidationResult{
+				Ordinal:    c.Ordinal,
 				PlayerName: c.PlayerName,
 				Value:      c.Value,
 				Valid:      ok,
@@ -148,6 +174,16 @@ func (v *validator) IsValidHold(hold *models.HoldCommand) (bool, error) {
 	return true, nil
 }
 
+func (v *validator) entryPermitted(origin, destination string) bool {
+	if v.neutralItaly && origin != destination {
+		switch destination {
+		case "pie", "tus", "ven", "rom", "apu", "nap":
+			return false
+		}
+	}
+	return true
+}
+
 func (v *validator) IsValidMove(move *models.MoveCommand, validatePlayer bool) (bool, error) {
 	loc, ok := v.BoardMap[move.Location.ID]
 	if !ok {
@@ -159,6 +195,9 @@ func (v *validator) IsValidMove(move *models.MoveCommand, validatePlayer bool) (
 		return false, locationError(move.Destination.ID)
 	}
 
+	if !v.entryPermitted(loc.ID, dest.ID) {
+		return false, fmt.Errorf("Italy is neutral.")
+	}
 	if ok, err := v.isValidLocation(move.Location, move.UnitType); !ok {
 		return false, err
 	}
@@ -176,6 +215,9 @@ func (v *validator) IsValidMove(move *models.MoveCommand, validatePlayer bool) (
 		return false, wrongUnit(move.PlayerName)
 	}
 
+	if move.ViaConvoy && (!move.UnitType.IsArmy() || !loc.IsCoastal() || !dest.IsCoastal()) {
+		return false, fmt.Errorf("Only coastal army moves can use a convoy.")
+	}
 	validRoute, routeErr := v.isValidRoute(loc, dest, move.Destination)
 	possibleConvoy := loc.Unit.IsArmy() && v.hasConvoyRoute(loc, dest)
 	if !validRoute && !possibleConvoy {
@@ -196,6 +238,9 @@ func (v *validator) IsValidRetreat(retreat *models.RetreatCommand) (bool, error)
 		return false, locationError(retreat.Destination.ID)
 	}
 
+	if !v.entryPermitted(loc.ID, dest.ID) {
+		return false, fmt.Errorf("Italy is neutral.")
+	}
 	if ok, err := v.isValidLocation(retreat.Location, retreat.UnitType); !ok {
 		return false, err
 	}
@@ -322,18 +367,13 @@ func (v *validator) IsValidReinforce(reinforce *models.ReinforceCommand) (bool, 
 		return false, err
 	}
 
-	if loc.Unit != nil {
-		return false, noUnitError(loc.ID)
-	}
 	if loc.SupplyCenter == nil {
 		return false, fmt.Errorf("This province does not have a supply center: %s.", loc.ID)
 	}
-	if loc.SupplyCenter.ControlledBy == nil {
-		return false, fmt.Errorf("You do not control the supply center.")
+	if loc.SupplyCenter.HomeFor == nil || *loc.SupplyCenter.HomeFor != reinforce.PlayerName {
+		return false, fmt.Errorf("Reinforcements can only be added to home supply centers.")
 	}
-	if *loc.SupplyCenter.ControlledBy != reinforce.PlayerName {
-		return false, fmt.Errorf("The supply center is not controlled by '%s'.", reinforce.PlayerName)
-	}
+	// Occupancy, control and quota are decided after Fall retreats.
 	if reinforce.UnitType.IsArmy() && loc.IsOcean() {
 		return false, fmt.Errorf("You cannot reinforce armies to ocean provinces.")
 	}

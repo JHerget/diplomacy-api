@@ -5,6 +5,7 @@ import (
 	"diplomacy-api/internal/orders"
 	"diplomacy-api/internal/utils"
 	"fmt"
+	"maps"
 	"math/rand"
 	"slices"
 )
@@ -17,9 +18,11 @@ func locationNotFound(locationID string) string {
 }
 
 type applicator struct {
+	Disrupted        map[string]bool
+	ConvoyCarriers   map[string]*node
 	BoardMap         map[string]*node
 	ReceivedCommands map[string]bool
-	IgnoredCommands  map[string]string
+	IgnoredCommands  map[int]string
 	PlayerCensus     map[string]*census
 }
 
@@ -36,6 +39,7 @@ type node struct {
 	Support           *models.SupportCommand
 	Convoy            *models.ConvoyCommand
 	RetreatUnit       *models.Unit
+	RetreatClaims     int
 }
 
 type attack struct {
@@ -54,50 +58,45 @@ func ApplyTurn(board []models.Province, turn *models.Turn) ([]models.Province, [
 	allCommands := orders.GetCommands(turn.Orders)
 	validCommands, validationResults := orders.ValidateCommands(allCommands, board)
 
-	a := applicator{
-		BoardMap:         make(map[string]*node),
-		ReceivedCommands: make(map[string]bool),
-		IgnoredCommands:  make(map[string]string),
-		PlayerCensus:     make(map[string]*census),
-	}
-	for _, p := range board {
-		a.BoardMap[p.ID] = &node{
-			Province:          p,
-			Attacks:           []attack{},
-			UnresolvedCommand: nil,
-		}
-	}
-	slices.SortFunc(validCommands.Move, a.compareMove)
+	return applyValidatedTurn(board, turn, validCommands, validationResults)
+}
 
-	utils.ForEach(validCommands.Convoy, a.ApplyConvoy)
-	utils.ForEach(validCommands.Hold, a.ApplyHold)
-	utils.ForEach(validCommands.Move, a.ApplyMove)
-	utils.ForEach(validCommands.Support, a.ApplySupport)
-	a.ResolveAttacks()
+func ApplyGameTurn(game *models.Game, turn *models.Turn) ([]models.Province, []models.CommandValidationResult, error) {
+	commands, results := orders.ValidateGameCommands(orders.GetCommands(turn.Orders), game, turn)
+	return applyValidatedTurn(game.Board, turn, commands, results)
+}
+
+func applyValidatedTurn(board []models.Province, turn *models.Turn, validCommands models.Commands, validationResults []models.CommandValidationResult) ([]models.Province, []models.CommandValidationResult, error) {
+
+	a, err := resolveMovement(board, validCommands)
+	if err != nil {
+		return nil, nil, err
+	}
 	utils.ForEach(validCommands.Retreat, a.ApplyRetreat)
 
 	isFallTurn := turn.TurnNumber%2 == 0
 	a.ResolveRetreats(isFallTurn)
+	clear(a.ReceivedCommands)
 
 	if isFallTurn {
 		utils.ForEach(validCommands.Disband, a.ApplyDisband)
 		utils.ForEach(validCommands.Reinforce, a.ApplyReinforce)
 	} else {
 		utils.ForEach(validCommands.Disband, func(c models.DisbandCommand) {
-			a.IgnoredCommands[c.Value] = "It is not a fall turn."
+			a.IgnoredCommands[c.Ordinal] = "It is not a fall turn."
 		})
 		utils.ForEach(validCommands.Reinforce, func(c models.ReinforceCommand) {
-			a.IgnoredCommands[c.Value] = "It is not a fall turn."
+			a.IgnoredCommands[c.Ordinal] = "It is not a fall turn."
 		})
 	}
 
 	for i, result := range validationResults {
-		if a.IgnoredCommands[result.Value] == "" {
+		if a.IgnoredCommands[result.Ordinal] == "" {
 			continue
 		}
 
 		result.Valid = false
-		result.Error = a.IgnoredCommands[result.Value]
+		result.Error = a.IgnoredCommands[result.Ordinal]
 
 		validationResults[i] = result
 	}
@@ -108,12 +107,12 @@ func ApplyTurn(board []models.Province, turn *models.Turn) ([]models.Province, [
 func (a *applicator) ApplyConvoy(convoy models.ConvoyCommand) {
 	loc, ok := a.BoardMap[convoy.Location.ID]
 	if !ok {
-		a.IgnoredCommands[convoy.Value] = locationNotFound(convoy.Location.ID)
+		a.IgnoredCommands[convoy.Ordinal] = locationNotFound(convoy.Location.ID)
 		return
 	}
 
 	if a.ReceivedCommands[loc.Province.ID] {
-		a.IgnoredCommands[convoy.Value] = commandAlreadyProcessed(loc.Province.ID)
+		a.IgnoredCommands[convoy.Ordinal] = commandAlreadyProcessed(loc.Province.ID)
 		return
 	}
 	a.ReceivedCommands[loc.Province.ID] = true
@@ -124,12 +123,12 @@ func (a *applicator) ApplyConvoy(convoy models.ConvoyCommand) {
 func (a *applicator) ApplyHold(hold models.HoldCommand) {
 	loc, ok := a.BoardMap[hold.Location.ID]
 	if !ok {
-		a.IgnoredCommands[hold.Value] = locationNotFound(hold.Location.ID)
+		a.IgnoredCommands[hold.Ordinal] = locationNotFound(hold.Location.ID)
 		return
 	}
 
 	if a.ReceivedCommands[loc.Province.ID] {
-		a.IgnoredCommands[hold.Value] = commandAlreadyProcessed(loc.Province.ID)
+		a.IgnoredCommands[hold.Ordinal] = commandAlreadyProcessed(loc.Province.ID)
 		return
 	}
 	a.ReceivedCommands[loc.Province.ID] = true
@@ -144,25 +143,41 @@ func (a *applicator) ApplyHold(hold models.HoldCommand) {
 func (a *applicator) ApplyMove(move models.MoveCommand) {
 	loc, ok := a.BoardMap[move.Location.ID]
 	if !ok {
-		a.IgnoredCommands[move.Value] = locationNotFound(move.Location.ID)
+		a.IgnoredCommands[move.Ordinal] = locationNotFound(move.Location.ID)
 		return
 	}
 
 	dest, ok := a.BoardMap[move.Destination.ID]
 	if !ok {
-		a.IgnoredCommands[move.Value] = locationNotFound(move.Destination.ID)
+		a.IgnoredCommands[move.Ordinal] = locationNotFound(move.Destination.ID)
 		return
 	}
 
 	if a.ReceivedCommands[loc.Province.ID] {
-		a.IgnoredCommands[move.Value] = commandAlreadyProcessed(loc.Province.ID)
+		a.IgnoredCommands[move.Ordinal] = commandAlreadyProcessed(loc.Province.ID)
 		return
 	}
-	a.ReceivedCommands[loc.Province.ID] = true
-
-	if needsConvoy(move, dest) && !a.hasConvoyRoute(loc, dest, move) {
-		a.IgnoredCommands[move.Value] = fmt.Sprintf("No convoy route from '%s' to '%s'.", loc.Province.ID, dest.Province.ID)
+	usesConvoy := move.UnitType.IsArmy() && (move.ViaConvoy ||
+		!slices.Contains(dest.Province.Routes, loc.Province.ID) ||
+		a.convoyRoute(move, nil, "", true))
+	if usesConvoy && !a.convoyRoute(move, nil, "", false) {
+		a.IgnoredCommands[move.Ordinal] = fmt.Sprintf("No convoy route from '%s' to '%s'.", loc.Province.ID, dest.Province.ID)
 		return
+	}
+
+	a.ReceivedCommands[loc.Province.ID] = true
+	if usesConvoy {
+		// Keep a reference to a matching fleet's order, including when the
+		// route is disrupted. The army's move is already stored in that order.
+		for _, carrier := range a.BoardMap {
+			if carrier.Convoy != nil && carrier.Convoy.Move.Equals(move) {
+				a.ConvoyCarriers[loc.Province.ID] = carrier
+				break
+			}
+		}
+		if !a.convoyRoute(move, a.Disrupted, "", false) {
+			return
+		}
 	}
 
 	loc.UnresolvedCommand = &move
@@ -171,71 +186,69 @@ func (a *applicator) ApplyMove(move models.MoveCommand) {
 		LocationID: move.Location.ID,
 		Support:    nil,
 	})
-
-	if dest.Convoy != nil {
-		dest.Convoy = nil
-	}
 }
 
 func (a *applicator) ApplyRetreat(retreat models.RetreatCommand) {
 	loc, ok := a.BoardMap[retreat.Location.ID]
 	if !ok {
-		a.IgnoredCommands[retreat.Value] = locationNotFound(retreat.Location.ID)
+		a.IgnoredCommands[retreat.Ordinal] = locationNotFound(retreat.Location.ID)
 		return
 	}
 
 	dest, ok := a.BoardMap[retreat.Destination.ID]
 	if !ok {
-		a.IgnoredCommands[retreat.Value] = locationNotFound(retreat.Destination.ID)
+		a.IgnoredCommands[retreat.Ordinal] = locationNotFound(retreat.Destination.ID)
 		return
 	}
 
 	if a.ReceivedCommands[loc.Province.ID] {
-		a.IgnoredCommands[retreat.Value] = commandAlreadyProcessed(loc.Province.ID)
+		a.IgnoredCommands[retreat.Ordinal] = commandAlreadyProcessed(loc.Province.ID)
+		return
+	}
+	if loc.AttackResult.DislodgedUnit == nil {
+		a.IgnoredCommands[retreat.Ordinal] = "Unit was not dislodged."
 		return
 	}
 	if dest.Province.Unit != nil {
-		a.IgnoredCommands[retreat.Value] = "A unit occupies the destination."
+		a.IgnoredCommands[retreat.Ordinal] = "A unit occupies the destination."
 		return
 	}
 	if loc.AttackResult.LocationID != nil && *loc.AttackResult.LocationID == retreat.Destination.ID {
-		a.IgnoredCommands[retreat.Value] = "Cannot retreat to where the attack originated."
+		a.IgnoredCommands[retreat.Ordinal] = "Cannot retreat to where the attack originated."
 		return
 	}
 	if dest.AttackResult.Standoff {
-		a.IgnoredCommands[retreat.Value] = "Cannot retreat to where a standoff occurred."
+		a.IgnoredCommands[retreat.Ordinal] = "Cannot retreat to where a standoff occurred."
 		return
 	}
 
-	if dest.RetreatUnit != nil {
-		dest.RetreatUnit = nil
-		return
-	}
-
-	dest.RetreatUnit = loc.AttackResult.DislodgedUnit
-	if dest.RetreatUnit != nil {
-		dest.RetreatUnit.Location = retreat.Destination
-	}
+	unit := loc.AttackResult.DislodgedUnit
 	loc.AttackResult.DislodgedUnit = nil
-
 	a.ReceivedCommands[loc.Province.ID] = true
+	dest.RetreatClaims++
+	if dest.RetreatClaims == 1 {
+		unit.Location = retreat.Destination
+		dest.RetreatUnit = unit
+	} else {
+		dest.RetreatUnit = nil
+	}
 }
 
 func (a *applicator) ApplySupport(support models.SupportCommand) {
 	loc, ok := a.BoardMap[support.Location.ID]
 	if !ok {
-		a.IgnoredCommands[support.Value] = locationNotFound(support.Location.ID)
+		a.IgnoredCommands[support.Ordinal] = locationNotFound(support.Location.ID)
 		return
 	}
 
 	dest, ok := a.BoardMap[support.Move.Destination.ID]
 	if !ok {
-		a.IgnoredCommands[support.Value] = locationNotFound(support.Move.Destination.ID)
+		a.IgnoredCommands[support.Ordinal] = locationNotFound(support.Move.Destination.ID)
 		return
 	}
 
 	if a.ReceivedCommands[loc.Province.ID] {
-		a.IgnoredCommands[support.Value] = commandAlreadyProcessed(loc.Province.ID)
+		a.IgnoredCommands[support.Ordinal] = commandAlreadyProcessed(loc.Province.ID)
 		return
 	}
 	a.ReceivedCommands[loc.Province.ID] = true
@@ -243,14 +256,19 @@ func (a *applicator) ApplySupport(support models.SupportCommand) {
 	for _, att := range loc.Attacks {
 		attLoc, ok := a.BoardMap[att.LocationID]
 		if !ok {
-			a.IgnoredCommands[support.Value] = fmt.Sprintf("Support was cut from an unknown province: %s.", att.LocationID)
+			a.IgnoredCommands[support.Ordinal] = fmt.Sprintf("Support was cut from an unknown province: %s.", att.LocationID)
 			return
 		}
 
-		enemyAttack := attLoc.Province.Unit != nil && attLoc.Province.Unit.ControlledBy != support.PlayerName
+		isEnemyAttack := attLoc.Province.Unit != nil && attLoc.Province.Unit.ControlledBy != support.PlayerName
 		fromDestination := attLoc.Province.ID == support.Move.Destination.ID
-		if enemyAttack && !fromDestination {
-			a.IgnoredCommands[support.Value] = fmt.Sprintf("Support was cut from '%s'.", att.LocationID)
+		if passenger := a.convoyMove(attLoc); passenger != nil && dest.Convoy != nil &&
+			support.Move.Location.ID != dest.Province.ID && dest.Convoy.Move.Equals(*passenger) &&
+			!a.convoyRoute(*passenger, a.Disrupted, dest.Province.ID, false) {
+			continue
+		}
+		if isEnemyAttack && !fromDestination {
+			a.IgnoredCommands[support.Ordinal] = fmt.Sprintf("Support was cut from '%s'.", att.LocationID)
 			return
 		}
 	}
@@ -260,7 +278,13 @@ func (a *applicator) ApplySupport(support models.SupportCommand) {
 	})
 	if !ok {
 		isHold := support.Move.Location.ID == support.Move.Destination.ID
-		if isHold && dest.UnresolvedCommand == nil {
+		// A disrupted convoy still selected this move. Its matching support
+		// is legal, but there is no attack to strengthen.
+		origin := a.BoardMap[support.Move.Location.ID]
+		if passenger := a.convoyMove(origin); passenger != nil && passenger.Equals(support.Move) {
+			return
+		}
+		if isHold && dest.UnresolvedCommand == nil && a.convoyMove(dest) == nil {
 			dest.Attacks = append(dest.Attacks, attack{
 				UnitType:   support.Move.UnitType,
 				LocationID: support.Move.Location.ID,
@@ -270,7 +294,7 @@ func (a *applicator) ApplySupport(support models.SupportCommand) {
 			return
 		}
 
-		a.IgnoredCommands[support.Value] = "Could not find the move to support."
+		a.IgnoredCommands[support.Ordinal] = "Could not find the move to support."
 		return
 	}
 
@@ -280,7 +304,7 @@ func (a *applicator) ApplySupport(support models.SupportCommand) {
 
 func (a *applicator) withdrawDislodgedSupport(support models.SupportCommand) {
 	loc := a.BoardMap[support.Location.ID]
-	if loc.AttackResult.DislodgedUnit == nil || a.IgnoredCommands[support.Value] != "" {
+	if loc.AttackResult.DislodgedUnit == nil || a.IgnoredCommands[support.Ordinal] != "" {
 		return
 	}
 
@@ -296,55 +320,55 @@ func (a *applicator) withdrawDislodgedSupport(support models.SupportCommand) {
 		})
 	}
 
-	a.IgnoredCommands[support.Value] = fmt.Sprintf("Support was cut from '%s'.", *loc.AttackResult.LocationID)
+	a.IgnoredCommands[support.Ordinal] = fmt.Sprintf("Support was cut from '%s'.", *loc.AttackResult.LocationID)
 }
 
 func (a *applicator) ApplyReinforce(reinforce models.ReinforceCommand) {
 	loc, ok := a.BoardMap[reinforce.Location.ID]
 	if !ok {
-		a.IgnoredCommands[reinforce.Value] = locationNotFound(reinforce.Location.ID)
+		a.IgnoredCommands[reinforce.Ordinal] = locationNotFound(reinforce.Location.ID)
 		return
 	}
 
 	if a.ReceivedCommands[loc.Province.ID] {
-		a.IgnoredCommands[reinforce.Value] = commandAlreadyProcessed(loc.Province.ID)
+		a.IgnoredCommands[reinforce.Ordinal] = commandAlreadyProcessed(loc.Province.ID)
 		return
 	}
 
 	c := a.PlayerCensus[reinforce.PlayerName]
 	if c == nil {
-		a.IgnoredCommands[reinforce.Value] = "Failed to determine reinforcement eligibility."
+		a.IgnoredCommands[reinforce.Ordinal] = "Failed to determine reinforcement eligibility."
 		return
 	}
 	if c.UnitCount >= c.SupplyCenterCount {
-		a.IgnoredCommands[reinforce.Value] = "Not enough supply centers to support a new unit."
+		a.IgnoredCommands[reinforce.Ordinal] = "Not enough supply centers to support a new unit."
 		return
 	}
 
 	if loc.Province.Unit != nil {
-		a.IgnoredCommands[reinforce.Value] = "A unit occupies the province."
+		a.IgnoredCommands[reinforce.Ordinal] = "A unit occupies the province."
 		return
 	}
 	if loc.Province.SupplyCenter == nil {
-		a.IgnoredCommands[reinforce.Value] = fmt.Sprintf("The province '%s' does not have a supply center.", loc.Province.ID)
+		a.IgnoredCommands[reinforce.Ordinal] = fmt.Sprintf("The province '%s' does not have a supply center.", loc.Province.ID)
 		return
 	}
 
 	homeFor := loc.Province.SupplyCenter.HomeFor
 	if homeFor == nil || *homeFor != reinforce.PlayerName {
-		a.IgnoredCommands[reinforce.Value] = "Reinforcements can only be added to home supply centers."
+		a.IgnoredCommands[reinforce.Ordinal] = "Reinforcements can only be added to home supply centers."
 		return
 	}
 
 	controlledBy := loc.Province.SupplyCenter.ControlledBy
-	if controlledBy == nil || controlledBy != &reinforce.PlayerName {
-		a.IgnoredCommands[reinforce.Value] = "This supply center is controlled by another player."
+	if controlledBy == nil || *controlledBy != reinforce.PlayerName {
+		a.IgnoredCommands[reinforce.Ordinal] = "This supply center is controlled by another player."
 		return
 	}
 
 	id, err := utils.RandomID()
 	if err != nil {
-		a.IgnoredCommands[reinforce.Value] = "Failed to generate an ID for the new unit."
+		a.IgnoredCommands[reinforce.Ordinal] = "Failed to generate an ID for the new unit."
 		return
 	}
 
@@ -362,22 +386,22 @@ func (a *applicator) ApplyReinforce(reinforce models.ReinforceCommand) {
 func (a *applicator) ApplyDisband(disband models.DisbandCommand) {
 	loc, ok := a.BoardMap[disband.Location.ID]
 	if !ok {
-		a.IgnoredCommands[disband.Value] = locationNotFound(disband.Location.ID)
+		a.IgnoredCommands[disband.Ordinal] = locationNotFound(disband.Location.ID)
 		return
 	}
 
 	if a.ReceivedCommands[loc.Province.ID] {
-		a.IgnoredCommands[disband.Value] = commandAlreadyProcessed(loc.Province.ID)
+		a.IgnoredCommands[disband.Ordinal] = commandAlreadyProcessed(loc.Province.ID)
 		return
 	}
 
 	c := a.PlayerCensus[disband.PlayerName]
 	if c == nil {
-		a.IgnoredCommands[disband.Value] = "Failed to determine eligibility for disbanding."
+		a.IgnoredCommands[disband.Ordinal] = "Failed to determine eligibility for disbanding."
 		return
 	}
 	if c.UnitCount <= c.SupplyCenterCount {
-		a.IgnoredCommands[disband.Value] = "The number of supply centers exceeds or matches the number of units."
+		a.IgnoredCommands[disband.Ordinal] = "The number of supply centers exceeds or matches the number of units."
 		return
 	}
 
@@ -388,7 +412,8 @@ func (a *applicator) ApplyDisband(disband models.DisbandCommand) {
 }
 
 func (a *applicator) ResolveAttacks() {
-	for _, n := range a.BoardMap {
+	for _, id := range slices.Sorted(maps.Keys(a.BoardMap)) {
+		n := a.BoardMap[id]
 		stack := []*node{n}
 
 		for len(stack) > 0 {
@@ -499,7 +524,6 @@ func (a *applicator) resolveAttack(n *node) {
 
 	n.Attacks = nil
 	n.UnresolvedCommand = nil
-	n.Convoy = nil
 }
 
 func (a *applicator) strongestAttacks(n *node) (int, []*attack) {
@@ -553,60 +577,6 @@ func (a *applicator) strongestAttacks(n *node) (int, []*attack) {
 	return maxStrength, strongest
 }
 
-func (a *applicator) compareMove(lhs, rhs models.MoveCommand) int {
-	lhsDest := a.BoardMap[lhs.Destination.ID]
-	lhsNeighbors := slices.Contains(lhsDest.Province.Routes, lhs.Location.ID)
-
-	rhsDest := a.BoardMap[rhs.Destination.ID]
-	rhsNeighbors := slices.Contains(rhsDest.Province.Routes, rhs.Location.ID)
-
-	if lhsNeighbors && !rhsNeighbors {
-		return -1
-	}
-	if !lhsNeighbors && rhsNeighbors {
-		return 1
-	}
-
-	return 0
-}
-
-func (a *applicator) hasConvoyRoute(location, destination *node, move models.MoveCommand) bool {
-	if !location.Province.IsCoastal() || !destination.Province.IsCoastal() {
-		return false
-	}
-
-	return a.hasConvoyRouteRecursiveHelper(location, destination, move, make([]string, 0))
-}
-
-func (a *applicator) hasConvoyRouteRecursiveHelper(location, destination *node, move models.MoveCommand, visited []string) bool {
-	if slices.Contains(visited, location.Province.ID) {
-		return false
-	}
-	if location.Province.ID == destination.Province.ID {
-		return false
-	}
-
-	for _, province := range location.Province.Routes {
-		if province == destination.Province.ID {
-			return true
-		}
-
-		newLocation, ok := a.BoardMap[province]
-		if !ok {
-			continue
-		}
-
-		if newLocation.Convoy == nil || !newLocation.Convoy.Move.Equals(move) {
-			continue
-		}
-		if a.hasConvoyRouteRecursiveHelper(newLocation, destination, move, append(visited, location.Province.ID)) {
-			return true
-		}
-	}
-
-	return false
-}
-
 func (a *applicator) removeRandomUnits(playerName string, amount int) {
 	playerNodes := make([]*node, 0)
 
@@ -626,10 +596,6 @@ func (a *applicator) removeRandomUnits(playerName string, amount int) {
 		playerNodes = playerNodes[:len(playerNodes)-1]
 		amount--
 	}
-}
-
-func needsConvoy(move models.MoveCommand, dest *node) bool {
-	return move.UnitType.IsArmy() && !slices.Contains(dest.Province.Routes, move.Location.ID)
 }
 
 func (a *applicator) resolveHeadToHead(origin, dest *node) bool {
@@ -680,7 +646,6 @@ func rotateUnits(cycle []*node) {
 		dest.Province.Unit = units[i]
 		origin.Attacks = nil
 		origin.UnresolvedCommand = nil
-		origin.Convoy = nil
 	}
 }
 
@@ -691,14 +656,14 @@ func (a *applicator) resolveCycle(stack []*node, newNode *node) bool {
 	}
 	cycle := stack[start:]
 
-	if len(cycle) == 2 {
+	exchangeByConvoy := len(cycle) == 2 && (a.convoyMove(cycle[0]) != nil || a.convoyMove(cycle[1]) != nil)
+	if len(cycle) == 2 && !exchangeByConvoy {
 		left, right := cycle[0], cycle[1]
-		if !needsConvoy(*left.UnresolvedCommand, right) && !needsConvoy(*right.UnresolvedCommand, left) &&
-			(a.resolveHeadToHead(left, right) || a.resolveHeadToHead(right, left)) {
+		if a.resolveHeadToHead(left, right) || a.resolveHeadToHead(right, left) {
 			return true
 		}
 	}
-	if len(cycle) >= 3 {
+	if len(cycle) >= 3 || exchangeByConvoy {
 		for i, origin := range cycle {
 			dest := cycle[(i+1)%len(cycle)]
 			if len(dest.Attacks) != 1 || dest.Attacks[0].LocationID != origin.Province.ID {

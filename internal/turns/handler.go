@@ -72,7 +72,7 @@ func (h *Handler) Create(ctx context.Context, event events.APIGatewayV2HTTPReque
 			}), err
 		}
 
-		newBoard, results, err := board.ApplyTurn(g.Board, currentTurn)
+		newBoard, results, err := board.ApplyGameTurn(g, currentTurn)
 		if err != nil {
 			return http.BadRequest(&http.Error{
 				Message: err.Error(),

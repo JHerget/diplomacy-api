@@ -22,12 +22,13 @@ func GetCommands(orders []models.Order) models.Commands {
 		Disband:   []models.DisbandCommand{},
 	}
 
-	for _, raw := range rawCommands {
+	for ordinal, raw := range rawCommands {
 		result := []string{}
 
 		result = models.CommandsRegex.Hold.FindStringSubmatch(raw.Value)
 		if result != nil {
 			commands.Hold = append(commands.Hold, models.HoldCommand(models.MoveCommand{
+				Ordinal:     ordinal,
 				PlayerName:  raw.PlayerName,
 				UnitType:    parseUnit(result[1]),
 				Location:    parseLocationReference(result[2]),
@@ -40,6 +41,8 @@ func GetCommands(orders []models.Order) models.Commands {
 		result = models.CommandsRegex.Move.FindStringSubmatch(raw.Value)
 		if result != nil {
 			commands.Move = append(commands.Move, models.MoveCommand{
+				ViaConvoy:   result[4] != "",
+				Ordinal:     ordinal,
 				PlayerName:  raw.PlayerName,
 				UnitType:    parseUnit(result[1]),
 				Location:    parseLocationReference(result[2]),
@@ -52,6 +55,7 @@ func GetCommands(orders []models.Order) models.Commands {
 		result = models.CommandsRegex.Retreat.FindStringSubmatch(raw.Value)
 		if result != nil {
 			commands.Retreat = append(commands.Retreat, models.RetreatCommand(models.MoveCommand{
+				Ordinal:     ordinal,
 				PlayerName:  raw.PlayerName,
 				UnitType:    parseUnit(result[1]),
 				Location:    parseLocationReference(result[2]),
@@ -70,6 +74,7 @@ func GetCommands(orders []models.Order) models.Commands {
 			}
 
 			commands.Support = append(commands.Support, models.SupportCommand{
+				Ordinal:    ordinal,
 				PlayerName: raw.PlayerName,
 				UnitType:   parseUnit(result[1]),
 				Location:   parseLocationReference(result[2]),
@@ -86,6 +91,7 @@ func GetCommands(orders []models.Order) models.Commands {
 		result = models.CommandsRegex.Convoy.FindStringSubmatch(raw.Value)
 		if result != nil {
 			commands.Convoy = append(commands.Convoy, models.ConvoyCommand(models.SupportCommand{
+				Ordinal:    ordinal,
 				PlayerName: raw.PlayerName,
 				UnitType:   models.UnitFleet,
 				Location:   parseLocationReference(result[1]),
@@ -102,6 +108,7 @@ func GetCommands(orders []models.Order) models.Commands {
 		result = models.CommandsRegex.Reinforce.FindStringSubmatch(raw.Value)
 		if result != nil {
 			commands.Reinforce = append(commands.Reinforce, models.ReinforceCommand(models.AdjustCommand{
+				Ordinal:    ordinal,
 				PlayerName: raw.PlayerName,
 				UnitType:   parseUnit(result[1]),
 				Location:   parseLocationReference(result[2]),
@@ -113,6 +120,7 @@ func GetCommands(orders []models.Order) models.Commands {
 		result = models.CommandsRegex.Disband.FindStringSubmatch(raw.Value)
 		if result != nil {
 			commands.Disband = append(commands.Disband, models.DisbandCommand(models.AdjustCommand{
+				Ordinal:    ordinal,
 				PlayerName: raw.PlayerName,
 				UnitType:   parseUnit(result[1]),
 				Location:   parseLocationReference(result[2]),
@@ -129,7 +137,7 @@ func ListCommands(orders []models.Order) []models.CommandValidationResult {
 	allCommands := make([]models.CommandValidationResult, 0)
 	rawCommands := process(orders)
 
-	for _, raw := range rawCommands {
+	for ordinal, raw := range rawCommands {
 		valid := (models.CommandsRegex.Hold.FindStringSubmatch(raw.Value) != nil ||
 			models.CommandsRegex.Move.FindStringSubmatch(raw.Value) != nil ||
 			models.CommandsRegex.Retreat.FindStringSubmatch(raw.Value) != nil ||
@@ -144,6 +152,7 @@ func ListCommands(orders []models.Order) []models.CommandValidationResult {
 		}
 
 		allCommands = append(allCommands, models.CommandValidationResult{
+			Ordinal:    ordinal,
 			PlayerName: raw.PlayerName,
 			Value:      raw.Value,
 			Valid:      valid,

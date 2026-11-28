@@ -12,7 +12,7 @@ var CommandsRegex = struct {
 	Disband   *regexp.Regexp
 }{
 	Hold:      regexp.MustCompile(`^([af])\s*([a-z]{3}|[a-z]{3}-[nsew]c)\s*-\s*(?:hold|h)$`),
-	Move:      regexp.MustCompile(`^([af])\s*([a-z]{3}|[a-z]{3}-[nsew]c)\s*-\s*([a-z]{3}|[a-z]{3}-[nsew]c)$`),
+	Move:      regexp.MustCompile(`^([af])\s*([a-z]{3}|[a-z]{3}-[nsew]c)\s*-\s*([a-z]{3}|[a-z]{3}-[nsew]c)(?:\s+(via\s+convoy))?$`),
 	Retreat:   regexp.MustCompile(`^([af])\s*r\s*([a-z]{3}|[a-z]{3}-[nsew]c)\s*-\s*([a-z]{3}|[a-z]{3}-[nsew]c)$`),
 	Support:   regexp.MustCompile(`^([af])\s*([a-z]{3}|[a-z]{3}-[nsew]c)\s*s\s*([af])\s*([a-z]{3}|[a-z]{3}-[nsew]c)\s*-\s*(hold|h|[a-z]{3})$`),
 	Convoy:    regexp.MustCompile(`^f\s*([a-z]{3}|[a-z]{3}-[nsew]c)\s*c\s*a\s*([a-z]{3}|[a-z]{3}-[nsew]c)\s*-\s*([a-z]{3}|[a-z]{3}-[nsew]c)$`),
@@ -21,6 +21,8 @@ var CommandsRegex = struct {
 }
 
 type MoveCommand struct {
+	ViaConvoy   bool              `json:"viaConvoy,omitempty" bson:"viaConvoy,omitempty"`
+	Ordinal     int               `json:"-" bson:"-"`
 	PlayerName  string            `json:"playerName" bson:"playerName"`
 	UnitType    UnitType          `json:"unitType" bson:"unitType"`
 	Location    LocationReference `json:"location" bson:"location"`
@@ -39,6 +41,7 @@ func (c *MoveCommand) Equals(move MoveCommand) bool {
 }
 
 type SupportCommand struct {
+	Ordinal    int               `json:"-" bson:"-"`
 	PlayerName string            `json:"playerName" bson:"playerName"`
 	UnitType   UnitType          `json:"unitType" bson:"unitType"`
 	Location   LocationReference `json:"location" bson:"location"`
@@ -48,6 +51,7 @@ type SupportCommand struct {
 type ConvoyCommand SupportCommand
 
 type AdjustCommand struct {
+	Ordinal    int               `json:"-" bson:"-"`
 	PlayerName string            `json:"playerName" bson:"playerName"`
 	UnitType   UnitType          `json:"unitType" bson:"unitType"`
 	Location   LocationReference `json:"location" bson:"location"`
@@ -67,6 +71,7 @@ type Commands struct {
 }
 
 type CommandValidationResult struct {
+	Ordinal    int    `json:"-" bson:"-"`
 	PlayerName string `json:"playerName"`
 	Value      string `json:"value"`
 	Valid      bool   `json:"valid"`
